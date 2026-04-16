@@ -1,0 +1,121 @@
+/* Fontsource variable fonts */
+@import '@fontsource-variable/urbanist';
+@import '@fontsource-variable/syne';
+
+/* ─── TAN Rosebud — self-hosted (licensed TTF)
+   Explicit @font-face ensures "TAN Rosebud" resolves in all contexts,
+   including the Plasmic canvas where next/font's scoped class may not cascade. */
+@font-face {
+  font-family: 'TAN Rosebud';
+  src: url('/fonts/TAN Rosebud.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Design tokens as CSS custom properties ─────────────────── */
+:root {
+  /* Typography — Next.js font variables injected via _app.tsx className */
+  --font-display:  "TAN Rosebud", serif;
+  --font-heading:  "Syne", sans-serif;
+  --font-body:     "Urbanist", sans-serif;
+
+  /* Primary palette */
+  --color-cream:       #EADBC2;
+  --color-lavender:    #CEBEE3;
+  --color-coral:       #FF6A50;
+  --color-peach:       #FFAB7B;
+  --color-chartreuse:  #DDEA44;
+  --color-green:       #52A159;
+  --color-navy:        #00427F;
+
+  /* Secondary palette */
+  --color-brick:    #802E28;
+  --color-sienna:   #80553E;
+  --color-olive:    #607522;
+  --color-forest:   #295037;
+  --color-midnight: #201B2A;
+
+  /* Neutral scale */
+  --color-neutral-0:   #EDE9E3;
+  --color-neutral-25:  #C5C0BA;
+  --color-neutral-50:  #888388;
+  --color-neutral-75:  #504C57;
+  --color-neutral-100: #201B2A;
+
+  /* Success scale */
+  --color-success-0:   #EAF3EB;
+  --color-success-25:  #9DCF9F;
+  --color-success-50:  #4CAF56;
+  --color-success-75:  #2A7030;
+  --color-success-100: #153818;
+
+  /* Warning scale */
+  --color-warning-0:   #FFF5EC;
+  --color-warning-25:  #FFC98A;
+  --color-warning-50:  #F59340;
+  --color-warning-75:  #B05E1A;
+  --color-warning-100: #6B3409;
+
+  /* Error scale */
+  --color-error-0:   #FFE9E6;
+  --color-error-25:  #FF9F94;
+  --color-error-50:  #F04E38;
+  --color-error-75:  #922018;
+  --color-error-100: #4D0E09;
+}
+
+/* ─── Base typography ─────────────────────────────────────────── */
+body {
+  font-family: var(--font-body);
+  color: var(--color-midnight);
+  background-color: var(--color-cream);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+/* ─── Risograph noise utility ─────────────────────────────────── */
+/* Apply .risograph to any position:relative element to add a
+   thresholded B&W noise overlay (SVG filter defined in _document.tsx) */
+.risograph::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  filter: url(#noise-threshold);
+  opacity: var(--noise-opacity, 0.12);
+  mix-blend-mode: multiply;
+  border-radius: inherit;
+}

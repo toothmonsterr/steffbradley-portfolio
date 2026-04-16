@@ -1,0 +1,36 @@
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-coral);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-midnight);
+  line-height: 1.3;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-neutral-75);
+  line-height: 1.6;
+}

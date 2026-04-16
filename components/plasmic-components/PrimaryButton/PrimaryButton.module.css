@@ -1,0 +1,102 @@
+/* @property declarations allow CSS to interpolate custom properties as typed values.
+   Without these, transitions on custom properties would snap rather than animate.
+   Supported: Chrome 85+, Firefox 128+, Safari 16.4+ */
+@property --hue-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --mix-pct {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  cursor: pointer;
+  border: none;
+  background: var(--btn-bg, var(--color-midnight));
+  color: var(--btn-text, var(--color-cream));
+  border-radius: 4px;
+  overflow: hidden;
+  transition: color 0.2s ease, transform 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  isolation: isolate;
+}
+
+.btn:hover {
+  color: var(--btn-bg, var(--color-midnight));
+  transform: scale(1.02);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Halftone overlay — rendered as a ::before pseudo-element.
+   Mechanism:
+     1. radial-gradient tiles create the dot grid
+     2. conic-gradient creates a colour sweep that rotates on hover (--hue-angle)
+     3. background-blend-mode: multiply merges the two layers
+     4. filter: contrast(24) thresholds the blend to hard halftone dots
+   The @property-animated --hue-angle and --mix-pct drive the smooth transition. */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      closest-side,
+      color-mix(in oklch, var(--btn-dot-a, var(--color-coral)) var(--mix-pct), var(--btn-dot-b, var(--color-chartreuse))),
+      transparent
+    ) 0 0 / 0.75em 0.75em space,
+    conic-gradient(
+      from var(--hue-angle) at 50% 50%,
+      var(--color-cream),
+      var(--color-lavender),
+      var(--btn-dot-a, var(--color-coral)),
+      var(--btn-dot-b, var(--color-chartreuse)),
+      var(--color-cream)
+    );
+  background-blend-mode: multiply;
+  filter: contrast(24);
+  opacity: 0;
+  transition:
+    opacity    0.25s ease,
+    --hue-angle 0.6s  ease,
+    --mix-pct   0.4s  ease;
+  z-index: -1;
+}
+
+.btn:hover::before {
+  opacity: 1;
+  --hue-angle: 180deg;
+  --mix-pct: 60%;
+}
+
+/* Size variants */
+.sm { padding: 10px 24px; font-size: 0.8rem; }
+.lg { padding: 18px 40px; font-size: 1rem; }
+
+/* Danger variant */
+.danger {
+  background: var(--color-brick);
+}
