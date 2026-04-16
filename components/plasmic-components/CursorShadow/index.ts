@@ -16,17 +16,28 @@ export const CursorShadowMeta = {
     step: {
       type: 'number',
       description: 'Grid cell size in px — smaller = denser dots',
-      defaultValueHint: 12,
+      defaultValueHint: 10,
     },
-    spotlightRadius: {
+    shape: {
+      type: 'choice',
+      options: ['arrow', 'radial'],
+      description: 'arrow = cursor-shaped halftone | radial = circular spotlight',
+      defaultValueHint: 'arrow',
+    },
+    cursorSize: {
       type: 'number',
-      description: 'Radius in px over which dots radiate from the cursor',
-      defaultValueHint: 180,
+      description: 'For arrow: height of cursor shape in px. For radial: spotlight radius in px.',
+      defaultValueHint: 56,
+    },
+    feather: {
+      type: 'number',
+      description: 'Edge feather in px — dots taper to nothing within this distance of the arrow boundary',
+      defaultValueHint: 14,
     },
     maxOpacity: {
       type: 'number',
       description: 'Max canvas opacity when active (0–1)',
-      defaultValueHint: 0.65,
+      defaultValueHint: 0.75,
     },
     blendMode: {
       type: 'choice',
