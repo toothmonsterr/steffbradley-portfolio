@@ -1,9 +1,21 @@
-import { colorPrimitive, fontFamily, spacingScale, spacing, radius, opacity, fontSizeScale, fontSize, lineHeight } from './primitives';
+import { colorPrimitive, fontFamily, spacingPx, spacingLarge, fontSizeRem, opacity, radius } from './primitives';
 import { colorNeutral, colorSuccess, colorWarning, colorError } from './semantic';
 
 export const tokens = {
   color: {
-    ...colorPrimitive,
+    // Brand palette — prefixed so they group together in Plasmic's token panel
+    'brand-cream':      colorPrimitive.cream,
+    'brand-lavender':   colorPrimitive.lavender,
+    'brand-coral':      colorPrimitive.coral,
+    'brand-peach':      colorPrimitive.peach,
+    'brand-chartreuse': colorPrimitive.chartreuse,
+    'brand-green':      colorPrimitive.green,
+    'brand-navy':       colorPrimitive.navy,
+    'brand-brick':      colorPrimitive.brick,
+    'brand-sienna':     colorPrimitive.sienna,
+    'brand-olive':      colorPrimitive.olive,
+    'brand-forest':     colorPrimitive.forest,
+    'brand-midnight':   colorPrimitive.midnight,
     // Neutral scale
     'neutral-0':   colorNeutral['0'],
     'neutral-25':  colorNeutral['25'],
@@ -30,22 +42,19 @@ export const tokens = {
     'error-100': colorError['100'],
   },
   fontFamily,
-  spacingScale,
-  spacing,
-  radius,
+  spacingPx,
+  spacingLarge,
+  fontSizeRem,
   opacity,
-  fontSizeScale,
-  fontSize,
-  lineHeight,
+  radius,
 } as const;
 
 export type TokenColor = keyof typeof tokens.color;
 export {
   colorPrimitive, colorNeutral, colorSuccess, colorWarning, colorError,
   fontFamily,
-  spacingScale, spacing,
-  radius,
+  spacingPx, spacingLarge,
+  fontSizeRem,
   opacity,
-  fontSizeScale, fontSize,
-  lineHeight,
+  radius,
 };

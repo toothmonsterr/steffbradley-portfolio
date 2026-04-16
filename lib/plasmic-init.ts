@@ -20,45 +20,40 @@ export const PLASMIC = initPlasmicLoader({
 
 // ---------------------------------------------------------------------------
 // Register design tokens.
-// All color tokens become --plasmic-token-{name} CSS variables in Studio.
 // ---------------------------------------------------------------------------
+
+// Colors — brand-* prefix for brand palette; neutral/success/warning/error keep their prefix.
 Object.entries(tokens.color).forEach(([name, value]) => {
   PLASMIC.registerToken({ name, value: value as string, type: 'color' });
 });
 
+// Font families
 Object.entries(tokens.fontFamily).forEach(([name, value]) => {
   PLASMIC.registerToken({ name: `font-${name}`, value: value as string, type: 'font-family' });
 });
 
-// Spacing — register the numeric primitives and t-shirt semantic aliases separately.
-// Plasmic shows these in the Spacing tokens panel.
-Object.entries(tokens.spacingScale).forEach(([name, value]) => {
-  PLASMIC.registerToken({ name: `sp-${name}`, value: value as string, type: 'spacing' });
-});
-Object.entries(tokens.spacing).forEach(([name, value]) => {
-  PLASMIC.registerToken({ name: `space-${name}`, value: value as string, type: 'spacing' });
+// Spacing — raw px values named by their value ("4px", "8px", … "144px")
+Object.entries(tokens.spacingPx).forEach(([name, value]) => {
+  PLASMIC.registerToken({ name, value: value as string, type: 'spacing' });
 });
 
-// Border radius — 'border-radius' is not a Plasmic TokenType; tokens live as
-// CSS vars (--radius-sm etc.) and can be referenced in Studio's raw CSS input.
+// Large layout sizes ("320px" … "1920px")
+Object.entries(tokens.spacingLarge).forEach(([name, value]) => {
+  PLASMIC.registerToken({ name, value: value as string, type: 'spacing' });
+});
 
-// Opacity — key is the integer percentage (e.g. '50' → 0.5)
+// Font sizes — raw rem values named by their value ("0.75rem", "1rem", …)
+Object.entries(tokens.fontSizeRem).forEach(([name, value]) => {
+  PLASMIC.registerToken({ name, value: value as string, type: 'font-size' });
+});
+
+// Opacity — key is the integer percentage ("0" … "100")
 Object.entries(tokens.opacity).forEach(([name, value]) => {
   PLASMIC.registerToken({ name: `opacity-${name}`, value: value as string, type: 'opacity' });
 });
 
-// Font size — register numeric primitives and t-shirt aliases.
-Object.entries(tokens.fontSizeScale).forEach(([name, value]) => {
-  PLASMIC.registerToken({ name: `fs-${name}`, value: value as string, type: 'font-size' });
-});
-Object.entries(tokens.fontSize).forEach(([name, value]) => {
-  PLASMIC.registerToken({ name: `font-size-${name}`, value: value as string, type: 'font-size' });
-});
-
-// Line height
-Object.entries(tokens.lineHeight).forEach(([name, value]) => {
-  PLASMIC.registerToken({ name: `lh-${name}`, value: value as string, type: 'line-height' });
-});
+// Border radius — not a valid Plasmic TokenType; lives as CSS vars only (--radius-sm etc.).
+// Line height  — not registered; user creates semantic tokens in Studio.
 
 // ---------------------------------------------------------------------------
 // Component registrations.
