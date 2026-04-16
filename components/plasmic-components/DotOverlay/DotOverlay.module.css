@@ -1,0 +1,34 @@
+/* @property lets CSS animate --mix-pct as a typed percentage so the
+   color-mix() transition interpolates smoothly (Chrome 85+, FF 128+, Safari 16.4+) */
+@property --mix-pct {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--dot-a, #FF6A50) var(--mix-pct), var(--dot-b, #DDEA44)),
+    transparent
+  ) 0 0 / var(--dot-size, 0.6em) var(--dot-size, 0.6em) space;
+  opacity: 0;
+  transition:
+    opacity   0.25s ease,
+    --mix-pct 0.4s  ease;
+}
+
+/* Applied via JS on parent mouseenter / removed on mouseleave */
+.active {
+  opacity: var(--dot-opacity, 1);
+  --mix-pct: 100%;
+}
+
+/* When trigger='always', skip the hover dance entirely */
+.alwaysVisible {
+  opacity: var(--dot-opacity, 1);
+  --mix-pct: 100%;
+}

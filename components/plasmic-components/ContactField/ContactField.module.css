@@ -7,7 +7,7 @@
 
 .label {
   font-family: var(--font-heading);
-  font-size: 0.8rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: lowercase;
@@ -18,7 +18,7 @@
 .textarea {
   width: 100%;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   color: var(--color-midnight);
   background: transparent;
   border: none;
@@ -41,12 +41,12 @@
 
 .textarea {
   min-height: 120px;
-  line-height: 1.6;
+  line-height: var(--line-height-relaxed);
 }
 
 .error {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--font-size-xs);
   color: var(--color-error-50);
   margin-top: 2px;
 }

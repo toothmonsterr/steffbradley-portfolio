@@ -1,4 +1,4 @@
-import { colorPrimitive, fontFamily, spacing } from './primitives';
+import { colorPrimitive, fontFamily, spacingScale, spacing, radius, opacity, fontSizeScale, fontSize, lineHeight } from './primitives';
 import { colorNeutral, colorSuccess, colorWarning, colorError } from './semantic';
 
 export const tokens = {
@@ -30,8 +30,22 @@ export const tokens = {
     'error-100': colorError['100'],
   },
   fontFamily,
+  spacingScale,
   spacing,
+  radius,
+  opacity,
+  fontSizeScale,
+  fontSize,
+  lineHeight,
 } as const;
 
 export type TokenColor = keyof typeof tokens.color;
-export { colorPrimitive, colorNeutral, colorSuccess, colorWarning, colorError, fontFamily, spacing };
+export {
+  colorPrimitive, colorNeutral, colorSuccess, colorWarning, colorError,
+  fontFamily,
+  spacingScale, spacing,
+  radius,
+  opacity,
+  fontSizeScale, fontSize,
+  lineHeight,
+};

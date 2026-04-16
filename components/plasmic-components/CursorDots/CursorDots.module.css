@@ -1,0 +1,11 @@
+.canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.active {
+  opacity: 1;
+}

@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   height: var(--viewer-height, 480px);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-neutral-0);
   position: relative;
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   color: var(--color-neutral-50);
 }
 

@@ -22,28 +22,49 @@ export const fontFamily = {
   body:    '"Urbanist", sans-serif',
 } as const;
 
-// 8-point grid; xs/sm/md/lg/xl/nxl are t-shirt names.
-// 4px (xs) and 12px are supplementary half-steps.
-// Strictly 8pt-grid from sm upward; 20px omitted as a non-grid step.
-export const spacing = {
-  '0':    '0px',
-  xs:     '4px',    // 0.5× base
-  sm:     '8px',    // 1× base
-  '12':   '12px',   // 1.5× base (explicit non-grid step)
-  md:     '16px',   // 2× base
-  lg:     '24px',   // 3× base
-  xl:     '32px',   // 4× base
-  '2xl':  '40px',   // 5× base
-  '3xl':  '48px',   // 6× base
-  '4xl':  '64px',   // 8× base
-  '5xl':  '80px',   // 10× base
-  '6xl':  '96px',   // 12× base
-  '7xl':  '128px',  // 16× base
-  '8xl':  '144px',  // 18× base
-  '9xl':  '160px',  // 20× base
-  '10xl': '192px',  // 24× base
+// ── Spacing ──────────────────────────────────────────────────────────────────
+// Primitive numeric scale — key is the pixel value.
+// 8-point grid base; 4px and 12px are explicit half-steps.
+export const spacingScale = {
+  '0':   '0px',
+  '4':   '4px',    // 0.5× base
+  '8':   '8px',    // 1× base
+  '12':  '12px',   // 1.5× base
+  '16':  '16px',   // 2×
+  '24':  '24px',   // 3×
+  '32':  '32px',   // 4×
+  '40':  '40px',   // 5×
+  '48':  '48px',   // 6×
+  '64':  '64px',   // 8×
+  '80':  '80px',   // 10×
+  '96':  '96px',   // 12×
+  '128': '128px',  // 16×
+  '144': '144px',  // 18×
+  '160': '160px',  // 20×
+  '192': '192px',  // 24×
 } as const;
 
+// Semantic t-shirt aliases — each entry references a spacingScale value.
+export const spacing = {
+  '0':    spacingScale['0'],
+  xs:     spacingScale['4'],    // 4px
+  sm:     spacingScale['8'],    // 8px
+  '12':   spacingScale['12'],   // 12px — half-step, no t-shirt equivalent
+  md:     spacingScale['16'],   // 16px
+  lg:     spacingScale['24'],   // 24px
+  xl:     spacingScale['32'],   // 32px
+  '2xl':  spacingScale['40'],   // 40px
+  '3xl':  spacingScale['48'],   // 48px
+  '4xl':  spacingScale['64'],   // 64px
+  '5xl':  spacingScale['80'],   // 80px
+  '6xl':  spacingScale['96'],   // 96px
+  '7xl':  spacingScale['128'],  // 128px
+  '8xl':  spacingScale['144'],  // 144px
+  '9xl':  spacingScale['160'],  // 160px
+  '10xl': spacingScale['192'],  // 192px
+} as const;
+
+// ── Border radius ─────────────────────────────────────────────────────────────
 export const radius = {
   none:  '0px',
   sm:    '4px',
@@ -55,8 +76,8 @@ export const radius = {
   full:  '9999px',
 } as const;
 
-// Decimal opacity values (0–1).
-// Numeric keys = percentage (e.g. '10' = 10% = 0.1).
+// ── Opacity ───────────────────────────────────────────────────────────────────
+// Key = integer percentage; value = decimal (0–1).
 export const opacity = {
   '0':   '0',
   '5':   '0.05',
@@ -73,22 +94,40 @@ export const opacity = {
   '100': '1',
 } as const;
 
-// rem-based; key is t-shirt size.
-export const fontSize = {
-  xs:    '0.75rem',    // 12px
-  sm:    '0.875rem',   // 14px
-  base:  '1rem',       // 16px
-  lg:    '1.125rem',   // 18px
-  xl:    '1.25rem',    // 20px
-  '2xl': '1.5rem',     // 24px
-  '3xl': '1.875rem',   // 30px
-  '4xl': '2.25rem',    // 36px
-  '5xl': '3rem',       // 48px
-  '6xl': '3.75rem',    // 60px
-  '7xl': '4.5rem',     // 72px
-  '8xl': '6rem',       // 96px
+// ── Font size ─────────────────────────────────────────────────────────────────
+// Primitive numeric scale — key is the pixel equivalent at a 16px root.
+export const fontSizeScale = {
+  '12': '0.75rem',
+  '14': '0.875rem',
+  '16': '1rem',
+  '18': '1.125rem',
+  '20': '1.25rem',
+  '24': '1.5rem',
+  '30': '1.875rem',
+  '36': '2.25rem',
+  '48': '3rem',
+  '60': '3.75rem',
+  '72': '4.5rem',
+  '96': '6rem',
 } as const;
 
+// Semantic t-shirt aliases — each entry references a fontSizeScale value.
+export const fontSize = {
+  xs:    fontSizeScale['12'],   // 12px
+  sm:    fontSizeScale['14'],   // 14px
+  base:  fontSizeScale['16'],   // 16px
+  lg:    fontSizeScale['18'],   // 18px
+  xl:    fontSizeScale['20'],   // 20px
+  '2xl': fontSizeScale['24'],   // 24px
+  '3xl': fontSizeScale['30'],   // 30px
+  '4xl': fontSizeScale['36'],   // 36px
+  '5xl': fontSizeScale['48'],   // 48px
+  '6xl': fontSizeScale['60'],   // 60px
+  '7xl': fontSizeScale['72'],   // 72px
+  '8xl': fontSizeScale['96'],   // 96px
+} as const;
+
+// ── Line height ───────────────────────────────────────────────────────────────
 // Unitless multipliers.
 export const lineHeight = {
   none:    '1',

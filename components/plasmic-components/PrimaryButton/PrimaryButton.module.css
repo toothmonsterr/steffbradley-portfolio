@@ -1,12 +1,6 @@
-/* @property declarations allow CSS to interpolate custom properties as typed values.
-   Without these, transitions on custom properties would snap rather than animate.
+/* @property allows CSS to interpolate --mix-pct as a typed percentage so the
+   color-mix() transition animates smoothly rather than snapping.
    Supported: Chrome 85+, Firefox 128+, Safari 16.4+ */
-@property --hue-angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
-
 @property --mix-pct {
   syntax: '<percentage>';
   inherits: false;
@@ -18,10 +12,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 32px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
   font-family: var(--font-heading);
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: lowercase;
@@ -29,7 +23,7 @@
   border: none;
   background: var(--btn-bg, var(--color-midnight));
   color: var(--btn-text, var(--color-cream));
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: color 0.2s ease, transform 0.15s ease;
   text-decoration: none;
@@ -47,54 +41,36 @@
 }
 
 .btn:disabled {
-  opacity: 0.4;
+  opacity: var(--opacity-40);
   pointer-events: none;
 }
 
-/* Halftone overlay — rendered as a ::before pseudo-element.
-   Mechanism:
-     1. radial-gradient tiles create the dot grid
-     2. conic-gradient creates a colour sweep that rotates on hover (--hue-angle)
-     3. background-blend-mode: multiply merges the two layers
-     4. filter: contrast(24) thresholds the blend to hard halftone dots
-   The @property-animated --hue-angle and --mix-pct drive the smooth transition. */
+/* Dot overlay — plain radial-gradient grid, color-ramps from dotColorA → dotColorB on hover.
+   No blend modes or contrast tricks; dots are applied at face value. */
 .btn::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      closest-side,
-      color-mix(in oklch, var(--btn-dot-a, var(--color-coral)) var(--mix-pct), var(--btn-dot-b, var(--color-chartreuse))),
-      transparent
-    ) 0 0 / 0.75em 0.75em space,
-    conic-gradient(
-      from var(--hue-angle) at 50% 50%,
-      var(--color-cream),
-      var(--color-lavender),
-      var(--btn-dot-a, var(--color-coral)),
-      var(--btn-dot-b, var(--color-chartreuse)),
-      var(--color-cream)
-    );
-  background-blend-mode: multiply;
-  filter: contrast(24);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklch, var(--btn-dot-a, var(--color-coral)) var(--mix-pct), var(--btn-dot-b, var(--color-chartreuse))),
+    transparent
+  ) 0 0 / 0.6em 0.6em space;
   opacity: 0;
   transition:
-    opacity    0.25s ease,
-    --hue-angle 0.6s  ease,
-    --mix-pct   0.4s  ease;
+    opacity   0.25s ease,
+    --mix-pct 0.4s  ease;
   z-index: -1;
 }
 
 .btn:hover::before {
   opacity: 1;
-  --hue-angle: 180deg;
-  --mix-pct: 60%;
+  --mix-pct: 100%;
 }
 
 /* Size variants */
-.sm { padding: 10px 24px; font-size: 0.8rem; }
-.lg { padding: 18px 40px; font-size: 1rem; }
+.sm { padding: var(--spacing-12) var(--spacing-lg); font-size: var(--font-size-xs); }
+.lg { padding: var(--spacing-md) var(--spacing-2xl); font-size: var(--font-size-base); }
 
 /* Danger variant */
 .danger {
