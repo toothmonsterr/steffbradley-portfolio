@@ -27,7 +27,13 @@ export const OffsetPrintMeta = {
       description: 'hover: misregistered at rest, snaps together on hover. always: permanently misregistered. inverse: aligned at rest, bumps apart on hover.',
     },
     jitter:       { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude for organic hand-printed feel (px)' },
-    showBase:     { type: 'boolean', defaultValueHint: false, description: 'Show the original un-tinted layer underneath' },
+    mode:         {
+      type: 'choice',
+      options: ['auto', 'shape', 'image'],
+      defaultValueHint: 'auto',
+      description: 'auto: detects images and uses luminance separation for them. shape: always silhouette fill. image: always luminance separation.',
+    },
+    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Contrast curve for image mode (dark→ink). >1 deepens shadows, <1 softens.' },
   },
   importPath: '@/components/plasmic-components/OffsetPrint',
 };

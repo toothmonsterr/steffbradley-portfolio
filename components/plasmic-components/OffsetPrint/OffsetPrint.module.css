@@ -53,3 +53,17 @@
 .bgOnlyInner * {
   color: transparent !important;
 }
+
+/* Image-mode: render the children as-is (don't strip anything) so the luma filter
+   can read their pixel data. */
+.imageLayer {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imageInner {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

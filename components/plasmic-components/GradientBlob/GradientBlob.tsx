@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import styles from './GradientBlob.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
-import { NoiseOverlay } from '@/components/plasmic-components/NoiseOverlay';
 
 export interface GradientBlobProps {
   colors?: string[];
@@ -13,13 +12,10 @@ export interface GradientBlobProps {
   speed?: number;
   width?: string;
   height?: string;
-  noise?: boolean;
-  noiseIntensity?: number;
   seed?: number;
   className?: string;
 }
 
-// Small deterministic PRNG so blob layouts are stable per mount and per seed.
 function mulberry32(a: number) {
   return () => {
     let t = (a += 0x6d2b79f5);
@@ -32,7 +28,6 @@ function mulberry32(a: number) {
 interface Blob {
   color: string;
   size: number;
-  // Keyframes in %, normalized so start == end for seamless loop
   xs: string[];
   ys: string[];
   times: number[];
@@ -42,7 +37,6 @@ interface Blob {
 function buildBlobs(colors: string[], count: number, seed: number, baseDuration: number): Blob[] {
   const rand = mulberry32(seed);
   return Array.from({ length: count }, (_, i) => {
-    // 3–4 intermediate waypoints; return to origin at the end
     const pts = 4;
     const xs: string[] = [];
     const ys: string[] = [];
@@ -55,11 +49,11 @@ function buildBlobs(colors: string[], count: number, seed: number, baseDuration:
     const times = Array.from({ length: pts + 1 }, (_, k) => k / pts);
     return {
       color: colors[i % colors.length] ?? '#FF6A50',
-      size: 40 + rand() * 40,  // % of container's smaller dimension
+      size: 40 + rand() * 40,
       xs,
       ys,
       times,
-      duration: baseDuration * (0.7 + rand() * 0.6),  // per-blob variation
+      duration: baseDuration * (0.7 + rand() * 0.6),
     };
   });
 }
@@ -73,15 +67,11 @@ export function GradientBlob({
   speed = 1,
   width = '100%',
   height = '400px',
-  noise = true,
-  noiseIntensity = 0.15,
   seed = 1,
   className,
 }: GradientBlobProps) {
   const prefersReduced = usePrefersReducedMotion();
 
-  // Derive color list: prefer explicit `colors` array, fall back to comma-separated `colorsText`,
-  // then fall back to the brand default set.
   const resolvedColors = useMemo(() => {
     if (colors && colors.length > 0) return colors;
     if (colorsText && colorsText.trim()) {
@@ -94,14 +84,13 @@ export function GradientBlob({
 
   const [blobs] = useState(() => buildBlobs(resolvedColors, blobCount, seed, effectiveDuration));
 
-  // Rebuild blobs when key inputs change
   const keyedBlobs = useMemo(
     () => buildBlobs(resolvedColors, blobCount, seed, effectiveDuration),
     [resolvedColors, blobCount, seed, effectiveDuration]
   );
   const activeBlobs = prefersReduced ? blobs : keyedBlobs;
 
-  const content = (
+  return (
     <div
       className={[styles.container, className ?? ''].filter(Boolean).join(' ')}
       style={{ width, height }}
@@ -130,8 +119,8 @@ export function GradientBlob({
               style={{ ...common, transform: 'translate(-50%, -50%)' }}
               animate={{ left: b.xs, top: b.ys }}
               transition={{
-                left:  { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
-                top:   { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
+                left: { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
+                top:  { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
               }}
             />
           );
@@ -139,9 +128,4 @@ export function GradientBlob({
       </div>
     </div>
   );
-
-  if (noise) {
-    return <NoiseOverlay intensity={noiseIntensity}>{content}</NoiseOverlay>;
-  }
-  return content;
 }

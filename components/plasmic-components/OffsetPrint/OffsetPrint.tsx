@@ -19,7 +19,34 @@ export interface OffsetPrintProps {
   interaction?: 'hover' | 'always' | 'inverse';
   /** Sub-pixel wobble magnitude for an organic hand-printed feel (px) */
   jitter?: number;
+  /**
+   * 'auto'  — detects images in children and uses luminance separation for them (default).
+   * 'shape' — always treats children as a shape; tint fills the silhouette.
+   * 'image' — always uses luminance separation (dark pixels become ink; light fades to transparent).
+   */
+  mode?: 'auto' | 'shape' | 'image';
+  /** Contrast curve for image-mode luminance → alpha. Higher = deeper blacks, brighter whites. */
+  imageContrast?: number;
   className?: string;
+}
+
+// Walks a React children tree and returns true if any node is an <img>, <picture>, <video>, or SVG <image>.
+function childrenContainImage(children: React.ReactNode): boolean {
+  let found = false;
+  React.Children.forEach(children, (child) => {
+    if (found) return;
+    if (!React.isValidElement(child)) return;
+    const type = child.type as unknown;
+    if (type === 'img' || type === 'picture' || type === 'video' || type === 'image') {
+      found = true;
+      return;
+    }
+    const props = child.props as { children?: React.ReactNode } | undefined;
+    if (props?.children && childrenContainImage(props.children)) {
+      found = true;
+    }
+  });
+  return found;
 }
 
 export function OffsetPrint({
@@ -32,24 +59,32 @@ export function OffsetPrint({
   blendMode = 'multiply',
   interaction = 'hover',
   jitter = 1.2,
+  mode = 'auto',
+  imageContrast = 1.3,
   className,
 }: OffsetPrintProps) {
   const uid = useId().replace(/:/g, '');
   const filterAId = `tint-a-${uid}`;
   const filterBId = `tint-b-${uid}`;
   const overlapId = `overlap-${uid}`;
+  const lumaAId = `luma-a-${uid}`;
+  const lumaBId = `luma-b-${uid}`;
+  const lumaOverlapId = `luma-overlap-${uid}`;
   const prefersReduced = usePrefersReducedMotion();
 
-  // Deterministic per-layer jitter so SSR === CSR. Three waypoints for a gentle drift loop.
+  // Decide whether this instance is in image mode.
+  const isImageMode = useMemo(() => {
+    if (mode === 'image') return true;
+    if (mode === 'shape') return false;
+    return childrenContainImage(children);
+  }, [mode, children]);
+
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
 
-  // "Rest" = misregistered (default); "registered" = snapped into alignment.
-  // interaction drives which one the wrapper is in at rest vs hover.
   const misreg = { x: offsetX, y: offsetY };
-  const registered = { x: 0.5, y: 0.5 }; // tiny residual for an inky edge, even when "aligned"
+  const registered = { x: 0.5, y: 0.5 };
 
-  // Build per-layer variants. sign = -1 for Layer A (negative offset), 1 for Layer B.
   const buildVariants = (sign: 1 | -1, w: number[][]): Variants => {
     const breathe = {
       x: [sign * misreg.x + w[0][0], sign * misreg.x + w[1][0], sign * misreg.x + w[2][0], sign * misreg.x + w[0][0]],
@@ -69,17 +104,9 @@ export function OffsetPrint({
     };
     const still = { x: sign * misreg.x, y: sign * misreg.y, rotate: 0, transition: { duration: 0 } };
 
-    if (prefersReduced) {
-      return { rest: still, hover: still };
-    }
-    if (interaction === 'always') {
-      return { rest: breathe, hover: breathe };
-    }
-    if (interaction === 'inverse') {
-      // aligned at rest, misregister on hover (breathing kicks in on hover)
-      return { rest: snap, hover: breathe };
-    }
-    // 'hover' (default): misregistered on rest, snap into place on hover
+    if (prefersReduced) return { rest: still, hover: still };
+    if (interaction === 'always') return { rest: breathe, hover: breathe };
+    if (interaction === 'inverse') return { rest: snap, hover: breathe };
     return { rest: breathe, hover: snap };
   };
 
@@ -94,11 +121,24 @@ export function OffsetPrint({
     [wobbleB, interaction, offsetX, offsetY, prefersReduced]
   );
 
-  const bgCopy = (filterId: string) => (
+  // Shape-mode copy: duplicates children with foreground stripped (color: transparent),
+  // leaving only backgrounds/borders visible, then floods the alpha with the tint color.
+  const shapeCopy = (filterId: string) => (
     <span className={styles.bgOnly} style={{ filter: `url(#${filterId})` }}>
       <span className={styles.bgOnlyInner}>{children}</span>
     </span>
   );
+
+  // Image-mode copy: duplicates children without stripping, then runs the luma filter
+  // that converts image luminance into alpha (dark→opaque) and floods with the tint.
+  const imageCopy = (filterId: string) => (
+    <span className={styles.imageLayer} style={{ filter: `url(#${filterId})` }}>
+      <span className={styles.imageInner}>{children}</span>
+    </span>
+  );
+
+  const layerCopy = (shapeFilter: string, imageFilter: string) =>
+    isImageMode ? imageCopy(imageFilter) : shapeCopy(shapeFilter);
 
   return (
     <motion.span
@@ -109,6 +149,7 @@ export function OffsetPrint({
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
+          {/* Shape-mode filters — flood the entire silhouette with a solid color */}
           <filter id={filterAId} colorInterpolationFilters="sRGB">
             <feFlood floodColor={colorA} result="flood" />
             <feComposite in="flood" in2="SourceAlpha" operator="in" />
@@ -123,6 +164,65 @@ export function OffsetPrint({
               <feComposite in="flood" in2="SourceAlpha" operator="in" />
             </filter>
           )}
+
+          {/* Image-mode filters — convert luminance to alpha, then tint.
+              The matrix below puts luminance into the alpha channel and zeros out RGB;
+              feComponentTransfer then inverts alpha so DARK pixels are OPAQUE (ink),
+              LIGHT pixels fade to transparent. feFlood + feComposite paints that
+              alpha with the target color. */}
+          <filter id={lumaAId} colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values={[
+                '0 0 0 0 0',
+                '0 0 0 0 0',
+                '0 0 0 0 0',
+                '0.299 0.587 0.114 0 0',
+              ].join(' ')}
+              result="luma"
+            />
+            <feComponentTransfer in="luma" result="inverted">
+              <feFuncA type="table" tableValues={invTable(imageContrast)} />
+            </feComponentTransfer>
+            <feFlood floodColor={colorA} result="flood" />
+            <feComposite in="flood" in2="inverted" operator="in" />
+          </filter>
+          <filter id={lumaBId} colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values={[
+                '0 0 0 0 0',
+                '0 0 0 0 0',
+                '0 0 0 0 0',
+                '0.299 0.587 0.114 0 0',
+              ].join(' ')}
+              result="luma"
+            />
+            <feComponentTransfer in="luma" result="inverted">
+              <feFuncA type="table" tableValues={invTable(imageContrast)} />
+            </feComponentTransfer>
+            <feFlood floodColor={colorB} result="flood" />
+            <feComposite in="flood" in2="inverted" operator="in" />
+          </filter>
+          {overlapColor && (
+            <filter id={lumaOverlapId} colorInterpolationFilters="sRGB">
+              <feColorMatrix
+                type="matrix"
+                values={[
+                  '0 0 0 0 0',
+                  '0 0 0 0 0',
+                  '0 0 0 0 0',
+                  '0.299 0.587 0.114 0 0',
+                ].join(' ')}
+                result="luma"
+              />
+              <feComponentTransfer in="luma" result="inverted">
+                <feFuncA type="table" tableValues={invTable(imageContrast)} />
+              </feComponentTransfer>
+              <feFlood floodColor={overlapColor} result="flood" />
+              <feComposite in="flood" in2="inverted" operator="in" />
+            </filter>
+          )}
         </defs>
       </svg>
 
@@ -134,7 +234,7 @@ export function OffsetPrint({
         variants={variantsA}
         style={{ mixBlendMode: blendMode }}
       >
-        {bgCopy(filterAId)}
+        {layerCopy(filterAId, lumaAId)}
       </motion.span>
 
       {/* Layer B */}
@@ -145,20 +245,43 @@ export function OffsetPrint({
         variants={variantsB}
         style={{ mixBlendMode: blendMode }}
       >
-        {bgCopy(filterBId)}
+        {layerCopy(filterBId, lumaBId)}
       </motion.span>
 
-      {/* Overlap layer — silhouette filled with overlapColor, no offset, no breathing. */}
+      {/* Overlap layer */}
       {overlapColor && (
         <span className={styles.layer} aria-hidden="true" inert>
-          {bgCopy(overlapId)}
+          {layerCopy(overlapId, lumaOverlapId)}
         </span>
       )}
 
-      {/* Real, interactive child */}
-      <span className={styles.sizer}>{children}</span>
+      {/* Real, interactive child.
+          In image mode it stays in the DOM for layout + a11y but is invisible —
+          the visible rendering is entirely the two tinted luma separations. */}
+      <span
+        className={styles.sizer}
+        style={isImageMode ? { visibility: 'hidden' } : undefined}
+      >
+        {children}
+      </span>
     </motion.span>
   );
+}
+
+// Inverts a 0-1 ramp and applies a contrast curve.
+// Returns a space-separated tableValues string for feFuncA.
+function invTable(contrast: number): string {
+  const n = 9;
+  const k = Math.max(0.1, contrast);
+  const values: number[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);          // 0 → 1 across luminance
+    const inv = 1 - t;               // dark → opaque
+    // Symmetric contrast: push towards the ends
+    const shaped = Math.pow(inv, 1 / k);
+    values.push(Math.max(0, Math.min(1, shaped)));
+  }
+  return values.map((v) => v.toFixed(3)).join(' ');
 }
 
 function buildWobble(seed: number, mag: number): number[][] {
