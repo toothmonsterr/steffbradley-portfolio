@@ -1,0 +1,9 @@
+.container {
+  position: relative;
+  display: block;
+}
+
+.layer {
+  position: relative;
+  will-change: transform;
+}

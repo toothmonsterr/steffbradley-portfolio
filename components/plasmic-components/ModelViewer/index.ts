@@ -7,8 +7,8 @@ export const ModelViewerMeta = {
   displayName: '3D Model Viewer',
   props: {
     modelUrl: {
-      type: 'string',
-      description: 'Path to a .glb file (e.g. /models/tooth.glb)',
+      type: 'imageUrl',
+      description: 'URL or uploaded asset for a .glb / .gltf model. Use Plasmic’s asset picker or paste an absolute URL.',
     },
     fallbackImageUrl: {
       type: 'imageUrl',

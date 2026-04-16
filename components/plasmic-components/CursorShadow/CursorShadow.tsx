@@ -86,6 +86,8 @@ export interface CursorShadowProps {
   maxOpacity?: number;
   /** Feather width in px — dots shrink to nothing within this distance of the arrow edge */
   feather?: number;
+  /** Per-frame lerp factor toward the real cursor (0–1). Higher = snappier, less trail. */
+  smoothing?: number;
   /** CSS mix-blend-mode applied to the canvas */
   blendMode?: 'multiply' | 'darken' | 'overlay' | 'screen' | 'normal';
   /** z-index for the fixed overlay */
@@ -99,6 +101,7 @@ export function CursorShadow({
   cursorSize  = 56,
   feather     = 14,
   maxOpacity  = 0.75,
+  smoothing   = 0.3,
   blendMode   = 'multiply',
   zIndex      = 9999,
 }: CursorShadowProps) {
@@ -130,8 +133,8 @@ export function CursorShadow({
       rafRef.current = requestAnimationFrame(draw);
 
       // Lerp cursor toward mouse target
-      cur.current.x += (target.current.x - cur.current.x) * 0.13;
-      cur.current.y += (target.current.y - cur.current.y) * 0.13;
+      cur.current.x += (target.current.x - cur.current.x) * smoothing;
+      cur.current.y += (target.current.y - cur.current.y) * smoothing;
 
       const { width: w, height: h } = canvas;
       ctx.clearRect(0, 0, w, h);
@@ -212,7 +215,7 @@ export function CursorShadow({
       window.removeEventListener('mousemove', onMove);
       document.documentElement.removeEventListener('mouseleave', onLeave);
     };
-  }, [dotColor, step, shape, cursorSize, feather]);
+  }, [dotColor, step, shape, cursorSize, feather, smoothing]);
 
   return (
     <canvas

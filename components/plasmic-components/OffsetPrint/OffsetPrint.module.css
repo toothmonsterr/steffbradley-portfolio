@@ -1,0 +1,55 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* The real child — sits on top, keeps original interactivity and text color. */
+.sizer {
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+
+/* Layers A/B/overlap — absolutely positioned behind the real child. */
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  display: block;
+  will-change: transform;
+}
+
+/* bgOnly = the outer tintable box. The inner strips foreground content via color: transparent,
+   leaving only the child's background-color / borders / box shadows visible.
+   The SVG filter then floods the entire remaining alpha with the target color. */
+.bgOnly {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bgOnlyInner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Strip the child's foreground color for text; background and border-color stay */
+  color: transparent !important;
+  /* Also hide any SVG fills that would paint on top */
+  fill: transparent !important;
+  stroke: transparent !important;
+}
+
+/* Force descendants' text color to transparent (CSS custom-property `currentColor` text etc.) */
+.bgOnlyInner * {
+  color: transparent !important;
+}

@@ -200,16 +200,3 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
-/* ─── Risograph noise utility ─────────────────────────────────── */
-/* Apply .risograph to any position:relative element to add a
-   thresholded B&W noise overlay (SVG filter defined in _document.tsx) */
-.risograph::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  filter: url(#noise-threshold);
-  opacity: var(--noise-opacity, 0.12);
-  mix-blend-mode: multiply;
-  border-radius: inherit;
-}

@@ -39,6 +39,11 @@ export const CursorShadowMeta = {
       description: 'Max canvas opacity when active (0–1)',
       defaultValueHint: 0.75,
     },
+    smoothing: {
+      type: 'number',
+      description: 'Per-frame lerp toward the cursor (0–1). Higher = snappier, less trail.',
+      defaultValueHint: 0.3,
+    },
     blendMode: {
       type: 'choice',
       options: ['multiply', 'darken', 'overlay', 'screen', 'normal'],

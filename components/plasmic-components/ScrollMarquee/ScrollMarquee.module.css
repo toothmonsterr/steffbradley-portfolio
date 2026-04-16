@@ -1,12 +1,10 @@
 .outer {
   width: 100%;
   overflow: hidden;
-  /* Prevent text selection while scrolling through the marquee */
   user-select: none;
 }
 
 .outer:hover .track {
-  /* pauseOnHover is handled in JS, but this gives a CSS fallback hook */
   animation-play-state: paused;
 }
 
@@ -20,5 +18,15 @@
 .copy {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+}
+
+/* Size any direct media children to the marquee height */
+.copy > img,
+.copy > svg,
+.copy > video {
+  height: 100%;
+  width: auto;
+  display: block;
   flex-shrink: 0;
 }

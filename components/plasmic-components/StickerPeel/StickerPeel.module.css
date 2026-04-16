@@ -1,0 +1,164 @@
+.wrapper {
+  display: inline-block;
+  transform: rotate(var(--sticker-rotation));
+  filter: drop-shadow(0 4px 10px var(--shadow-color));
+  transition: filter 280ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  outline: none;
+}
+
+.wrapper:hover,
+.wrapper:focus-visible {
+  filter: drop-shadow(0 10px 22px var(--shadow-color));
+  transform: rotate(calc(var(--sticker-rotation) * 0.5));
+}
+
+.sticker {
+  position: relative;
+  display: block;
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.content {
+  display: block;
+  transition: clip-path 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.peel {
+  position: absolute;
+  width: var(--peel-size);
+  aspect-ratio: 1 / 1;
+  background-color: var(--peel-bg);
+  transform-origin: center;
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+              width 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Soft gradient from paper-color to slight shadow at the peeled edge */
+  background-image: linear-gradient(
+    var(--peel-grad-angle, 135deg),
+    var(--peel-bg) 60%,
+    rgba(0, 0, 0, 0.18)
+  );
+  opacity: 0;
+}
+
+/* Soft inner shadow on the revealed side of the content */
+.wrapper:hover .peel,
+.wrapper:focus-visible .peel {
+  opacity: 1;
+}
+
+/* ── Corner variants ───────────────────────────────────────────── */
+
+.corner-top-right .content {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 0%) 0,
+    100% 0%,
+    100% 100%,
+    0 100%
+  );
+}
+.corner-top-right:hover .content,
+.corner-top-right:focus-visible .content {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--peel-size)) 0,
+    100% var(--peel-size),
+    100% 100%,
+    0 100%
+  );
+}
+.corner-top-right .peel {
+  top: 0;
+  right: 0;
+  --peel-grad-angle: 225deg;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  transform: translate(-50%, 50%) rotate(180deg) scale(0);
+}
+.corner-top-right:hover .peel,
+.corner-top-right:focus-visible .peel {
+  transform: translate(-8%, 8%) rotate(180deg) scale(1);
+}
+
+.corner-top-left .content {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.corner-top-left:hover .content,
+.corner-top-left:focus-visible .content {
+  clip-path: polygon(
+    var(--peel-size) 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 var(--peel-size)
+  );
+}
+.corner-top-left .peel {
+  top: 0;
+  left: 0;
+  --peel-grad-angle: 315deg;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  transform: translate(50%, 50%) rotate(180deg) scale(0);
+}
+.corner-top-left:hover .peel,
+.corner-top-left:focus-visible .peel {
+  transform: translate(8%, 8%) rotate(180deg) scale(1);
+}
+
+.corner-bottom-right .content {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.corner-bottom-right:hover .content,
+.corner-bottom-right:focus-visible .content {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--peel-size)),
+    calc(100% - var(--peel-size)) 100%,
+    0 100%
+  );
+}
+.corner-bottom-right .peel {
+  bottom: 0;
+  right: 0;
+  --peel-grad-angle: 135deg;
+  clip-path: polygon(100% 100%, 100% 0, 0 100%);
+  transform: translate(-8%, -50%) rotate(180deg) scale(0);
+}
+.corner-bottom-right:hover .peel,
+.corner-bottom-right:focus-visible .peel {
+  transform: translate(-8%, -8%) rotate(180deg) scale(1);
+}
+
+.corner-bottom-left .content {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.corner-bottom-left:hover .content,
+.corner-bottom-left:focus-visible .content {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    var(--peel-size) 100%,
+    0 calc(100% - var(--peel-size))
+  );
+}
+.corner-bottom-left .peel {
+  bottom: 0;
+  left: 0;
+  --peel-grad-angle: 45deg;
+  clip-path: polygon(0 100%, 0 0, 100% 100%);
+  transform: translate(50%, -50%) rotate(180deg) scale(0);
+}
+.corner-bottom-left:hover .peel,
+.corner-bottom-left:focus-visible .peel {
+  transform: translate(8%, -8%) rotate(180deg) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper,
+  .sticker,
+  .content,
+  .peel {
+    transition: none;
+  }
+}

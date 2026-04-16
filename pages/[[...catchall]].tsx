@@ -65,7 +65,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return { notFound: true };
   }
 
-  // Pre-fetch data for any data-fetching components (e.g. PortfolioGrid)
+  // Pre-fetch data for any data-fetching components.
   const queryCache = await extractPlasmicQueryData(
     <PlasmicRootProvider loader={PLASMIC} prefetchedData={plasmicData}>
       <PlasmicComponent component={plasmicData.entryCompMetas[0].displayName} />

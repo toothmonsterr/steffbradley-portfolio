@@ -63,31 +63,31 @@ Object.entries(tokens.opacity).forEach(([name, value]) => {
 // ---------------------------------------------------------------------------
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SecondaryButton, SecondaryButtonMeta } from '@/components/plasmic-components/SecondaryButton';
-import { ContactField, ContactFieldMeta }       from '@/components/plasmic-components/ContactField';
-import { IconListItem, IconListItemMeta }       from '@/components/plasmic-components/IconListItem';
-import { Footer, FooterMeta }                   from '@/components/plasmic-components/Footer';
-import { StickyNav, StickyNavMeta }             from '@/components/plasmic-components/StickyNav';
 import { FloatingElement, FloatingElementMeta } from '@/components/plasmic-components/FloatingElement';
-import { PrimaryButton, PrimaryButtonMeta }     from '@/components/plasmic-components/PrimaryButton';
 import { ScrollMarquee, ScrollMarqueeMeta }     from '@/components/plasmic-components/ScrollMarquee';
-import { PortfolioGrid, PortfolioGridMeta }     from '@/components/plasmic-components/PortfolioGrid';
 import { ModelViewer, ModelViewerMeta }         from '@/components/plasmic-components/ModelViewer';
 import { DotOverlay, DotOverlayMeta }           from '@/components/plasmic-components/DotOverlay';
 import { CursorDots, CursorDotsMeta }           from '@/components/plasmic-components/CursorDots';
 import { CursorShadow, CursorShadowMeta }       from '@/components/plasmic-components/CursorShadow';
+import { NoiseOverlay, NoiseOverlayMeta }       from '@/components/plasmic-components/NoiseOverlay';
+import { OffsetPrint, OffsetPrintMeta }         from '@/components/plasmic-components/OffsetPrint';
+import { TiltCard, TiltCardMeta }               from '@/components/plasmic-components/TiltCard';
+import { CursorParallax, CursorParallaxMeta }   from '@/components/plasmic-components/CursorParallax';
+import { GradientBlob, GradientBlobMeta }       from '@/components/plasmic-components/GradientBlob';
+import { StickerPeel, StickerPeelMeta }         from '@/components/plasmic-components/StickerPeel';
+import { ScrollParallax, ScrollParallaxMeta }   from '@/components/plasmic-components/ScrollParallax';
 
-PLASMIC.registerComponent(SecondaryButton, SecondaryButtonMeta as any);
-PLASMIC.registerComponent(ContactField,    ContactFieldMeta    as any);
-PLASMIC.registerComponent(IconListItem,    IconListItemMeta    as any);
-PLASMIC.registerComponent(Footer,          FooterMeta          as any);
-PLASMIC.registerComponent(StickyNav,       StickyNavMeta       as any);
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
-PLASMIC.registerComponent(PrimaryButton,   PrimaryButtonMeta   as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
-PLASMIC.registerComponent(PortfolioGrid,   PortfolioGridMeta   as any);
 PLASMIC.registerComponent(ModelViewer,     ModelViewerMeta     as any);
 PLASMIC.registerComponent(DotOverlay,      DotOverlayMeta      as any);
 PLASMIC.registerComponent(CursorDots,      CursorDotsMeta      as any);
 PLASMIC.registerComponent(CursorShadow,    CursorShadowMeta    as any);
+PLASMIC.registerComponent(NoiseOverlay,    NoiseOverlayMeta    as any);
+PLASMIC.registerComponent(OffsetPrint,     OffsetPrintMeta     as any);
+PLASMIC.registerComponent(TiltCard,        TiltCardMeta        as any);
+PLASMIC.registerComponent(CursorParallax,  CursorParallaxMeta  as any);
+PLASMIC.registerComponent(GradientBlob,    GradientBlobMeta    as any);
+PLASMIC.registerComponent(StickerPeel,     StickerPeelMeta     as any);
+PLASMIC.registerComponent(ScrollParallax,  ScrollParallaxMeta  as any);
 /* eslint-enable @typescript-eslint/no-explicit-any */

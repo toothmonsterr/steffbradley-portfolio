@@ -1,0 +1,11 @@
+.container {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.blobLayer {
+  position: absolute;
+  inset: 0;
+  will-change: filter;
+}

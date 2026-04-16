@@ -5,29 +5,31 @@ import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import styles from './ScrollMarquee.module.css';
 
 export interface ScrollMarqueeProps {
+  children?: React.ReactNode;
   speed?: number;
   direction?: 'left' | 'right';
   pauseOnHover?: boolean;
   gap?: number;
+  height?: string;
   className?: string;
 }
 
 export function ScrollMarquee({
+  children,
   speed = 80,
   direction = 'left',
   pauseOnHover = true,
-  gap = 48,
+  gap = 0,
+  height = '126px',
   className,
 }: ScrollMarqueeProps) {
   const velocityFactor = useScrollVelocity({ maxFactor: 4 });
   const prefersReduced = usePrefersReducedMotion();
   const isPaused = useRef(false);
 
-  // Base x position as a MotionValue — driven by useAnimationFrame
   const baseX = useMotionValue(0);
   const copyRef = useRef<HTMLDivElement>(null);
 
-  // Direction multiplier: left = negative x drift, right = positive
   const dirMul = direction === 'left' ? -1 : 1;
 
   useAnimationFrame((_, delta) => {
@@ -41,8 +43,6 @@ export function ScrollMarquee({
 
     let newX = baseX.get() + move;
 
-    // Teleport: when the leading copy has scrolled fully offscreen,
-    // wrap back to keep the loop seamless
     if (direction === 'left' && newX <= -copyWidth) {
       newX += copyWidth;
     } else if (direction === 'right' && newX >= 0) {
@@ -52,7 +52,6 @@ export function ScrollMarquee({
     baseX.set(newX);
   });
 
-  // Apply the x transform to the track
   const x = useTransform(baseX, (v) => `${v}px`);
 
   const handleMouseEnter = () => { if (pauseOnHover) isPaused.current = true; };
@@ -61,22 +60,19 @@ export function ScrollMarquee({
   return (
     <div
       className={[styles.outer, className ?? ''].filter(Boolean).join(' ')}
+      style={{ height }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <motion.div
         className={styles.track}
-        style={{ x, gap: `${gap}px` }}
+        style={{ x, gap: `${gap}px`, height }}
       >
-        {/* First copy — measured for teleport width */}
-        <div ref={copyRef} className={styles.copy}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/marquee.svg" alt="" width={2008} height={126} draggable={false} style={{ display: 'block' }} />
+        <div ref={copyRef} className={styles.copy} style={{ height, gap: `${gap}px` }}>
+          {children}
         </div>
-        {/* Second copy — always follows the first */}
-        <div className={styles.copy} aria-hidden="true">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/marquee.svg" alt="" width={2008} height={126} draggable={false} style={{ display: 'block' }} />
+        <div className={styles.copy} aria-hidden="true" style={{ height, gap: `${gap}px` }}>
+          {children}
         </div>
       </motion.div>
     </div>
