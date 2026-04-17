@@ -2,10 +2,8 @@ import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { tanRosebud, urbanist, syne } from '@/lib/fonts';
 
-// NOTE: PlasmicRootProvider is intentionally NOT here.
-// It belongs only on pages that use Plasmic data (i.e. [[...catchall]].tsx with prefetchedData).
-// Putting PlasmicRootProvider globally in _app.tsx causes the plasmic-host page to subscribe
-// to Studio changes as a client, which conflicts with it acting as the canvas host.
+// Codegen pages provide their own Plasmic context (PlasmicQueryDataProvider) per-page,
+// so no global PlasmicRootProvider is needed here.
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
