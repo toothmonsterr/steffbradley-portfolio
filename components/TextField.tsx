@@ -5,7 +5,6 @@ import {
   PlasmicTextField,
   DefaultTextFieldProps
 } from "./plasmic/toothmonster/PlasmicTextField";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -22,7 +21,7 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface TextFieldProps extends DefaultTextFieldProps {}
 
-function TextField_(props: TextFieldProps, ref: HTMLElementRefOf<"div">) {
+function TextField(props: TextFieldProps) {
   // Use PlasmicTextField to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -38,8 +37,7 @@ function TextField_(props: TextFieldProps, ref: HTMLElementRefOf<"div">) {
   // By default, we are just piping all TextFieldProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicTextField root={{ ref }} {...props} />;
+  return <PlasmicTextField {...props} />;
 }
 
-const TextField = React.forwardRef(TextField_);
 export default TextField;

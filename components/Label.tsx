@@ -5,7 +5,6 @@ import {
   PlasmicLabel,
   DefaultLabelProps
 } from "./plasmic/toothmonster/PlasmicLabel";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -22,7 +21,7 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface LabelProps extends DefaultLabelProps {}
 
-function Label_(props: LabelProps, ref: HTMLElementRefOf<"div">) {
+function Label(props: LabelProps) {
   // Use PlasmicLabel to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -38,8 +37,7 @@ function Label_(props: LabelProps, ref: HTMLElementRefOf<"div">) {
   // By default, we are just piping all LabelProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicLabel root={{ ref }} {...props} />;
+  return <PlasmicLabel {...props} />;
 }
 
-const Label = React.forwardRef(Label_);
 export default Label;

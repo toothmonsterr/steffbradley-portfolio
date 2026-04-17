@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&family=Inter%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --token-SkhDeVUszhHS: #ede9e3;
@@ -203,12 +203,6 @@
   --plasmic-token-margin-xl: var(--token-OBRata9djSd9);
   --token-aRWQsRb09ChY: var(--token-QaKSUqLet13R);
   --plasmic-token-margin-xxl: var(--token-aRWQsRb09ChY);
-  --token--vgiIodcPVc8: 110%;
-  --plasmic-token-lead-snug: var(--token--vgiIodcPVc8);
-  --token-Q-Hl7m4ki9K0: 130%;
-  --plasmic-token-lead-fit: var(--token-Q-Hl7m4ki9K0);
-  --token-Mu1Wf1qEcmxj: 150%;
-  --plasmic-token-lead-loose: var(--token-Mu1Wf1qEcmxj);
   --token-XV0X8meVfffB: var(--token-RiA1Jt5Qyqhh);
   --plasmic-token-solids-color-solid-brick: var(--token-XV0X8meVfffB);
   --token-QQ6ClAm082fZ: var(--token-CF2zaqM0RfUb);
@@ -234,23 +228,27 @@
   --token-c2hVMrY7CCPE: var(--token-ccuw6m6O_EJW);
   --plasmic-token-solids-color-solid-midnight: var(--token-c2hVMrY7CCPE);
   --token-6U10-UCl9glp: var(--token-SkhDeVUszhHS);
-  --plasmic-token-solids-color-solid-white: var(--token-6U10-UCl9glp);
+  --plasmic-token-solids-neutrals-color-solid-white: var(--token-6U10-UCl9glp);
   --token-xfXrF6IuLHLl: var(--token-1zbOA6d02XHZ);
-  --plasmic-token-solids-color-solid-black: var(--token-xfXrF6IuLHLl);
-  --token-0hH50bQFBEqI: var(--token-NhpIzmQQtW_l);
-  --plasmic-token-solids-color-solid-grey: var(--token-0hH50bQFBEqI);
+  --plasmic-token-solids-neutrals-color-solid-black: var(--token-xfXrF6IuLHLl);
   --token-B0qKLpHjT84g: var(--token-SkhDeVUszhHS);
-  --plasmic-token-text-color-text-light: var(--token-B0qKLpHjT84g);
+  --plasmic-token-text-color-text-white: var(--token-B0qKLpHjT84g);
   --token-zT50wK_s6GQj: var(--token-1zbOA6d02XHZ);
-  --plasmic-token-text-color-text-dark: var(--token-zT50wK_s6GQj);
+  --plasmic-token-text-color-text-black: var(--token-zT50wK_s6GQj);
   --token-MLzkLWMwWZkA: var(--token-rJwCDlq7jBoY);
   --plasmic-token-text-color-text-link: var(--token-MLzkLWMwWZkA);
   --token-g9z2pwocfSZz: var(--token-snNuuVAoFS-q);
-  --plasmic-token-text-color-text-neutral-25: var(--token-g9z2pwocfSZz);
+  --plasmic-token-text-neutrals-color-text-neutral-25: var(
+    --token-g9z2pwocfSZz
+  );
   --token-K3ZWhgfxI5lx: var(--token-NhpIzmQQtW_l);
-  --plasmic-token-text-color-text-neutral-50: var(--token-K3ZWhgfxI5lx);
+  --plasmic-token-text-neutrals-color-text-neutral-50: var(
+    --token-K3ZWhgfxI5lx
+  );
   --token-Qs5LrhX1LFL7: var(--token-AXPvbXqvdUnY);
-  --plasmic-token-text-color-text-neutral-75: var(--token-Qs5LrhX1LFL7);
+  --plasmic-token-text-neutrals-color-text-neutral-75: var(
+    --token-Qs5LrhX1LFL7
+  );
   --token-V1mEBOP99-7Q: var(--token-1zbOA6d02XHZ);
   --plasmic-token-strokes-color-stroke-dark: var(--token-V1mEBOP99-7Q);
   --token-MkNK8HnaRKfZ: var(--token-SkhDeVUszhHS);
@@ -287,6 +285,180 @@
   --plasmic-token-text-color-text-midnight: var(--token-tvApPEHD7oPk);
   --token-ovM-CLBsmkj2: var(--token-CF2zaqM0RfUb);
   --plasmic-token-text-color-text-cream: var(--token-ovM-CLBsmkj2);
+  --token-PK6gG5x9dq9c: var(--token-c37mPw2afllu);
+  --plasmic-token-states-error-color-solid-error-0: var(--token-PK6gG5x9dq9c);
+  --token-odlYGdyvcshj: var(--token-6bAyar-pI6Et);
+  --plasmic-token-states-error-color-solid-error-100: var(--token-odlYGdyvcshj);
+  --token-2ODnTNYKqGl8: var(--token-TnZtiLaVFdIF);
+  --plasmic-token-states-error-color-solid-error: var(--token-2ODnTNYKqGl8);
+  --token-fvWf6xfcOD5A: var(--token-TnZtiLaVFdIF);
+  --plasmic-token-states-error-color-text-error: var(--token-fvWf6xfcOD5A);
+  --token-WHUhtt3QNph3: var(--token-TnZtiLaVFdIF);
+  --plasmic-token-states-error-color-stroke-error: var(--token-WHUhtt3QNph3);
+  --token-78LIgeiVQDna: var(--token-Bwru3ole_LZu);
+  --plasmic-token-states-error-color-solid-error-25: var(--token-78LIgeiVQDna);
+  --token-s5QlUsUKIGdK: var(--token-gDIjbhHUcOrU);
+  --plasmic-token-states-error-color-solid-error-75: var(--token-s5QlUsUKIGdK);
+  --token-sYHyNu91eB1F: var(--token-TWzqvyOdLZny);
+  --plasmic-token-states-warning-color-solid-warning: var(--token-sYHyNu91eB1F);
+  --token-16MqdvsvqA3r: var(--token-hZQevylvuUzr);
+  --plasmic-token-states-warning-color-solid-warning-25: var(
+    --token-16MqdvsvqA3r
+  );
+  --token-wPzyj51eA6py: var(--token--waPlGRGC-L5);
+  --plasmic-token-states-warning-color-solid-warning-0: var(
+    --token-wPzyj51eA6py
+  );
+  --token-5BIJFNFHmf7g: var(--token-GCsky8SolQU0);
+  --plasmic-token-states-warning-color-solid-warning-75: var(
+    --token-5BIJFNFHmf7g
+  );
+  --token-HoBrmvcgq4Uk: var(--token-TWzqvyOdLZny);
+  --plasmic-token-states-warning-color-text-warning: var(--token-HoBrmvcgq4Uk);
+  --token-LHpUXyF_jkWD: var(--token-TWzqvyOdLZny);
+  --plasmic-token-states-warning-color-stroke-warning: var(
+    --token-LHpUXyF_jkWD
+  );
+  --token-00ZC59bwBMiJ: var(--token-Ig83VfuypkaX);
+  --plasmic-token-states-success-color-solid-success: var(--token-00ZC59bwBMiJ);
+  --token-DaYyFU8bZ15H: var(--token-2yGZklNffZBF);
+  --plasmic-token-states-success-color-solid-success-0: var(
+    --token-DaYyFU8bZ15H
+  );
+  --token-HBKFTaj1oQqT: var(--token-IVk0fmIDPhPK);
+  --plasmic-token-states-success-color-solid-success-25: var(
+    --token-HBKFTaj1oQqT
+  );
+  --token-Wv_wfw4SvANU: var(--token-2jg0w9Sc0XIV);
+  --plasmic-token-states-success-color-solid-success-75: var(
+    --token-Wv_wfw4SvANU
+  );
+  --token-p_43eDFhUAuL: var(--token-stzHnPqfYExy);
+  --plasmic-token-states-success-color-solid-success-100: var(
+    --token-p_43eDFhUAuL
+  );
+  --token-DSGJ49BGfWX1: var(--token-E5fWGjsguOL8);
+  --plasmic-token-states-warning-color-solid-warning-100: var(
+    --token-DSGJ49BGfWX1
+  );
+  --token-To3aYo43ayBk: var(--token-Ig83VfuypkaX);
+  --plasmic-token-states-success-color-text-success: var(--token-To3aYo43ayBk);
+  --token-ujy8GnR0sXV_: var(--token-Ig83VfuypkaX);
+  --plasmic-token-states-success-color-stroke-success: var(
+    --token-ujy8GnR0sXV_
+  );
+  --token-hRuVqbYqll8H: var(--token-snNuuVAoFS-q);
+  --plasmic-token-solids-neutrals-color-solid-neutral-25: var(
+    --token-hRuVqbYqll8H
+  );
+  --token-OVGehJbU725h: var(--token-NhpIzmQQtW_l);
+  --plasmic-token-solids-neutrals-color-solid-neutral-50: var(
+    --token-OVGehJbU725h
+  );
+  --token-6-ID9BYwd2s7: var(--token-AXPvbXqvdUnY);
+  --plasmic-token-solids-neutrals-color-solid-neutral-75: var(
+    --token-6-ID9BYwd2s7
+  );
+  --token-wUqDe6DlD3ck: var(--token-N30F_EpnjnaG);
+  --plasmic-token-font-size-body: var(--token-wUqDe6DlD3ck);
+  --token-g6xRGSOpmOY4: var(--token-ItN_F7C7iFqC);
+  --plasmic-token-font-size-body-large: var(--token-g6xRGSOpmOY4);
+  --token-3KmqYMiXkSna: var(--token-e8LOGgF0xq_0);
+  --plasmic-token-font-size-body-small: var(--token-3KmqYMiXkSna);
+  --token-Lg4eMraSUqxo: var(--token-FA1vUWAz-lAE);
+  --plasmic-token-font-size-heading-h-1: var(--token-Lg4eMraSUqxo);
+  --token-qy2t2cB1Z966: var(--token-Yw4lpO-MWgIb);
+  --plasmic-token-font-size-heading-h-2: var(--token-qy2t2cB1Z966);
+  --token-vuFAuqFlonPF: var(--token-qJiV-vERWLDE);
+  --plasmic-token-font-size-heading-h-3: var(--token-vuFAuqFlonPF);
+  --token-ddpjhyBt78PO: var(--token-2z6llxWJ_veN);
+  --plasmic-token-font-size-heading-h-4: var(--token-ddpjhyBt78PO);
+  --token-Zq1C79gm8EFw: var(--token--6H3RfH9wrHV);
+  --plasmic-token-font-size-heading-h-5: var(--token-Zq1C79gm8EFw);
+  --token-RAgNLQ3wQLp1: var(--token-kZJmXNE67HnD);
+  --plasmic-token-font-size-display-d-1: var(--token-RAgNLQ3wQLp1);
+  --token-7_hg3AFldtEz: var(--token-EXYMZNHXybDf);
+  --plasmic-token-font-size-display-d-2: var(--token-7_hg3AFldtEz);
+  --token-WqzGZKhetfzw: var(--token-iKGvoKpY1shT);
+  --plasmic-token-font-size-display-d-3: var(--token-WqzGZKhetfzw);
+  --token-DG4cvzTgESyf: 1;
+  --plasmic-token-1: var(--token-DG4cvzTgESyf);
+  --token-eXpjASkirdNF: 2;
+  --plasmic-token-2: var(--token-eXpjASkirdNF);
+  --token-9DnUsAQ7wUsc: 1.1;
+  --plasmic-token-1-1: var(--token-9DnUsAQ7wUsc);
+  --token-_Dc_Bf0Bg1XL: 1.15;
+  --plasmic-token-1-15: var(--token-_Dc_Bf0Bg1XL);
+  --token-CDur6-QwjfDT: 1.2;
+  --plasmic-token-1-2: var(--token-CDur6-QwjfDT);
+  --token-pNRFFZCtGPdA: 1.25;
+  --plasmic-token-1-25: var(--token-pNRFFZCtGPdA);
+  --token-ErQEQyNOX46x: 1.3;
+  --plasmic-token-1-3: var(--token-ErQEQyNOX46x);
+  --token-uY_Y8o3v2j4a: 1.4;
+  --plasmic-token-1-4: var(--token-uY_Y8o3v2j4a);
+  --token-W7qzsDgaLz-U: 1.5;
+  --plasmic-token-1-5: var(--token-W7qzsDgaLz-U);
+  --token-1NwcgglmLR0x: 1.6;
+  --plasmic-token-1-6: var(--token-1NwcgglmLR0x);
+  --token-K8lIZWH50jws: 1.7;
+  --plasmic-token-1-7: var(--token-K8lIZWH50jws);
+  --token-pcZJwwGUjg1X: 1.8;
+  --plasmic-token-1-8: var(--token-pcZJwwGUjg1X);
+  --token-DDoFl77miZL2: var(--token-DG4cvzTgESyf);
+  --plasmic-token-line-height-display-d-1: var(--token-DDoFl77miZL2);
+  --token--O7I77D1TvzD: var(--token-9DnUsAQ7wUsc);
+  --plasmic-token-line-height-display-d-2: var(--token--O7I77D1TvzD);
+  --token-DFZn9Do9IfDh: var(--token-9DnUsAQ7wUsc);
+  --plasmic-token-line-height-display-d-3: var(--token-DFZn9Do9IfDh);
+  --token-KUcfP9iX1cXP: var(--token-9DnUsAQ7wUsc);
+  --plasmic-token-line-height-heading-h-1: var(--token-KUcfP9iX1cXP);
+  --token-NDVsl8wxIAFu: var(--token-_Dc_Bf0Bg1XL);
+  --plasmic-token-line-height-heading-h-2: var(--token-NDVsl8wxIAFu);
+  --token-V-GxQ983VzzK: var(--token-CDur6-QwjfDT);
+  --plasmic-token-line-height-heading-h-3: var(--token-V-GxQ983VzzK);
+  --token-Ei1RtMoY6PrK: var(--token-pNRFFZCtGPdA);
+  --plasmic-token-line-height-heading-h-4: var(--token-Ei1RtMoY6PrK);
+  --token-M6iwFMf_XZfr: var(--token-ErQEQyNOX46x);
+  --plasmic-token-line-height-heading-h-5: var(--token-M6iwFMf_XZfr);
+  --token-mHxZDRfRrs22: var(--token-1NwcgglmLR0x);
+  --plasmic-token-line-height-body: var(--token-mHxZDRfRrs22);
+  --token-0BpAuOlR_ryf: var(--token-1NwcgglmLR0x);
+  --plasmic-token-line-height-body-large: var(--token-0BpAuOlR_ryf);
+  --token-HHYdF0z0DA2q: var(--token-W7qzsDgaLz-U);
+  --plasmic-token-line-height-body-small: var(--token-HHYdF0z0DA2q);
+  --token-7usfeyN57SGU: var(--token-sI0doLVCLIee);
+  --plasmic-token-radius-xs: var(--token-7usfeyN57SGU);
+  --token-s4DGlSnsJpWF: var(--token-EHxHXcfYPuLF);
+  --plasmic-token-radius-s: var(--token-s4DGlSnsJpWF);
+  --token-f5tAU2MiM7kI: var(--token-1UJSXjsZSpe7);
+  --plasmic-token-radius-m: var(--token-f5tAU2MiM7kI);
+  --token-yBp3zIJjjXFk: var(--token-jduBXnCvbMbO);
+  --plasmic-token-radius-l: var(--token-yBp3zIJjjXFk);
+  --token-qzZqry1n7Obf: var(--token-AhdODhIYkVVt);
+  --plasmic-token-radius-xl: var(--token-qzZqry1n7Obf);
+  --token-gdGApjxYzGgA: 999999px;
+  --plasmic-token-radius-full: var(--token-gdGApjxYzGgA);
+  --token-nfPIC50ov7vV: #16a34a;
+  --plasmic-token-success-success: var(--token-nfPIC50ov7vV);
+  --token-FGMWB3aMxT6X: #facc15;
+  --plasmic-token-warning-warning: var(--token-FGMWB3aMxT6X);
+  --token-9Y80DAhUfJ29: #dcfce7;
+  --plasmic-token-success-success-soft: var(--token-9Y80DAhUfJ29);
+  --token-Y_1wgX-aJbFG: #fef9c3;
+  --plasmic-token-warning-warning-soft: var(--token-Y_1wgX-aJbFG);
+  --token-ZB01NP9XEMC5: #86efac;
+  --plasmic-token-success-success-border: var(--token-ZB01NP9XEMC5);
+  --token-IHehvpDWq8un: #fde047;
+  --plasmic-token-warning-warning-border: var(--token-IHehvpDWq8un);
+  --token-YvuBBVpez404: #422006;
+  --plasmic-token-warning-warning-foreground: var(--token-YvuBBVpez404);
+  --token-ChiLChn_Wqw6: #f0fdf4;
+  --plasmic-token-success-success-foreground: var(--token-ChiLChn_Wqw6);
+  --token-7crWCh4Jk9Bk: #14532d;
+  --plasmic-token-success-success-soft-foreground: var(--token-7crWCh4Jk9Bk);
+  --token-hhc56eKcGP0E: #713f12;
+  --plasmic-token-warning-warning-soft-foreground: var(--token-hhc56eKcGP0E);
 }
 
 .plasmic_tokens {
@@ -465,7 +637,9 @@
     --mixin-_k40B2zHuSrC_white-space
   );
   --mixin-BSL-qmUqn1af_white-space: pre-wrap;
-  --plasmic-mixin-solid-grey_white-space: var(--mixin-BSL-qmUqn1af_white-space);
+  --plasmic-mixin-solid-neutral-50_white-space: var(
+    --mixin-BSL-qmUqn1af_white-space
+  );
   --mixin-iBet8HYd74pr_white-space: pre-wrap;
   --plasmic-mixin-solid-midnight_white-space: var(
     --mixin-iBet8HYd74pr_white-space
@@ -475,8 +649,140 @@
     --mixin-aVlaiF4vwJ69_white-space
   );
   --mixin-KLLydeuOLHMM_white-space: pre-wrap;
-  --plasmic-mixin-unnamed-style-preset_white-space: var(
+  --plasmic-mixin-solid-neutral-25_white-space: var(
     --mixin-KLLydeuOLHMM_white-space
+  );
+  --mixin-eyYqNckUfMUh_white-space: pre-wrap;
+  --plasmic-mixin-solid-neutral-75_white-space: var(
+    --mixin-eyYqNckUfMUh_white-space
+  );
+  --mixin-YSDty_CbIknj_white-space: pre-wrap;
+  --plasmic-mixin-text-black_white-space: var(--mixin-YSDty_CbIknj_white-space);
+  --mixin-rx6BSYOkRaxp_white-space: pre-wrap;
+  --plasmic-mixin-text-white_white-space: var(--mixin-rx6BSYOkRaxp_white-space);
+  --mixin-jOj1r9i_DVUE_white-space: pre-wrap;
+  --plasmic-mixin-text-link_white-space: var(--mixin-jOj1r9i_DVUE_white-space);
+  --mixin-hiUjvqiAWmJl_white-space: pre-wrap;
+  --plasmic-mixin-text-green_white-space: var(--mixin-hiUjvqiAWmJl_white-space);
+  --mixin-SAnbkssEs2Tr_white-space: pre-wrap;
+  --plasmic-mixin-text-coral_white-space: var(--mixin-SAnbkssEs2Tr_white-space);
+  --mixin-um9lp0dafSAh_white-space: pre-wrap;
+  --plasmic-mixin-text-neutral-25_white-space: var(
+    --mixin-um9lp0dafSAh_white-space
+  );
+  --mixin-MZTgFVkF-hAt_white-space: pre-wrap;
+  --plasmic-mixin-text-neutral-50_white-space: var(
+    --mixin-MZTgFVkF-hAt_white-space
+  );
+  --mixin-OQnuyEIRUWYY_white-space: pre-wrap;
+  --plasmic-mixin-text-neutral-75_white-space: var(
+    --mixin-OQnuyEIRUWYY_white-space
+  );
+  --mixin-VxPfjQr7ZzIB_white-space: pre-wrap;
+  --plasmic-mixin-text-navy_white-space: var(--mixin-VxPfjQr7ZzIB_white-space);
+  --mixin-kpJRdfeeUSC3_white-space: pre-wrap;
+  --plasmic-mixin-text-lavender_white-space: var(
+    --mixin-kpJRdfeeUSC3_white-space
+  );
+  --mixin-hcl9dwAGkaD8_white-space: pre-wrap;
+  --plasmic-mixin-text-cream_white-space: var(--mixin-hcl9dwAGkaD8_white-space);
+  --mixin-xK0LASAM6w_x_white-space: pre-wrap;
+  --plasmic-mixin-text-midnight_white-space: var(
+    --mixin-xK0LASAM6w_x_white-space
+  );
+  --mixin-MbYPTcxnDMb-_white-space: pre-wrap;
+  --plasmic-mixin-text-peach_white-space: var(--mixin-MbYPTcxnDMb-_white-space);
+  --mixin-iUuLQQqi3AZQ_white-space: pre-wrap;
+  --plasmic-mixin-font-body_white-space: var(--mixin-iUuLQQqi3AZQ_white-space);
+  --mixin-MvVGRwuBiwSh_white-space: pre-wrap;
+  --plasmic-mixin-font-heading_white-space: var(
+    --mixin-MvVGRwuBiwSh_white-space
+  );
+  --mixin-ciA2J4LoErCT_white-space: pre-wrap;
+  --plasmic-mixin-font-display_white-space: var(
+    --mixin-ciA2J4LoErCT_white-space
+  );
+  --mixin-E_R2cypAygQ0_white-space: pre-wrap;
+  --plasmic-mixin-style-body_white-space: var(--mixin-E_R2cypAygQ0_white-space);
+  --mixin-8MHJI3X4xdRf_white-space: pre-wrap;
+  --plasmic-mixin-style-body-small_white-space: var(
+    --mixin-8MHJI3X4xdRf_white-space
+  );
+  --mixin-VDkCHgAw5--2_white-space: pre-wrap;
+  --plasmic-mixin-style-body-large_white-space: var(
+    --mixin-VDkCHgAw5--2_white-space
+  );
+  --mixin-BWiKdEp9OzD__white-space: pre-wrap;
+  --plasmic-mixin-style-heading-h-1_white-space: var(
+    --mixin-BWiKdEp9OzD__white-space
+  );
+  --mixin-8N25Dv7M_diV_white-space: pre-wrap;
+  --plasmic-mixin-style-heading-h-2_white-space: var(
+    --mixin-8N25Dv7M_diV_white-space
+  );
+  --mixin-2MWoFwhOV6wC_white-space: pre-wrap;
+  --plasmic-mixin-style-heading-h-3_white-space: var(
+    --mixin-2MWoFwhOV6wC_white-space
+  );
+  --mixin-8GJFUVPxP3E6_white-space: pre-wrap;
+  --plasmic-mixin-style-heading-h-4_white-space: var(
+    --mixin-8GJFUVPxP3E6_white-space
+  );
+  --mixin-AlDJxIA_SGay_white-space: pre-wrap;
+  --plasmic-mixin-style-heading-h-5_white-space: var(
+    --mixin-AlDJxIA_SGay_white-space
+  );
+  --mixin-rckIpiOGLyq-_white-space: pre-wrap;
+  --plasmic-mixin-style-display-d-1_white-space: var(
+    --mixin-rckIpiOGLyq-_white-space
+  );
+  --mixin-kW0JftKgFy6k_white-space: pre-wrap;
+  --plasmic-mixin-style-display-d-2_white-space: var(
+    --mixin-kW0JftKgFy6k_white-space
+  );
+  --mixin-5oe5oPf6m4AT_white-space: pre-wrap;
+  --plasmic-mixin-style-display-d-3_white-space: var(
+    --mixin-5oe5oPf6m4AT_white-space
+  );
+  --mixin-uzBc_ZfStxZp_white-space: pre-wrap;
+  --plasmic-mixin-radius-xs_white-space: var(--mixin-uzBc_ZfStxZp_white-space);
+  --mixin-h5f_ZVFVe_10_white-space: pre-wrap;
+  --plasmic-mixin-radius-s_white-space: var(--mixin-h5f_ZVFVe_10_white-space);
+  --mixin-T9vKNS-SeJ6H_white-space: pre-wrap;
+  --plasmic-mixin-radius-m_white-space: var(--mixin-T9vKNS-SeJ6H_white-space);
+  --mixin-hzkcDXQzYGFK_white-space: pre-wrap;
+  --plasmic-mixin-radius-l_white-space: var(--mixin-hzkcDXQzYGFK_white-space);
+  --mixin-qB5HnqGN3iRd_white-space: pre-wrap;
+  --plasmic-mixin-radius-xl_white-space: var(--mixin-qB5HnqGN3iRd_white-space);
+  --mixin-W-ObyGie_eV0_white-space: pre-wrap;
+  --plasmic-mixin-padding-m_white-space: var(--mixin-W-ObyGie_eV0_white-space);
+  --mixin-qS7F5cpbD-Nu_white-space: pre-wrap;
+  --plasmic-mixin-padding-xxs_white-space: var(
+    --mixin-qS7F5cpbD-Nu_white-space
+  );
+  --mixin-NeDx7lup4r84_white-space: pre-wrap;
+  --plasmic-mixin-padding-xs_white-space: var(--mixin-NeDx7lup4r84_white-space);
+  --mixin-VmxU5Lrjyh_I_white-space: pre-wrap;
+  --plasmic-mixin-padding-s_white-space: var(--mixin-VmxU5Lrjyh_I_white-space);
+  --mixin-dNGGcUO4JfUS_white-space: pre-wrap;
+  --plasmic-mixin-padding-l_white-space: var(--mixin-dNGGcUO4JfUS_white-space);
+  --mixin-wRBe20CouqLH_white-space: pre-wrap;
+  --plasmic-mixin-padding-xl_white-space: var(--mixin-wRBe20CouqLH_white-space);
+  --mixin-fv4ftLzO4kFj_white-space: pre-wrap;
+  --plasmic-mixin-padding-xxl_white-space: var(
+    --mixin-fv4ftLzO4kFj_white-space
+  );
+  --mixin-4FLo4tnNDWom_white-space: pre-wrap;
+  --plasmic-mixin-stroke-black_white-space: var(
+    --mixin-4FLo4tnNDWom_white-space
+  );
+  --mixin--u5ijoG858LG_white-space: pre-wrap;
+  --plasmic-mixin-stroke-white_white-space: var(
+    --mixin--u5ijoG858LG_white-space
+  );
+  --mixin-pT-vMkgFK554_white-space: pre-wrap;
+  --plasmic-mixin-stroke-lavender_white-space: var(
+    --mixin-pT-vMkgFK554_white-space
   );
 }
 

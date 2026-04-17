@@ -5,7 +5,6 @@ import {
   PlasmicTextAreaInput,
   DefaultTextAreaInputProps
 } from "./plasmic/toothmonster/PlasmicTextAreaInput";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -22,10 +21,7 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface TextAreaInputProps extends DefaultTextAreaInputProps {}
 
-function TextAreaInput_(
-  props: TextAreaInputProps,
-  ref: HTMLElementRefOf<"div">
-) {
+function TextAreaInput(props: TextAreaInputProps) {
   // Use PlasmicTextAreaInput to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -41,8 +37,7 @@ function TextAreaInput_(
   // By default, we are just piping all TextAreaInputProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicTextAreaInput root={{ ref }} {...props} />;
+  return <PlasmicTextAreaInput {...props} />;
 }
 
-const TextAreaInput = React.forwardRef(TextAreaInput_);
 export default TextAreaInput;

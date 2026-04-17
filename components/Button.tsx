@@ -5,7 +5,6 @@ import {
   PlasmicButton,
   DefaultButtonProps
 } from "./plasmic/toothmonster/PlasmicButton";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -22,7 +21,7 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface ButtonProps extends DefaultButtonProps {}
 
-function Button_(props: ButtonProps, ref: HTMLElementRefOf<"div">) {
+function Button(props: ButtonProps) {
   // Use PlasmicButton to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -38,8 +37,7 @@ function Button_(props: ButtonProps, ref: HTMLElementRefOf<"div">) {
   // By default, we are just piping all ButtonProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicButton root={{ ref }} {...props} />;
+  return <PlasmicButton {...props} />;
 }
 
-const Button = React.forwardRef(Button_);
 export default Button;

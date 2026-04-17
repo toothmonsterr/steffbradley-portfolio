@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { OffsetPrint } from "@/components/plasmic-components/OffsetPrint"; // plasmic-import: DlJQBSlj9xoa/codeComponent
+import Button from "../../Button"; // plasmic-import: 3ILQOKV_IYFb/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -66,6 +68,10 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicStyleGuide.module.css"; // plasmic-import: KestoklH4saO/css
+
+import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
+import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
+import ChevronDownIcon from "./icons/PlasmicIcon__ChevronDown"; // plasmic-import: G6S5umLx_RKu/icon
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -111,6 +117,9 @@ export const PlasmicStyleGuide__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicStyleGuide__OverridesType = {
   root?: Flex__<"div">;
+  svg?: Flex__<"svg">;
+  button?: Flex__<typeof Button>;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultStyleGuideProps {}
@@ -185,20 +194,76 @@ function PlasmicStyleGuide__RenderFunc(props: {
             styleTokensClassNames,
             sty.root
           )}
-        />
+        >
+          <OffsetPrint
+            blendMode={"overlay"}
+            className={classNames("__wab_instance", sty.offsetPrint___6EQjx)}
+            colorA={true ? "#CEBEE3" : undefined}
+            colorB={true ? "#201B2A" : undefined}
+            mode={"shape"}
+            offsetX={1}
+            offsetY={1}
+            showOriginal={false}
+          >
+            <EyeconSvgIcon
+              data-plasmic-name={"svg"}
+              data-plasmic-override={overrides.svg}
+              className={classNames(projectcss.all, sty.svg)}
+              role={"img"}
+            />
+          </OffsetPrint>
+          <OffsetPrint
+            blendMode={"overlay"}
+            children={null}
+            className={classNames("__wab_instance", sty.offsetPrint__n8V0W)}
+            colorA={true ? "#FFAB7B" : undefined}
+            colorB={true ? "#DDEA44" : undefined}
+            mode={"shape"}
+            offsetX={1}
+            offsetY={1}
+            showOriginal={false}
+          />
+
+          <Button
+            data-plasmic-name={"button"}
+            data-plasmic-override={overrides.button}
+            className={classNames("__wab_instance", sty.button)}
+            effect={true}
+            hoverEffect={null}
+            label={
+              <div
+                data-plasmic-name={"text"}
+                data-plasmic-override={overrides.text}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text
+                )}
+              >
+                {"Text"}
+              </div>
+            }
+          />
+        </div>
       </div>
     </React.Fragment>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "svg", "button", "text"],
+  svg: ["svg"],
+  button: ["button", "text"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  svg: "svg";
+  button: typeof Button;
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -263,6 +328,9 @@ export const PlasmicStyleGuide = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    svg: makeNodeComponent("svg"),
+    button: makeNodeComponent("button"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicStyleGuide
     internalVariantProps: PlasmicStyleGuide__VariantProps,

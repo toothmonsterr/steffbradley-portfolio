@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Button from "../../Button"; // plasmic-import: 3ILQOKV_IYFb/component
+import TextField from "../../TextField"; // plasmic-import: j-F7rqXkCu17/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -66,6 +68,9 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicHomepage.module.css"; // plasmic-import: FuUP13USuDR8/css
+
+import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
+import ChevronDownIcon from "./icons/PlasmicIcon__ChevronDown"; // plasmic-import: G6S5umLx_RKu/icon
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -111,6 +116,8 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
+  button?: Flex__<typeof Button>;
+  textField?: Flex__<typeof TextField>;
 };
 
 export interface DefaultHomepageProps {}
@@ -154,6 +161,25 @@ function PlasmicHomepage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "textField.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $q: {},
+    $refs
+  });
+
   const pageMetadata = generateDynamicMetadata(
     wrapQueriesWithLoadingProxy({}),
     $ctx as PageCtx
@@ -185,20 +211,51 @@ function PlasmicHomepage__RenderFunc(props: {
             styleTokensClassNames,
             sty.root
           )}
-        />
+        >
+          <Button
+            data-plasmic-name={"button"}
+            data-plasmic-override={overrides.button}
+            className={classNames("__wab_instance", sty.button)}
+          />
+
+          <TextField
+            data-plasmic-name={"textField"}
+            data-plasmic-override={overrides.textField}
+            className={classNames("__wab_instance", sty.textField)}
+            onChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["textField", "value"]).apply(
+                null,
+                eventArgs
+              );
+
+              if (
+                eventArgs.length > 1 &&
+                eventArgs[1] &&
+                eventArgs[1]._plasmic_state_init_
+              ) {
+                return;
+              }
+            }}
+            value={generateStateValueProp($state, ["textField", "value"])}
+          />
+        </div>
       </div>
     </React.Fragment>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "button", "textField"],
+  button: ["button"],
+  textField: ["textField"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  button: typeof Button;
+  textField: typeof TextField;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -263,6 +320,8 @@ export const PlasmicHomepage = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    button: makeNodeComponent("button"),
+    textField: makeNodeComponent("textField"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,
