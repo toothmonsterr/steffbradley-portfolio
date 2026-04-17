@@ -47,6 +47,11 @@ Object.entries(tokens.fontSizeRem).forEach(([name, value]) => {
   PLASMIC.registerToken({ name, value: value as string, type: 'font-size' });
 });
 
+// Line heights — unitless multipliers named by their value ("1", "1.5", "1.6", …)
+Object.entries(tokens.lineHeight).forEach(([name, value]) => {
+  PLASMIC.registerToken({ name, value: value as string, type: 'line-height' });
+});
+
 // Opacity — key is the integer percentage ("0" … "100")
 Object.entries(tokens.opacity).forEach(([name, value]) => {
   PLASMIC.registerToken({ name: `opacity-${name}`, value: value as string, type: 'opacity' });

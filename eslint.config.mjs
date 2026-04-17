@@ -18,6 +18,9 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Plasmic-generated component wrappers and code-gen output
+      "components/plasmic/**",
+      "components/*.tsx",
     ],
   },
 ];

@@ -98,6 +98,23 @@ export const opacity = {
   '100': '1',
 } as const;
 
+// ── Line height ───────────────────────────────────────────────────────────────
+// Named by value. Unitless multipliers — scales with font-size automatically.
+export const lineHeight = {
+  '1':    '1',
+  '1.1':  '1.1',
+  '1.15': '1.15',
+  '1.2':  '1.2',
+  '1.25': '1.25',
+  '1.3':  '1.3',
+  '1.4':  '1.4',
+  '1.5':  '1.5',
+  '1.6':  '1.6',
+  '1.7':  '1.7',
+  '1.8':  '1.8',
+  '2':    '2',
+} as const;
+
 // ── Border radius ─────────────────────────────────────────────────────────────
 // Not registered as Plasmic tokens (not a valid TokenType).
 // Referenced only via CSS vars: --radius-sm, --radius-md, etc.

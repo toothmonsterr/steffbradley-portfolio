@@ -1,4 +1,4 @@
-import { colorPrimitive, fontFamily, spacingPx, spacingLarge, fontSizeRem, opacity, radius } from './primitives';
+import { colorPrimitive, fontFamily, spacingPx, spacingLarge, fontSizeRem, lineHeight, opacity, radius } from './primitives';
 import { colorNeutral, colorSuccess, colorWarning, colorError } from './semantic';
 
 export const tokens = {
@@ -45,6 +45,7 @@ export const tokens = {
   spacingPx,
   spacingLarge,
   fontSizeRem,
+  lineHeight,
   opacity,
   radius,
 } as const;
@@ -55,6 +56,7 @@ export {
   fontFamily,
   spacingPx, spacingLarge,
   fontSizeRem,
+  lineHeight,
   opacity,
   radius,
 };
