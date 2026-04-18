@@ -136,6 +136,9 @@ export function HalftoneDots({
       const a = activityRef.current;
       const pulseScale = cursor === 'pulse' ? 1 + a * 0.35 : 1;
       const shiftAmt = cursor === 'shift' ? a * (step * 0.6) : 0;
+      // In shift mode the two layers counter-rotate slightly as they drift apart,
+      // reinforcing the misregistration feel.
+      const shiftRotDeg = cursor === 'shift' ? a * 8 : 0;
 
       if (cursor === 'pulse') rebuildTilesForPulseScale(pulseScale);
       if (!patternA || !patternB) return;
@@ -146,8 +149,8 @@ export function HalftoneDots({
 
       const diagHalf = Math.ceil(Math.hypot(w, h) / 2) + step;
 
-      // Layer A
-      const aRad = (layerAAngle * Math.PI) / 180;
+      // Layer A — base angle minus shift rotation
+      const aRad = ((layerAAngle - shiftRotDeg) * Math.PI) / 180;
       ctx.setTransform(
         Math.cos(aRad), Math.sin(aRad),
         -Math.sin(aRad), Math.cos(aRad),
@@ -156,9 +159,9 @@ export function HalftoneDots({
       ctx.fillStyle = patternA;
       ctx.fillRect(-diagHalf, -diagHalf, diagHalf * 2, diagHalf * 2);
 
-      // Layer B — multiply blend over A
+      // Layer B — base angle plus shift rotation (counter-rotate)
       ctx.globalCompositeOperation = 'multiply';
-      const bRad = (layerBAngle * Math.PI) / 180;
+      const bRad = ((layerBAngle + shiftRotDeg) * Math.PI) / 180;
       ctx.setTransform(
         Math.cos(bRad), Math.sin(bRad),
         -Math.sin(bRad), Math.cos(bRad),
