@@ -1,9 +1,0 @@
-.card {
-  display: block;
-}
-
-.inner {
-  display: block;
-  will-change: transform;
-  transform-style: preserve-3d;
-}

@@ -1,18 +1,33 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styles from './GradientBlob.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { findHoverHost } from '@/hooks/findHoverHost';
+import { colorOrDefault } from '@/hooks/colorDefault';
 
 export interface GradientBlobProps {
-  colors?: string[];
-  colorsText?: string;
+  /** Up to 4 ink colors cycled through the blobs */
+  color1?: string;
+  color2?: string;
+  color3?: string;
+  color4?: string;
+  /** Number of blobs to draw */
   blobCount?: number;
+  /** Blur radius in px */
   blurAmount?: number;
+  /** Loop duration in seconds */
   loopDuration?: number;
+  /** Speed multiplier */
   speed?: number;
-  width?: string;
-  height?: string;
+  /** Random seed for blob layout — same seed = same layout */
   seed?: number;
+  /** Max layer opacity (0–1) */
+  maxOpacity?: number;
+  /** CSS mix-blend-mode */
+  blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
+  /** Hard edges — thresholds the blurred composite's alpha for a crisp "gooey" silhouette */
+  hardEdges?: boolean;
+  /** How crisp the hard edge is (only applies when hardEdges is on). Higher = sharper. */
+  hardEdgesContrast?: number;
   className?: string;
 }
 
@@ -27,105 +42,181 @@ function mulberry32(a: number) {
 
 interface Blob {
   color: string;
-  size: number;
-  xs: string[];
-  ys: string[];
-  times: number[];
-  duration: number;
+  sizePct: number;         // blob diameter as % of container min-dim
+  // Waypoints in 0..1 normalised to container size
+  xs: number[];
+  ys: number[];
+  duration: number;        // seconds per loop
+  phase: number;           // 0..1 starting phase inside its loop
 }
 
 function buildBlobs(colors: string[], count: number, seed: number, baseDuration: number): Blob[] {
   const rand = mulberry32(seed);
   return Array.from({ length: count }, (_, i) => {
     const pts = 4;
-    const xs: string[] = [];
-    const ys: string[] = [];
+    const xs: number[] = [];
+    const ys: number[] = [];
     for (let p = 0; p < pts; p++) {
-      xs.push(`${Math.round(rand() * 100)}%`);
-      ys.push(`${Math.round(rand() * 100)}%`);
+      xs.push(rand());
+      ys.push(rand());
     }
+    // Close the loop so start == end for seamless looping
     xs.push(xs[0]);
     ys.push(ys[0]);
-    const times = Array.from({ length: pts + 1 }, (_, k) => k / pts);
     return {
       color: colors[i % colors.length] ?? '#FF6A50',
-      size: 40 + rand() * 40,
+      sizePct: 40 + rand() * 40,
       xs,
       ys,
-      times,
       duration: baseDuration * (0.7 + rand() * 0.6),
+      phase: rand(),
     };
   });
 }
 
+// Catmull-Rom-ish interpolation along the waypoint list (linear segments is fine
+// for a soft blurred blob — the blur hides any faceting).
+function sampleBlobPosition(blob: Blob, t: number): [number, number] {
+  const segs = blob.xs.length - 1;        // number of segments
+  const u = (t * segs) % segs;
+  const i0 = Math.floor(u) % segs;
+  const i1 = (i0 + 1) % (segs + 1);
+  const localT = u - Math.floor(u);
+  const x = blob.xs[i0] + (blob.xs[i1] - blob.xs[i0]) * localT;
+  const y = blob.ys[i0] + (blob.ys[i1] - blob.ys[i0]) * localT;
+  return [x, y];
+}
+
 export function GradientBlob({
-  colors,
-  colorsText,
+  color1,
+  color2,
+  color3,
+  color4,
   blobCount = 4,
-  blurAmount = 80,
+  blurAmount = 60,
   loopDuration = 20,
   speed = 1,
-  width = '100%',
-  height = '400px',
   seed = 1,
+  maxOpacity = 1,
+  blendMode = 'normal',
+  hardEdges = false,
+  hardEdgesContrast = 18,
   className,
 }: GradientBlobProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef(0);
   const prefersReduced = usePrefersReducedMotion();
 
-  const resolvedColors = useMemo(() => {
-    if (colors && colors.length > 0) return colors;
-    if (colorsText && colorsText.trim()) {
-      return colorsText.split(',').map((c) => c.trim()).filter(Boolean);
-    }
-    return ['#FF6A50', '#DDEA44', '#CEBEE3', '#FFAB7B'];
-  }, [colors, colorsText]);
+  const colors = useMemo(
+    () => [
+      colorOrDefault(color1, '#FF6A50'),
+      colorOrDefault(color2, '#DDEA44'),
+      colorOrDefault(color3, '#CEBEE3'),
+      colorOrDefault(color4, '#FFAB7B'),
+    ],
+    [color1, color2, color3, color4]
+  );
 
   const effectiveDuration = Math.max(2, loopDuration / Math.max(0.1, speed));
 
-  const [blobs] = useState(() => buildBlobs(resolvedColors, blobCount, seed, effectiveDuration));
-
-  const keyedBlobs = useMemo(
-    () => buildBlobs(resolvedColors, blobCount, seed, effectiveDuration),
-    [resolvedColors, blobCount, seed, effectiveDuration]
+  const blobs = useMemo(
+    () => buildBlobs(colors, blobCount, seed, effectiveDuration),
+    [colors, blobCount, seed, effectiveDuration]
   );
-  const activeBlobs = prefersReduced ? blobs : keyedBlobs;
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const canvas = canvasRef.current;
+    if (!root || !canvas) return;
+
+    const host = findHoverHost(root);
+    if (!host) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = host.offsetWidth;
+      canvas.height = host.offsetHeight;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(host);
+
+    // Offscreen canvas for the unblurred raw blobs. We draw the blobs here first,
+    // then blit the whole thing onto the visible canvas with blur (+ optional
+    // contrast for the hard-edges "gooey" threshold). This way the contrast
+    // operates on the COMPOSITE alpha, not each blob individually, which is
+    // what produces the correct metaball silhouette.
+    const offscreen = document.createElement('canvas');
+    const offCtx = offscreen.getContext('2d');
+    if (!offCtx) return;
+
+    const syncOffscreen = () => {
+      offscreen.width = canvas.width;
+      offscreen.height = canvas.height;
+    };
+    syncOffscreen();
+
+    const start = performance.now();
+    const draw = (now: number) => {
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) {
+        rafRef.current = requestAnimationFrame(draw);
+        return;
+      }
+
+      if (offscreen.width !== w || offscreen.height !== h) syncOffscreen();
+
+      // Draw raw, unblurred blobs to the offscreen canvas first.
+      offCtx.clearRect(0, 0, w, h);
+      offCtx.filter = 'none';
+
+      const elapsed = prefersReduced ? 0 : (now - start) / 1000;
+      const minDim = Math.min(w, h);
+      for (const blob of blobs) {
+        const t = prefersReduced ? blob.phase : ((elapsed / blob.duration) + blob.phase) % 1;
+        const [nx, ny] = sampleBlobPosition(blob, t);
+        const cx = nx * w;
+        const cy = ny * h;
+        const radius = (blob.sizePct / 100) * minDim * 0.5;
+        offCtx.fillStyle = blob.color;
+        offCtx.beginPath();
+        offCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+        offCtx.fill();
+      }
+
+      // Now composite onto the visible canvas with blur, and optionally a
+      // contrast pass that thresholds the alpha ramp into a hard edge.
+      ctx.clearRect(0, 0, w, h);
+      const effectiveBlur = Math.min(blurAmount, Math.min(w, h) / 2);
+      ctx.filter = hardEdges
+        ? `blur(${effectiveBlur}px) contrast(${Math.max(2, hardEdgesContrast)})`
+        : `blur(${effectiveBlur}px)`;
+      ctx.drawImage(offscreen, 0, 0);
+
+      rafRef.current = requestAnimationFrame(draw);
+    };
+    rafRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ro.disconnect();
+    };
+  }, [blobs, blurAmount, hardEdges, hardEdgesContrast, prefersReduced]);
 
   return (
-    <div
-      className={[styles.container, className ?? ''].filter(Boolean).join(' ')}
-      style={{ width, height }}
-      aria-hidden="true"
-    >
-      <div className={styles.blobLayer} style={{ filter: `blur(${blurAmount}px)` }}>
-        {activeBlobs.map((b, i) => {
-          const common = {
-            position: 'absolute' as const,
-            width: `${b.size}%`,
-            aspectRatio: '1 / 1',
-            borderRadius: '50%',
-            backgroundColor: b.color,
-          };
-          if (prefersReduced) {
-            return (
-              <div
-                key={i}
-                style={{ ...common, left: b.xs[0], top: b.ys[0], transform: 'translate(-50%, -50%)' }}
-              />
-            );
-          }
-          return (
-            <motion.div
-              key={i}
-              style={{ ...common, transform: 'translate(-50%, -50%)' }}
-              animate={{ left: b.xs, top: b.ys }}
-              transition={{
-                left: { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
-                top:  { duration: b.duration, times: b.times, repeat: Infinity, ease: 'linear' },
-              }}
-            />
-          );
-        })}
-      </div>
+    <div ref={rootRef} className={[styles.root, className ?? ''].filter(Boolean).join(' ')} aria-hidden="true">
+      <canvas
+        ref={canvasRef}
+        className={styles.canvas}
+        style={{
+          opacity: maxOpacity,
+          mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
+        }}
+      />
     </div>
   );
 }

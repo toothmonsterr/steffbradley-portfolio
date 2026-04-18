@@ -20,3 +20,11 @@
 .canvas.active {
   opacity: 1;
 }
+
+.clipSvg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
