@@ -149,7 +149,7 @@ export function OffsetCMYK({
   const layerK = useLayerMotionValues( 1,  1, wobbleK);
 
   const hostRef = useRef<HTMLSpanElement>(null);
-  const layers = useMemo(() => [layerC, layerM, layerY, layerK], [layerC, layerM, layerY, layerK]);
+  const layers = [layerC, layerM, layerY, layerK];
 
   useOffsetActivity(hostRef, {
     interaction,

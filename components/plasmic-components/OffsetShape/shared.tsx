@@ -16,10 +16,12 @@ export function mulberry32(a: number) {
 
 // Returns 3 waypoints [x, y, rotate] in ±mag, ±mag, ±0.3° — seeded so SSR === CSR.
 export function buildWobble(seed: number, mag: number): number[][] {
-  const rand = mulberry32(seed);
+  const safeMag = (typeof mag === 'number' && isFinite(mag)) ? mag : 1.2;
+  const safeSeed = (typeof seed === 'number' && isFinite(seed)) ? seed : 1;
+  const rand = mulberry32(safeSeed);
   const pt = () => [
-    (rand() * 2 - 1) * mag,
-    (rand() * 2 - 1) * mag,
+    (rand() * 2 - 1) * safeMag,
+    (rand() * 2 - 1) * safeMag,
     (rand() * 2 - 1) * 0.3,
   ];
   return [pt(), pt(), pt()];
@@ -101,8 +103,8 @@ function smoothstep(x: number) {
   return x * x * (3 - 2 * x);
 }
 
-// Evaluates the "breathing" drift at time t (seconds) using three closed-loop waypoints.
 function sampleBreathe(w: number[][], t: number): [number, number, number] {
+  if (!w || w.length < 3 || !w[0] || !w[1] || !w[2]) return [0, 0, 0];
   const period = 3.2;
   const u = (t % period) / period;
   const segs = 3;
@@ -113,6 +115,7 @@ function sampleBreathe(w: number[][], t: number): [number, number, number] {
   const e = smoothstep(local);
   const p0 = w[i0];
   const p1 = w[i1];
+  if (!p0 || !p1) { console.error('[sampleBreathe] bad index i0=', i0, 'i1=', i1, 'u=', u, 't=', t, 'w=', JSON.stringify(w)); return [0,0,0]; }
   return [
     p0[0] + (p1[0] - p0[0]) * e,
     p0[1] + (p1[1] - p0[1]) * e,
@@ -120,25 +123,28 @@ function sampleBreathe(w: number[][], t: number): [number, number, number] {
   ];
 }
 
+const REG = 0.5;
+
 /**
  * Shared RAF driver for offset-print layers.
  *
- * Maintains a time-based activity ramp (linear 0..1) that eases between the
- * misregistered + breathing state (0) and the snapped/registered state (1)
- * over `easeDuration` seconds. Shapes via smoothstep, writes imperative
- * transforms to each layer's motion values. Gives symmetric ease-in / ease-out
- * on both hover-enter and hover-leave.
+ * Scalar props (offsetX/Y, easeDuration, interaction, prefersReduced) are read
+ * via optsRef so they update without restarting the loop. The layers array is
+ * snapshotted at effect-mount time — LayerSpec objects are stable refs (via
+ * useLayerMotionValues), so the snapshot always points to the live motion values
+ * and wobble data even as renders update them in place.
  */
 export function useOffsetActivity(
   hostRef: React.RefObject<HTMLElement | null>,
   opts: UseOffsetActivityOpts,
 ) {
-  const {
-    interaction, offsetX, offsetY, easeDuration, prefersReduced, layers,
-    sizerX, sizerY, sizerRotate, sizerWobble,
-  } = opts;
+  const optsRef = useRef(opts);
+  optsRef.current = opts;
 
-  const REG = 0.5;
+  // Stable ref to the layers array — never replaced after init.
+  // Each LayerSpec inside is itself a stable ref (from useLayerMotionValues),
+  // so wobble/dxSign/dySign and the motion values always reflect the latest render.
+  const layersRef = useRef<LayerSpec[]>(opts.layers);
 
   const hoveringRef = useRef(false);
   const activityRef = useRef(0);
@@ -150,16 +156,18 @@ export function useOffsetActivity(
     const host = hostRef.current;
     if (!host) return;
 
-    // rest state: hover/always start at 0 (misregistered+breathing), inverse at 1 (snapped).
-    const restActivity = interaction === 'inverse' ? 1 : 0;
-    const hoverActivity = interaction === 'inverse' ? 0 : 1;
-    activityRef.current = restActivity;
-
-    const easeSec = Math.max(0.05, easeDuration);
+    const { interaction } = optsRef.current;
+    activityRef.current = interaction === 'inverse' ? 1 : 0;
+    startTsRef.current = performance.now();
 
     const writeTransforms = (now: number) => {
-      const tSec = (now - startTsRef.current) / 1000;
-      const a = smoothstep(activityRef.current);
+      const { offsetX, offsetY, prefersReduced, sizerX, sizerY, sizerRotate, sizerWobble } = optsRef.current;
+      const layers = layersRef.current;
+      // Clamp to >= 0 — can go negative under React Strict Mode double-invoke
+      // when startTsRef is reset by the second mount after the first RAF fired.
+      const tSec = Math.max(0, (now - startTsRef.current) / 1000);
+      const a = smoothstep(Math.max(0, Math.min(1, activityRef.current)));
+      if (a > 0.01 && a < 0.99) console.log('[offset] a=', a.toFixed(3), 'x0=', (layersRef.current[0]?.dxSign ?? '?'));
 
       for (const layer of layers) {
         const [bx, by, br] = prefersReduced ? [0, 0, 0] : sampleBreathe(layer.wobble, tSec);
@@ -181,33 +189,32 @@ export function useOffsetActivity(
     };
 
     const tick = (now: number) => {
-      if (startTsRef.current === 0) startTsRef.current = now;
+      const { interaction: ia, easeDuration, prefersReduced } = optsRef.current;
+      const restActivity = ia === 'inverse' ? 1 : 0;
+      const hoverActivity = ia === 'inverse' ? 0 : 1;
+      const easeSec = Math.max(0.05, easeDuration);
+
       const dt = lastTsRef.current === 0 ? 0 : Math.min(0.1, (now - lastTsRef.current) / 1000);
       lastTsRef.current = now;
 
-      // In 'always' mode, target is always restActivity (no hover reaction).
-      const target = interaction === 'always'
+      const target = ia === 'always'
         ? restActivity
         : hoveringRef.current ? hoverActivity : restActivity;
+
+      const cur = activityRef.current;
       const delta = dt / easeSec;
-      if (activityRef.current < target) {
-        activityRef.current = Math.min(target, activityRef.current + delta);
-      } else if (activityRef.current > target) {
-        activityRef.current = Math.max(target, activityRef.current - delta);
+      if (cur < target) {
+        activityRef.current = Math.min(target, cur + delta);
+      } else if (cur > target) {
+        activityRef.current = Math.max(target, cur - delta);
       }
 
       writeTransforms(now);
 
-      // Keep looping while breathing is visible (activity < 1) OR still settling.
-      const breathingVisible = activityRef.current < 1;
-      const stillSettling = activityRef.current !== target;
-      const shouldContinue = breathingVisible || stillSettling;
-
-      if (shouldContinue && !prefersReduced) {
+      if (!prefersReduced) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = 0;
-        lastTsRef.current = 0;
       }
     };
 
@@ -217,50 +224,35 @@ export function useOffsetActivity(
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    startTsRef.current = performance.now();
     writeTransforms(startTsRef.current);
+    startLoop();
 
-    if (prefersReduced) return;
+    const onEnter = () => { hoveringRef.current = true;  console.log('[offset] enter, activity=', activityRef.current); };
+    const onLeave = () => { hoveringRef.current = false; console.log('[offset] leave, activity=', activityRef.current); };
 
-    if (interaction === 'always') {
-      // Breathing loop only — no hover listeners.
-      startLoop();
-      return () => {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = 0;
-      };
-    }
-
-    const onEnter = () => {
-      hoveringRef.current = true;
-      startLoop();
-    };
-    const onLeave = () => {
-      hoveringRef.current = false;
-      startLoop();
-    };
     host.addEventListener('mouseenter', onEnter);
     host.addEventListener('mouseleave', onLeave);
-
-    // Start the loop once to show the base breathing state.
-    startLoop();
 
     return () => {
       host.removeEventListener('mouseenter', onEnter);
       host.removeEventListener('mouseleave', onLeave);
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
+      lastTsRef.current = 0;
     };
-  }, [
-    hostRef, interaction, offsetX, offsetY, easeDuration, prefersReduced,
-    layers, sizerX, sizerY, sizerRotate, sizerWobble,
-  ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hostRef]);
 }
 
 // Convenience: create the motion values + LayerSpec for one layer.
+// useRef keeps the object identity stable across renders.
 export function useLayerMotionValues(dxSign: number, dySign: number, wobble: number[][]): LayerSpec {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotate = useMotionValue(0);
-  return { dxSign, dySign, wobble, x, y, rotate };
+  const specRef = useRef<LayerSpec>({ dxSign, dySign, wobble, x, y, rotate });
+  specRef.current.dxSign = dxSign;
+  specRef.current.dySign = dySign;
+  specRef.current.wobble = wobble;
+  return specRef.current;
 }

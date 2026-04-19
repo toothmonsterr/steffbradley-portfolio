@@ -64,7 +64,7 @@ export function OffsetShape({
   const layerB = useLayerMotionValues(1, 1, wobbleB);
 
   const hostRef = useRef<HTMLSpanElement>(null);
-  const layers = useMemo(() => [layerA, layerB], [layerA, layerB]);
+  const layers = [layerA, layerB];
 
   useOffsetActivity(hostRef, {
     interaction,
