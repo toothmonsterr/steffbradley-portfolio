@@ -26284,6 +26284,26 @@
           "id": "nL7GB2u_p8ri",
           "name": "eyecon.svg 2",
           "filePath": "../public/plasmic/toothmonster/images/eyeconSvg2.svg"
+        },
+        {
+          "id": "NVAC5hukOswI",
+          "name": "donut.gif",
+          "filePath": "../public/plasmic/toothmonster/images/donutGif.gif"
+        },
+        {
+          "id": "NU-3v12BOjVO",
+          "name": "flower.gif",
+          "filePath": "../public/plasmic/toothmonster/images/flowerGif.gif"
+        },
+        {
+          "id": "qrQACCMGOQwa",
+          "name": "isosphere.gif",
+          "filePath": "../public/plasmic/toothmonster/images/isosphereGif.gif"
+        },
+        {
+          "id": "0H2FUrgEn78z",
+          "name": "donut_2.gif",
+          "filePath": "../public/plasmic/toothmonster/images/donut2Gif.gif"
         }
       ],
       "indirect": false,
@@ -26330,18 +26350,6 @@
           "componentImportPath": "@/components/plasmic-components/NoiseOverlay"
         },
         {
-          "id": "DlJQBSlj9xoa",
-          "name": "OffsetPrint",
-          "displayName": "OffsetPrint",
-          "componentImportPath": "@/components/plasmic-components/OffsetPrint"
-        },
-        {
-          "id": "CdCDfMiagwQS",
-          "name": "StickerPeel",
-          "displayName": "StickerPeel",
-          "componentImportPath": "@/components/plasmic-components/StickerPeel"
-        },
-        {
           "id": "_MSv54ZDU1SB",
           "name": "HalftoneDots",
           "displayName": "HalftoneDots",
@@ -26358,6 +26366,24 @@
           "name": "DotOverlay",
           "displayName": "DotOverlay",
           "componentImportPath": "@/components/plasmic-components/DotOverlay"
+        },
+        {
+          "id": "6iLg6RvlDLn6",
+          "name": "OffsetShape",
+          "displayName": "OffsetShape",
+          "componentImportPath": "@/components/plasmic-components/OffsetShape"
+        },
+        {
+          "id": "bIanIbIW8b7U",
+          "name": "OffsetImage",
+          "displayName": "OffsetImage",
+          "componentImportPath": "@/components/plasmic-components/OffsetImage"
+        },
+        {
+          "id": "W6F38AxYTSP7",
+          "name": "OffsetCMYK",
+          "displayName": "OffsetCMYK",
+          "componentImportPath": "@/components/plasmic-components/OffsetCMYK"
         }
       ],
       "customFunctions": []
