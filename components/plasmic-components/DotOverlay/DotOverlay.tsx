@@ -10,7 +10,7 @@ export interface DotOverlayProps {
   dotColorB?: string;
   /** Grid cell size in px */
   step?: number;
-  /** Minimum dot radius as % of cell (0–100). Applies far from the cursor. */
+  /** Minimum dot radius as % of cell (0–100). Applies far from the cursor / at rest. */
   dotEdgeMin?: number;
   /** Maximum dot radius as % of cell (0–100). Applies at the cursor. */
   dotEdgeMax?: number;
@@ -27,6 +27,8 @@ export interface DotOverlayProps {
   blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
   /** hover: activate on host hover. always: always on. never: hidden. */
   trigger?: 'hover' | 'always' | 'never';
+  /** Ease-in / ease-out duration (seconds) for the cursor activity ramp */
+  easeDuration?: number;
   className?: string;
 }
 
@@ -54,18 +56,24 @@ export function DotOverlay({
   maxOpacity = 1,
   blendMode = 'normal',
   trigger = 'hover',
+  easeDuration = 0.45,
   className,
 }: DotOverlayProps) {
   const resolvedColorA = colorOrDefault(dotColorA, '#FF6A50');
   const resolvedColorB = colorOrDefault(dotColorB, '#DDEA44');
   const effectiveStep = Math.max(2, step * Math.max(0.1, scale));
   const effectiveFalloff = Math.max(1, falloffRadius * Math.max(0.1, scale));
+
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const runningRef = useRef(false);
   const rafRef = useRef(0);
+  // Eased cursor position (lerped toward the true pointer so movement feels smooth)
   const curRef = useRef({ x: -9999, y: -9999 });
   const targetRef = useRef({ x: -9999, y: -9999 });
+  // Linear activity ramp 0..1 (time-based). 1 = fully hovered, 0 = at rest.
+  const activityRef = useRef(0);
+  const hoveringRef = useRef(false);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -78,41 +86,35 @@ export function DotOverlay({
 
     const colA = parseColor(resolvedColorA);
     const colB = parseColor(resolvedColorB);
-    // Clamp and convert percent-of-cell to actual px radius. 100% = touching (cell/2).
     const minR = (Math.max(0, Math.min(100, dotEdgeMin)) / 100) * (effectiveStep / 2);
     const maxR = (Math.max(0, Math.min(100, dotEdgeMax)) / 100) * (effectiveStep / 2);
 
-    const resize = () => {
-      canvas.width = host.offsetWidth;
-      canvas.height = host.offsetHeight;
-    };
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(host);
+    // Smoothstep: symmetric ease-in and ease-out
+    const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
-    const draw = () => {
-      if (!runningRef.current) return;
-      rafRef.current = requestAnimationFrame(draw);
-
-      curRef.current.x += (targetRef.current.x - curRef.current.x) * 0.18;
-      curRef.current.y += (targetRef.current.y - curRef.current.y) * 0.18;
-
+    // Pure render — reads curRef + activityRef and paints one frame.
+    const render = () => {
       const { width: w, height: h } = canvas;
+      if (w === 0 || h === 0) return;
       ctx.clearRect(0, 0, w, h);
 
+      const a = smoothstep(activityRef.current);
       const { x: cx, y: cy } = curRef.current;
       const half = effectiveStep / 2;
 
       for (let gx = half; gx < w + half; gx += effectiveStep) {
         for (let gy = half; gy < h + half; gy += effectiveStep) {
-          // Proximity-based interpolation between min and max radius
-          let t = 1;
+          // Cursor-proximity factor (0..1). Only meaningful when we actually have
+          // a cursor position — guarded by the sentinel below.
+          let proximity = 0;
           if (cx > -100) {
             const dist = Math.hypot(gx - cx, gy - cy);
-            t = Math.max(0, 1 - dist / effectiveFalloff);
-          } else {
-            t = 0; // no cursor yet → sit at min radius
+            proximity = Math.max(0, 1 - dist / effectiveFalloff);
           }
+          // Blend proximity by activity: at activity=0 every dot is at min
+          // (base state); at activity=1 the cursor's proximity fully drives
+          // the dot size + color lerp.
+          const t = proximity * a;
           const r = minR + (maxR - minR) * t;
           if (r < 0.3) continue;
           ctx.fillStyle = lerpColor(colA, colB, 1 - t);
@@ -123,43 +125,109 @@ export function DotOverlay({
       }
     };
 
+    const resize = () => {
+      canvas.width = host.offsetWidth;
+      canvas.height = host.offsetHeight;
+      render();
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(host);
+
+    // Time-based activity ramp. Advances linearly over easeDuration seconds
+    // toward target (1 hovered, 0 idle); the render shapes through smoothstep.
+    // Cursor position is also eased each frame so the proximity spotlight moves
+    // smoothly.
+    let lastTickTs = 0;
+    const easeSec = Math.max(0.05, easeDuration);
+
+    const tick = (now: number) => {
+      const dt = lastTickTs === 0 ? 0 : Math.min(0.1, (now - lastTickTs) / 1000);
+      lastTickTs = now;
+
+      // Activity toward target
+      const target = hoveringRef.current ? 1 : 0;
+      const delta = dt / easeSec;
+      if (activityRef.current < target) {
+        activityRef.current = Math.min(target, activityRef.current + delta);
+      } else if (activityRef.current > target) {
+        activityRef.current = Math.max(target, activityRef.current - delta);
+      }
+
+      // Cursor follow (exponential lerp, smooth enough here)
+      curRef.current.x += (targetRef.current.x - curRef.current.x) * 0.18;
+      curRef.current.y += (targetRef.current.y - curRef.current.y) * 0.18;
+
+      render();
+
+      // Continue looping while hovered, or while activity is still settling,
+      // or while cursor is still easing toward its target.
+      const cursorSettling =
+        Math.abs(targetRef.current.x - curRef.current.x) > 0.5 ||
+        Math.abs(targetRef.current.y - curRef.current.y) > 0.5;
+      const activitySettling = activityRef.current !== target;
+
+      if (hoveringRef.current || activitySettling || cursorSettling) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        runningRef.current = false;
+        lastTickTs = 0;
+      }
+    };
+
+    const startLoop = () => {
+      if (runningRef.current) return;
+      runningRef.current = true;
+      lastTickTs = 0;
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
     const onMove = (e: MouseEvent) => {
       const rect = host.getBoundingClientRect();
       targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      startLoop();
     };
-    const show = () => {
-      runningRef.current = true;
+    const onEnter = () => {
+      hoveringRef.current = true;
       canvas.classList.add(styles.active);
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(draw);
+      startLoop();
     };
-    const hide = () => {
-      // Keep drawing during the CSS opacity fade so dots stay intact as they fade.
+    const onLeave = () => {
+      hoveringRef.current = false;
+      // Keep RAF running so activity can ease back to 0 smoothly.
+      startLoop();
+      // Fade the canvas out via CSS opacity; the loop naturally clears
+      // itself as activity reaches 0 and proximity stops mattering.
       canvas.classList.remove(styles.active);
-      setTimeout(() => {
-        runningRef.current = false;
-        cancelAnimationFrame(rafRef.current);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }, 500);
     };
 
     host.addEventListener('mousemove', onMove);
     if (trigger === 'hover') {
-      host.addEventListener('mouseenter', show);
-      host.addEventListener('mouseleave', hide);
+      host.addEventListener('mouseenter', onEnter);
+      host.addEventListener('mouseleave', onLeave);
     } else if (trigger === 'always') {
-      // Keep cursor offscreen so dots sit at min radius; mouse updates override.
-      show();
+      canvas.classList.add(styles.active);
+      // "Always" means the canvas is visible — activity still ramps to 1 on
+      // hover and back to 0 on leave, so the cursor-driven max-size behavior
+      // still fades in and out. With no cursor, dots sit at min.
+      render();
+      host.addEventListener('mouseenter', onEnter);
+      host.addEventListener('mouseleave', onLeave);
     }
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      runningRef.current = false;
       ro.disconnect();
       host.removeEventListener('mousemove', onMove);
-      host.removeEventListener('mouseenter', show);
-      host.removeEventListener('mouseleave', hide);
+      host.removeEventListener('mouseenter', onEnter);
+      host.removeEventListener('mouseleave', onLeave);
     };
-  }, [resolvedColorA, resolvedColorB, effectiveStep, dotEdgeMin, dotEdgeMax, effectiveFalloff, trigger]);
+  }, [
+    resolvedColorA, resolvedColorB, effectiveStep, dotEdgeMin, dotEdgeMax,
+    effectiveFalloff, trigger, easeDuration,
+  ]);
 
   if (trigger === 'never') return null;
 

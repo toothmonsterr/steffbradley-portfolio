@@ -8,7 +8,7 @@
 //
 // Returned element is where `mouseenter`/`mouseleave` will fire reliably when a
 // user hovers the button / card that the effect is filling.
-export function findHoverHost(fromEl: HTMLElement | null): HTMLElement | null {
+export function findHoverHost(fromEl: Element | null): HTMLElement | null {
   if (!fromEl || typeof window === 'undefined') return null;
 
   let el: HTMLElement | null = fromEl.parentElement;

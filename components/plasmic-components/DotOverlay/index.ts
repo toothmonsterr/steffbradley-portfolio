@@ -26,6 +26,11 @@ export const DotOverlayMeta = {
       options: ['hover', 'always', 'never'],
       defaultValueHint: 'hover',
     },
+    easeDuration: {
+      type: 'number',
+      defaultValueHint: 0.45,
+      description: 'Seconds for the cursor-proximity ramp to ease in on hover and ease back to the base state on leave',
+    },
   },
   importPath: '@/components/plasmic-components/DotOverlay',
 };

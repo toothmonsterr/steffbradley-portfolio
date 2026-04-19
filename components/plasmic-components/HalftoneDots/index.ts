@@ -47,6 +47,11 @@ export const HalftoneDotsMeta = {
       defaultValueHint: 'hover',
       description: 'hover: fade in on hover of host. always: always on. never: hidden.',
     },
+    easeDuration: {
+      type: 'number',
+      defaultValueHint: 0.45,
+      description: 'Seconds for the shift/pulse ramp to ease in on hover and ease back out on leave',
+    },
   },
   importPath: '@/components/plasmic-components/HalftoneDots',
 };

@@ -23,8 +23,13 @@ export const GradientBlobMeta = {
       options: ['normal', 'multiply', 'darken', 'overlay', 'screen', 'soft-light', 'color-burn'],
       defaultValueHint: 'normal',
     },
-    hardEdges:          { type: 'boolean', defaultValueHint: false, description: 'Threshold the blurred composite alpha — crisp metaball silhouette instead of soft gradient' },
-    hardEdgesContrast:  { type: 'number',  defaultValueHint: 18, description: 'Sharpness of the hard edge (only used when hardEdges is on). Higher = harder cut.' },
+    animate: {
+      type: 'choice',
+      options: ['never', 'hover', 'always'],
+      defaultValueHint: 'always',
+      description: 'When the blobs drift. never: static. hover: loops while the host is hovered; eases to a stop on leave. always: continuous loop.',
+    },
+    easeDuration: { type: 'number', defaultValueHint: 0.8, description: 'Seconds over which the loop eases in/out when animate="hover"' },
   },
   importPath: '@/components/plasmic-components/GradientBlob',
 };

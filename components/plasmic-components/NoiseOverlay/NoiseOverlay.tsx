@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef } from 'react';
 import styles from './NoiseOverlay.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { colorOrDefault } from '@/hooks/colorDefault';
+import { findHoverHost } from '@/hooks/findHoverHost';
 
 export interface NoiseOverlayProps {
   /** Noise opacity (0–1) */
@@ -12,8 +13,13 @@ export interface NoiseOverlayProps {
   color?: string;
   /** CSS mix-blend-mode */
   blendMode?: 'multiply' | 'overlay' | 'soft-light' | 'darken' | 'screen' | 'normal';
-  /** Flicker the grain at ~12fps for a film-gate feel */
-  animate?: boolean;
+  /**
+   * When the grain flickers:
+   *   never  — static grain (cheapest)
+   *   hover  — flicker only while the hosting element is hovered
+   *   always — flicker continuously
+   */
+  animate?: 'never' | 'hover' | 'always';
   /** Fixed seed — change to shift the grain pattern */
   seed?: number;
   className?: string;
@@ -24,13 +30,14 @@ export function NoiseOverlay({
   grainSize = 1.2,
   color,
   blendMode = 'multiply',
-  animate = false,
+  animate = 'never',
   seed = 0,
   className,
 }: NoiseOverlayProps) {
   const resolvedColor = colorOrDefault(color, '#201B2A');
   const uid = useId().replace(/:/g, '');
   const filterId = `noise-${uid}`;
+  const svgRef = useRef<SVGSVGElement>(null);
   const turbRef = useRef<SVGFETurbulenceElement>(null);
   const prefersReduced = usePrefersReducedMotion();
 
@@ -38,7 +45,7 @@ export function NoiseOverlay({
   const baseFrequency = Math.max(0.1, 0.85 / Math.max(0.4, grainSize));
 
   useEffect(() => {
-    if (!animate || prefersReduced) return;
+    if (animate === 'never' || prefersReduced) return;
     const el = turbRef.current;
     if (!el) return;
 
@@ -53,12 +60,40 @@ export function NoiseOverlay({
       }
       raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    const start = () => {
+      cancelAnimationFrame(raf);
+      last = 0;
+      raf = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      // Reset to the base seed so the grain returns to its "rest" state
+      el.setAttribute('seed', String(seed));
+      s = seed;
+    };
+
+    if (animate === 'always') {
+      start();
+      return () => stop();
+    }
+
+    // animate === 'hover' — attach listeners to the hover host
+    const host = findHoverHost(svgRef.current);
+    if (!host) return;
+    const onEnter = () => start();
+    const onLeave = () => stop();
+    host.addEventListener('mouseenter', onEnter);
+    host.addEventListener('mouseleave', onLeave);
+    return () => {
+      host.removeEventListener('mouseenter', onEnter);
+      host.removeEventListener('mouseleave', onLeave);
+      stop();
+    };
   }, [animate, seed, prefersReduced]);
 
   return (
     <svg
+      ref={svgRef}
       aria-hidden="true"
       focusable="false"
       className={[styles.overlay, className ?? ''].filter(Boolean).join(' ')}

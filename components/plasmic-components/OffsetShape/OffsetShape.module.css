@@ -11,20 +11,13 @@
   overflow: hidden;
 }
 
-/* shape mode: sizer is visible and sits on top — real button/text is readable,
-   ink copies peek out behind as colored offset shadows. */
+/* Sizer — invisible copy of children that establishes the wrapper's layout
+   dimensions. Only the offset ink layers + overlap are visible. */
 .sizer {
   display: block;
   position: relative;
-}
-
-/* image mode: sizer hidden — luma layers are the full visual.
-   Keeps layout dimensions and allows pointer-events on children. */
-.sizerHidden {
-  display: block;
-  position: relative;
   visibility: hidden;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 /* Ink layers — absolutely positioned over the sizer area. */
@@ -36,7 +29,7 @@
   will-change: transform;
 }
 
-/* The SVG filter is applied to filterShell. filterInner just fills the space. */
+/* SVG filters are applied to filterShell. filterInner fills the box. */
 .filterShell {
   display: block;
   width: 100%;

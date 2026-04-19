@@ -16,7 +16,12 @@ export const NoiseOverlayMeta = {
       options: ['multiply', 'overlay', 'soft-light', 'darken', 'screen', 'normal'],
       defaultValueHint: 'multiply',
     },
-    animate:    { type: 'boolean', defaultValueHint: false, description: 'Flicker the grain at ~12fps (film-gate)' },
+    animate: {
+      type: 'choice',
+      options: ['never', 'hover', 'always'],
+      defaultValueHint: 'never',
+      description: 'When the grain flickers. never: static. hover: only while the host is hovered. always: continuous.',
+    },
     seed:       { type: 'number',  defaultValueHint: 0, description: 'Fixed seed for the grain. Change to shift pattern.' },
   },
   importPath: '@/components/plasmic-components/NoiseOverlay',

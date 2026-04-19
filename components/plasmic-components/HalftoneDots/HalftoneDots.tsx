@@ -35,6 +35,8 @@ export interface HalftoneDotsProps {
   iconFollowsCursor?: boolean;
   /** hover: activate on host hover. always: always on. never: hidden. */
   trigger?: 'hover' | 'always' | 'never';
+  /** Ease-in / ease-out duration (seconds) for the cursor shift/pulse activity ramp */
+  easeDuration?: number;
   className?: string;
 }
 
@@ -70,6 +72,7 @@ export function HalftoneDots({
   iconSize = '96px',
   iconFollowsCursor = false,
   trigger = 'hover',
+  easeDuration = 0.45,
   className,
 }: HalftoneDotsProps) {
   const resolvedColorA = colorOrDefault(dotColorA, '#FF6A50');
@@ -127,13 +130,19 @@ export function HalftoneDots({
     });
     ro.observe(host);
 
+    // Smoothstep: gentle ease-in AND ease-out. Symmetric — enter and leave
+    // animations slow down at both ends, not just the far end.
+    const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
     // ── Render one frame of both layers.
     // This uses ONE fillRect per layer (the rotated pattern covers everything).
     const render = () => {
       const { width: w, height: h } = canvas;
       if (w === 0 || h === 0) return;
 
-      const a = activityRef.current;
+      // activityRef holds linear progress 0..1 (time-based).
+      // Shape it through smoothstep for the visual ramp.
+      const a = smoothstep(activityRef.current);
       const pulseScale = cursor === 'pulse' ? 1 + a * 0.35 : 1;
       const shiftAmt = cursor === 'shift' ? a * (step * 0.6) : 0;
       // In shift mode the two layers counter-rotate slightly as they drift apart,
@@ -175,25 +184,41 @@ export function HalftoneDots({
       ctx.globalCompositeOperation = 'source-over';
     };
 
-    // ── RAF loop only runs while the activity ramp is still moving,
-    // or for a few frames after a change. For static mode we just render once.
-    const ANIM_EPS = 0.002;
-    const tickAnim = () => {
+    // ── Time-based activity ramp.
+    // activityRef holds LINEAR progress 0..1; render() shapes it through
+    // smoothstep for the visual. This gives symmetric ease-in/ease-out on
+    // both hover-enter AND hover-leave so the dots smoothly return to their
+    // static base state when the cursor leaves (not just pause where they were).
+    let lastTickTs = 0;
+    const easeSec = Math.max(0.05, easeDuration);
+
+    const tickAnim = (now: number) => {
+      const dt = lastTickTs === 0 ? 0 : Math.min(0.1, (now - lastTickTs) / 1000);
+      lastTickTs = now;
+
       const target = hoveringRef.current ? 1 : 0;
-      activityRef.current += (target - activityRef.current) * 0.12;
-      if (Math.abs(target - activityRef.current) < ANIM_EPS) {
-        activityRef.current = target;
-        render();
-        runningRef.current = false;
-        return;
+      const delta = dt / easeSec;
+      if (activityRef.current < target) {
+        activityRef.current = Math.min(target, activityRef.current + delta);
+      } else if (activityRef.current > target) {
+        activityRef.current = Math.max(target, activityRef.current - delta);
       }
+
       render();
-      rafRef.current = requestAnimationFrame(tickAnim);
+
+      if (activityRef.current !== target) {
+        rafRef.current = requestAnimationFrame(tickAnim);
+      } else {
+        // Reached target — one final render already happened above.
+        runningRef.current = false;
+        lastTickTs = 0;
+      }
     };
 
     const startAnim = () => {
       if (runningRef.current) return;
       runningRef.current = true;
+      lastTickTs = 0;
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(tickAnim);
     };
@@ -242,7 +267,7 @@ export function HalftoneDots({
     };
   }, [
     resolvedColorA, resolvedColorB, layerAAngle, layerBAngle,
-    step, dotSize, cursor, trigger,
+    step, dotSize, cursor, trigger, easeDuration,
   ]);
 
   // ── Cursor-following mask ────────────────────────────────────────────

@@ -24,10 +24,15 @@ export interface GradientBlobProps {
   maxOpacity?: number;
   /** CSS mix-blend-mode */
   blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
-  /** Hard edges — thresholds the blurred composite's alpha for a crisp "gooey" silhouette */
-  hardEdges?: boolean;
-  /** How crisp the hard edge is (only applies when hardEdges is on). Higher = sharper. */
-  hardEdgesContrast?: number;
+  /**
+   * When the blobs animate:
+   *   never  — static, one draw (cheapest)
+   *   hover  — loops while the host is hovered; eases to a stop when the cursor leaves
+   *   always — continuous loop
+   */
+  animate?: 'never' | 'hover' | 'always';
+  /** Ease-in/ease-out duration (seconds) for start/stop in hover mode */
+  easeDuration?: number;
   className?: string;
 }
 
@@ -42,12 +47,11 @@ function mulberry32(a: number) {
 
 interface Blob {
   color: string;
-  sizePct: number;         // blob diameter as % of container min-dim
-  // Waypoints in 0..1 normalised to container size
+  sizePct: number;
   xs: number[];
   ys: number[];
-  duration: number;        // seconds per loop
-  phase: number;           // 0..1 starting phase inside its loop
+  duration: number;
+  phase: number;
 }
 
 function buildBlobs(colors: string[], count: number, seed: number, baseDuration: number): Blob[] {
@@ -60,7 +64,6 @@ function buildBlobs(colors: string[], count: number, seed: number, baseDuration:
       xs.push(rand());
       ys.push(rand());
     }
-    // Close the loop so start == end for seamless looping
     xs.push(xs[0]);
     ys.push(ys[0]);
     return {
@@ -74,10 +77,9 @@ function buildBlobs(colors: string[], count: number, seed: number, baseDuration:
   });
 }
 
-// Catmull-Rom-ish interpolation along the waypoint list (linear segments is fine
-// for a soft blurred blob — the blur hides any faceting).
+// Linear waypoint interpolation (blur hides any faceting).
 function sampleBlobPosition(blob: Blob, t: number): [number, number] {
-  const segs = blob.xs.length - 1;        // number of segments
+  const segs = blob.xs.length - 1;
   const u = (t * segs) % segs;
   const i0 = Math.floor(u) % segs;
   const i1 = (i0 + 1) % (segs + 1);
@@ -99,8 +101,8 @@ export function GradientBlob({
   seed = 1,
   maxOpacity = 1,
   blendMode = 'normal',
-  hardEdges = false,
-  hardEdgesContrast = 18,
+  animate = 'always',
+  easeDuration = 0.8,
   className,
 }: GradientBlobProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -141,40 +143,47 @@ export function GradientBlob({
       canvas.height = host.offsetHeight;
     };
     resize();
-    const ro = new ResizeObserver(resize);
+    const ro = new ResizeObserver(() => {
+      resize();
+      // Re-render on resize even if paused
+      renderFrame();
+    });
     ro.observe(host);
 
-    // Offscreen canvas for the unblurred raw blobs. We draw the blobs here first,
-    // then blit the whole thing onto the visible canvas with blur (+ optional
-    // contrast for the hard-edges "gooey" threshold). This way the contrast
-    // operates on the COMPOSITE alpha, not each blob individually, which is
-    // what produces the correct metaball silhouette.
+    // Offscreen canvas for raw unblurred blobs — composited onto visible canvas
+    // with blur applied, so contrast/blur operate on the combined alpha.
     const offscreen = document.createElement('canvas');
     const offCtx = offscreen.getContext('2d');
     if (!offCtx) return;
-
     const syncOffscreen = () => {
       offscreen.width = canvas.width;
       offscreen.height = canvas.height;
     };
     syncOffscreen();
 
-    const start = performance.now();
-    const draw = (now: number) => {
+    // ── Animation state ─────────────────────────────────────────────────
+    // elapsed = virtual "playback time" for the blob loop. It only advances
+    // when playbackRate > 0, which is what lets us preserve loop continuity
+    // across hover pause/resume.
+    let elapsed = 0;
+    let playbackRate = animate === 'always' ? 1 : 0;
+    let hovered = false;
+    const easeSec = Math.max(0.05, easeDuration);
+    let lastNow = performance.now();
+
+    // Smoothstep for a gentle ease-in / ease-out as playbackRate
+    // lerps toward its target (0 or 1).
+    const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
+    const renderFrame = () => {
       const w = canvas.width;
       const h = canvas.height;
-      if (w === 0 || h === 0) {
-        rafRef.current = requestAnimationFrame(draw);
-        return;
-      }
-
+      if (w === 0 || h === 0) return;
       if (offscreen.width !== w || offscreen.height !== h) syncOffscreen();
 
-      // Draw raw, unblurred blobs to the offscreen canvas first.
       offCtx.clearRect(0, 0, w, h);
       offCtx.filter = 'none';
 
-      const elapsed = prefersReduced ? 0 : (now - start) / 1000;
       const minDim = Math.min(w, h);
       for (const blob of blobs) {
         const t = prefersReduced ? blob.phase : ((elapsed / blob.duration) + blob.phase) % 1;
@@ -188,24 +197,84 @@ export function GradientBlob({
         offCtx.fill();
       }
 
-      // Now composite onto the visible canvas with blur, and optionally a
-      // contrast pass that thresholds the alpha ramp into a hard edge.
       ctx.clearRect(0, 0, w, h);
       const effectiveBlur = Math.min(blurAmount, Math.min(w, h) / 2);
-      ctx.filter = hardEdges
-        ? `blur(${effectiveBlur}px) contrast(${Math.max(2, hardEdgesContrast)})`
-        : `blur(${effectiveBlur}px)`;
+      ctx.filter = `blur(${effectiveBlur}px)`;
       ctx.drawImage(offscreen, 0, 0);
-
-      rafRef.current = requestAnimationFrame(draw);
     };
-    rafRef.current = requestAnimationFrame(draw);
 
+    const tick = (now: number) => {
+      const dt = Math.min(0.1, (now - lastNow) / 1000); // clamp big jumps (tab switches)
+      lastNow = now;
+
+      // Ease the playbackRate toward its target. In hover mode the target
+      // depends on whether we're currently hovered; in always mode it's just 1.
+      const target = animate === 'always' ? 1 : (hovered ? 1 : 0);
+      // Approach target at a rate that covers 0→1 in ~easeSec seconds.
+      const delta = dt / easeSec;
+      if (playbackRate < target) {
+        playbackRate = Math.min(target, playbackRate + delta);
+      } else if (playbackRate > target) {
+        playbackRate = Math.max(target, playbackRate - delta);
+      }
+
+      // Advance virtual elapsed time by the shaped rate (so the loop itself
+      // accelerates/decelerates smoothly, preserving continuity).
+      if (!prefersReduced) {
+        elapsed += dt * smoothstep(playbackRate);
+      }
+
+      renderFrame();
+
+      // Keep looping while animating or still easing out
+      if (playbackRate > 0 || target > 0) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = 0;
+      }
+    };
+
+    const startLoop = () => {
+      if (rafRef.current) return;
+      lastNow = performance.now();
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    // Initial render — shows at least one frame even in 'never' mode
+    renderFrame();
+
+    if (prefersReduced || animate === 'never') {
+      return () => ro.disconnect();
+    }
+
+    if (animate === 'always') {
+      startLoop();
+      return () => {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+        ro.disconnect();
+      };
+    }
+
+    // animate === 'hover'
+    const onEnter = () => {
+      hovered = true;
+      startLoop();
+    };
+    const onLeave = () => {
+      hovered = false;
+      startLoop(); // ensure we're running so the rate can ease out
+    };
+    host.addEventListener('mouseenter', onEnter);
+    host.addEventListener('mouseleave', onLeave);
     return () => {
+      host.removeEventListener('mouseenter', onEnter);
+      host.removeEventListener('mouseleave', onLeave);
       cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
       ro.disconnect();
     };
-  }, [blobs, blurAmount, hardEdges, hardEdgesContrast, prefersReduced]);
+  }, [blobs, blurAmount, animate, easeDuration, prefersReduced]);
 
   return (
     <div ref={rootRef} className={[styles.root, className ?? ''].filter(Boolean).join(' ')} aria-hidden="true">
