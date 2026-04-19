@@ -26189,7 +26189,7 @@
           "path": "/style-guide"
         },
         {
-          "id": "3ILQOKV_IYFb",
+          "id": "wLGJ71B22wJH",
           "name": "Button",
           "type": "managed",
           "projectId": "67C2x4VH9CGyuASG98L3XF",
@@ -26198,71 +26198,6 @@
             "modulePath": "Button.tsx"
           },
           "cssFilePath": "plasmic/toothmonster/PlasmicButton.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "FDVhqvUTQn3S",
-          "name": "Label",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicLabel.tsx",
-          "importSpec": {
-            "modulePath": "Label.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicLabel.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "MArGxXIcQ7-_",
-          "name": "TextInput",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicTextInput.tsx",
-          "importSpec": {
-            "modulePath": "TextInput.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicTextInput.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "mEscwhtjrK2x",
-          "name": "TextAreaInput",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicTextAreaInput.tsx",
-          "importSpec": {
-            "modulePath": "TextAreaInput.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicTextAreaInput.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "MNKUITDjajR4",
-          "name": "Description",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicDescription.tsx",
-          "importSpec": {
-            "modulePath": "Description.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicDescription.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "j-F7rqXkCu17",
-          "name": "TextField",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicTextField.tsx",
-          "importSpec": {
-            "modulePath": "TextField.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicTextField.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -26344,6 +26279,11 @@
           "id": "OKun6mesTzr7",
           "name": "round.gif",
           "filePath": "../public/plasmic/toothmonster/images/roundGif.gif"
+        },
+        {
+          "id": "nL7GB2u_p8ri",
+          "name": "eyecon.svg 2",
+          "filePath": "../public/plasmic/toothmonster/images/eyeconSvg2.svg"
         }
       ],
       "indirect": false,
@@ -26384,24 +26324,6 @@
           "componentImportPath": "@/components/plasmic-components/ModelViewer"
         },
         {
-          "id": "1HVZyz2XFipU",
-          "name": "DotOverlay",
-          "displayName": "DotOverlay",
-          "componentImportPath": "@/components/plasmic-components/DotOverlay"
-        },
-        {
-          "id": "qc9XkpYIOoNO",
-          "name": "CursorDots",
-          "displayName": "CursorDots",
-          "componentImportPath": "@/components/plasmic-components/CursorDots"
-        },
-        {
-          "id": "Anzp4P8VlV4P",
-          "name": "CursorShadow",
-          "displayName": "CursorShadow",
-          "componentImportPath": "@/components/plasmic-components/CursorShadow"
-        },
-        {
           "id": "GohQkMFtGYyn",
           "name": "NoiseOverlay",
           "displayName": "NoiseOverlay",
@@ -26414,34 +26336,28 @@
           "componentImportPath": "@/components/plasmic-components/OffsetPrint"
         },
         {
-          "id": "HRCJhNi369Fo",
-          "name": "TiltCard",
-          "displayName": "TiltCard",
-          "componentImportPath": "@/components/plasmic-components/TiltCard"
-        },
-        {
-          "id": "DpcbxaECdiBn",
-          "name": "CursorParallax",
-          "displayName": "CursorParallax",
-          "componentImportPath": "@/components/plasmic-components/CursorParallax"
-        },
-        {
-          "id": "-XAXxv4rspRL",
-          "name": "GradientBlob",
-          "displayName": "GradientBlob",
-          "componentImportPath": "@/components/plasmic-components/GradientBlob"
-        },
-        {
           "id": "CdCDfMiagwQS",
           "name": "StickerPeel",
           "displayName": "StickerPeel",
           "componentImportPath": "@/components/plasmic-components/StickerPeel"
         },
         {
-          "id": "NoTuXBa7noFH",
-          "name": "ScrollParallax",
-          "displayName": "ScrollParallax",
-          "componentImportPath": "@/components/plasmic-components/ScrollParallax"
+          "id": "_MSv54ZDU1SB",
+          "name": "HalftoneDots",
+          "displayName": "HalftoneDots",
+          "componentImportPath": "@/components/plasmic-components/HalftoneDots"
+        },
+        {
+          "id": "e8qsCr99-93Q",
+          "name": "GradientBlob",
+          "displayName": "GradientBlob",
+          "componentImportPath": "@/components/plasmic-components/GradientBlob"
+        },
+        {
+          "id": "8p09mZd-cKv0",
+          "name": "DotOverlay",
+          "displayName": "DotOverlay",
+          "componentImportPath": "@/components/plasmic-components/DotOverlay"
         }
       ],
       "customFunctions": []

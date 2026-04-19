@@ -59,8 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { OffsetPrint } from "@/components/plasmic-components/OffsetPrint"; // plasmic-import: DlJQBSlj9xoa/codeComponent
-import Button from "../../Button"; // plasmic-import: 3ILQOKV_IYFb/component
+import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
+import { GradientBlob } from "@/components/plasmic-components/GradientBlob"; // plasmic-import: e8qsCr99-93Q/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -69,7 +70,6 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicStyleGuide.module.css"; // plasmic-import: KestoklH4saO/css
 
-import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
 import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
 import ChevronDownIcon from "./icons/PlasmicIcon__ChevronDown"; // plasmic-import: G6S5umLx_RKu/icon
 
@@ -117,9 +117,10 @@ export const PlasmicStyleGuide__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicStyleGuide__OverridesType = {
   root?: Flex__<"div">;
-  svg?: Flex__<"svg">;
-  button?: Flex__<typeof Button>;
-  text?: Flex__<"div">;
+  freeBox?: Flex__<"div">;
+  noiseOverlay?: Flex__<typeof NoiseOverlay>;
+  freeBox2?: Flex__<"div">;
+  gradientBlob?: Flex__<typeof GradientBlob>;
 };
 
 export interface DefaultStyleGuideProps {}
@@ -195,53 +196,45 @@ function PlasmicStyleGuide__RenderFunc(props: {
             sty.root
           )}
         >
-          <OffsetPrint
-            blendMode={"overlay"}
-            className={classNames("__wab_instance", sty.offsetPrint___6EQjx)}
-            colorA={true ? "#CEBEE3" : undefined}
-            colorB={true ? "#201B2A" : undefined}
-            mode={"shape"}
-            offsetX={1}
-            offsetY={1}
-            showOriginal={false}
-          >
-            <EyeconSvgIcon
-              data-plasmic-name={"svg"}
-              data-plasmic-override={overrides.svg}
-              className={classNames(projectcss.all, sty.svg)}
-              role={"img"}
-            />
-          </OffsetPrint>
-          <OffsetPrint
-            blendMode={"overlay"}
-            children={null}
-            className={classNames("__wab_instance", sty.offsetPrint__n8V0W)}
-            colorA={true ? "#FFAB7B" : undefined}
-            colorB={true ? "#DDEA44" : undefined}
-            mode={"shape"}
-            offsetX={1}
-            offsetY={1}
-            showOriginal={false}
+          <Button
+            className={classNames("__wab_instance", sty.button__lgSr)}
+            effect={
+              <div
+                data-plasmic-name={"freeBox"}
+                data-plasmic-override={overrides.freeBox}
+                className={classNames(projectcss.all, sty.freeBox)}
+              >
+                <NoiseOverlay
+                  data-plasmic-name={"noiseOverlay"}
+                  data-plasmic-override={overrides.noiseOverlay}
+                  animate={true}
+                  className={classNames("__wab_instance", sty.noiseOverlay)}
+                />
+              </div>
+            }
           />
 
           <Button
-            data-plasmic-name={"button"}
-            data-plasmic-override={overrides.button}
-            className={classNames("__wab_instance", sty.button)}
-            effect={true}
-            hoverEffect={null}
-            label={
-              <div
-                data-plasmic-name={"text"}
-                data-plasmic-override={overrides.text}
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text
-                )}
-              >
-                {"Text"}
-              </div>
+            className={classNames("__wab_instance", sty.button___9Tay7)}
+            effect={
+              <React.Fragment>
+                <div
+                  data-plasmic-name={"freeBox2"}
+                  data-plasmic-override={overrides.freeBox2}
+                  className={classNames(projectcss.all, sty.freeBox2)}
+                />
+
+                <GradientBlob
+                  data-plasmic-name={"gradientBlob"}
+                  data-plasmic-override={overrides.gradientBlob}
+                  blobCount={8}
+                  className={classNames("__wab_instance", sty.gradientBlob)}
+                  color1={true ? "#FFAB7B" : undefined}
+                  color2={true ? "#295037" : undefined}
+                  color3={true ? "#FF6A50" : undefined}
+                  color4={true ? "#52A159" : undefined}
+                />
+              </React.Fragment>
             }
           />
         </div>
@@ -251,19 +244,21 @@ function PlasmicStyleGuide__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "svg", "button", "text"],
-  svg: ["svg"],
-  button: ["button", "text"],
-  text: ["text"]
+  root: ["root", "freeBox", "noiseOverlay", "freeBox2", "gradientBlob"],
+  freeBox: ["freeBox", "noiseOverlay"],
+  noiseOverlay: ["noiseOverlay"],
+  freeBox2: ["freeBox2"],
+  gradientBlob: ["gradientBlob"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  svg: "svg";
-  button: typeof Button;
-  text: "div";
+  freeBox: "div";
+  noiseOverlay: typeof NoiseOverlay;
+  freeBox2: "div";
+  gradientBlob: typeof GradientBlob;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -328,9 +323,10 @@ export const PlasmicStyleGuide = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    svg: makeNodeComponent("svg"),
-    button: makeNodeComponent("button"),
-    text: makeNodeComponent("text"),
+    freeBox: makeNodeComponent("freeBox"),
+    noiseOverlay: makeNodeComponent("noiseOverlay"),
+    freeBox2: makeNodeComponent("freeBox2"),
+    gradientBlob: makeNodeComponent("gradientBlob"),
 
     // Metadata about props expected for PlasmicStyleGuide
     internalVariantProps: PlasmicStyleGuide__VariantProps,

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&family=Inter%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --token-SkhDeVUszhHS: #ede9e3;
@@ -459,6 +459,40 @@
   --plasmic-token-success-success-soft-foreground: var(--token-7crWCh4Jk9Bk);
   --token-hhc56eKcGP0E: #713f12;
   --plasmic-token-warning-warning-soft-foreground: var(--token-hhc56eKcGP0E);
+  --token-6y05U5qu5bTJ: 0.5rem;
+  --plasmic-token-size-8: var(--token-6y05U5qu5bTJ);
+  --token-wx8tPfOWhFpx: Inter;
+  --plasmic-token-sans-serif: var(--token-wx8tPfOWhFpx);
+  --token-xw1-G_yOXHza: 1rem;
+  --plasmic-token-font-md: var(--token-xw1-G_yOXHza);
+  --token-egGYHVTw2etk: 1.25;
+  --plasmic-token-line-height-md: var(--token-egGYHVTw2etk);
+  --token-XHco1EwF-9E0: 0.375rem;
+  --plasmic-token-size-6: var(--token-XHco1EwF-9E0);
+  --token-YYvB1fK9j_le: 0.25rem;
+  --plasmic-token-size-4: var(--token-YYvB1fK9j_le);
+  --token-M7okz5-SEo6w: 0.75rem;
+  --plasmic-token-font-sm: var(--token-M7okz5-SEo6w);
+  --token-Idb349pdoUCx: 1;
+  --plasmic-token-line-height-sm: var(--token-Idb349pdoUCx);
+  --token-WOevqGcFVy0i: 1.25rem;
+  --plasmic-token-font-lg: var(--token-WOevqGcFVy0i);
+  --token-A2j3-JqnAka1: 1.4;
+  --plasmic-token-line-height-lg: var(--token-A2j3-JqnAka1);
+  --token-rxZyXiMtINZ_: 0.125rem;
+  --plasmic-token-size-2: var(--token-rxZyXiMtINZ_);
+  --token-HvtSPSdy-1oc: #0000001a;
+  --plasmic-token-interaction-hovered: var(--token-HvtSPSdy-1oc);
+  --token-OtOfpI-FGkX1: #ffffff40;
+  --plasmic-token-interaction-disabled: var(--token-OtOfpI-FGkX1);
+  --token-WYpfNa69vqXU: #00000033;
+  --plasmic-token-interaction-pressed: var(--token-WYpfNa69vqXU);
+  --token-5ylaoG25mAaq: 0.625rem;
+  --plasmic-token-size-10: var(--token-5ylaoG25mAaq);
+  --token-zlKCr218vPjz: 0.75rem;
+  --plasmic-token-size-12: var(--token-zlKCr218vPjz);
+  --token-UHzC1QpoO0wt: var(--token-Exqtdtc1L1Pg);
+  --plasmic-token-size-button: var(--token-UHzC1QpoO0wt);
 }
 
 .plasmic_tokens {
