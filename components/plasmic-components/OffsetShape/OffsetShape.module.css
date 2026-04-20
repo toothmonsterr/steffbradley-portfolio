@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
   display: inline-block;
+  isolation: isolate;
 }
 
 .defs {

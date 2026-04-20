@@ -6,7 +6,9 @@ import {
   buildWobble,
   useOffsetActivity,
   useLayerMotionValues,
+  rotatedDotScreenUri,
   type Interaction,
+  type TextureMode,
 } from '../OffsetShape/shared';
 
 export interface OffsetCMYKProps {
@@ -38,11 +40,11 @@ export interface OffsetCMYKProps {
    * 'inverse' — aligned at rest; eases apart on hover.
    */
   interaction?: Interaction;
-  /** Sub-pixel wobble magnitude for organic hand-printed feel (px) */
   jitter?: number;
-  /** Ease-in / ease-out duration for the hover transition (seconds) */
   easeDuration?: number;
-
+  texture?: TextureMode;
+  textureStep?: number;
+  textureContrast?: number;
   className?: string;
 }
 
@@ -89,21 +91,67 @@ function contrastTable(k: number): string {
   return values.map((v) => v.toFixed(3)).join(' ');
 }
 
-function channelFilter(id: string, channel: Channel, color: string, contrast: number) {
-  return (
-    <filter id={id} colorInterpolationFilters="sRGB">
-      {/* 1. Compute density into alpha */}
+const SCREEN_ANGLES = [15, 30, 45, 60];
+
+function channelFilter(
+  id: string, channel: Channel, color: string, contrast: number,
+  texture: TextureMode, layerIndex: number, step: number, dotSize: number,
+) {
+  const densityChain = (
+    <>
       <feColorMatrix type="matrix" values={MATRIX_FOR[channel]} result="density" />
-
-      {/* 2. Clip density by source alpha — no ink where the source was transparent */}
       <feComposite in="density" in2="SourceAlpha" operator="in" result="maskedDensity" />
-
-      {/* 3. Contrast curve */}
       <feComponentTransfer in="maskedDensity" result="curved">
         <feFuncA type="table" tableValues={contrastTable(contrast)} />
       </feComponentTransfer>
+    </>
+  );
 
-      {/* 4. Paint alpha with ink color */}
+  if (texture === 'halftone') {
+    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
+    const s = Math.max(2, Math.round(step));
+    const uri = rotatedDotScreenUri(s, dotSize, angle);
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        {densityChain}
+        <feImage href={uri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
+        <feTile in="screen" result="tiled" />
+        {/* Dots clipped by channel density */}
+        <feComposite in="tiled" in2="curved" operator="in" result="dots" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="dots" operator="in" />
+      </filter>
+    );
+  }
+
+  if (texture === 'noise') {
+    const freq = (0.4 / Math.max(1, step)).toFixed(4);
+    const n = 10;
+    const ones = Math.round(Math.max(1, Math.min(n - 1, (dotSize / 100) * n)));
+    const tv = Array.from({ length: n }, (_, i) => (i >= n - ones ? 1 : 0)).join(' ');
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        {densityChain}
+        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2"
+                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
+        <feComponentTransfer in="grey" result="grain">
+          <feFuncR type="discrete" tableValues={tv} />
+          <feFuncG type="discrete" tableValues={tv} />
+          <feFuncB type="discrete" tableValues={tv} />
+          <feFuncA type="discrete" tableValues={tv} />
+        </feComponentTransfer>
+        <feComposite in="grain" in2="curved" operator="in" result="maskedGrain" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="maskedGrain" operator="in" />
+      </filter>
+    );
+  }
+
+  // none
+  return (
+    <filter id={id} colorInterpolationFilters="sRGB">
+      {densityChain}
       <feFlood floodColor={color} result="ink" />
       <feComposite in="ink" in2="curved" operator="in" />
     </filter>
@@ -123,9 +171,12 @@ export function OffsetCMYK({
   blendMode    = 'multiply',
   channelContrast = 1.4,
 
-  interaction  = 'hover',
-  jitter       = 1.2,
-  easeDuration = 0.6,
+  interaction    = 'hover',
+  jitter         = 1.2,
+  easeDuration   = 0.6,
+  texture        = 'none' as TextureMode,
+  textureStep    = 4,
+  textureContrast = 60,
   className,
 }: OffsetCMYKProps) {
   const uid  = useId().replace(/:/g, '');
@@ -178,10 +229,10 @@ export function OffsetCMYK({
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
-          {channelFilter(ids.C, 'C', colorC, channelContrast)}
-          {channelFilter(ids.M, 'M', colorM, channelContrast)}
-          {channelFilter(ids.Y, 'Y', colorY, channelContrast)}
-          {channelFilter(ids.K, 'K', colorK, channelContrast)}
+          {channelFilter(ids.C, 'C', colorC, channelContrast, texture, 0, textureStep, textureContrast)}
+          {channelFilter(ids.M, 'M', colorM, channelContrast, texture, 1, textureStep, textureContrast)}
+          {channelFilter(ids.Y, 'Y', colorY, channelContrast, texture, 2, textureStep, textureContrast)}
+          {channelFilter(ids.K, 'K', colorK, channelContrast, texture, 3, textureStep, textureContrast)}
         </defs>
       </svg>
 

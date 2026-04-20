@@ -27,6 +27,14 @@ export const OffsetShapeMeta = {
     },
     jitter:        { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude for organic hand-printed feel (px)' },
     easeDuration:  { type: 'number', defaultValueHint: 0.6, description: 'Ease-in / ease-out duration for the hover transition (seconds)' },
+    texture: {
+      type: 'choice',
+      options: ['none', 'halftone', 'noise'],
+      defaultValueHint: 'none',
+      description: 'Ink texture: none = solid fill, halftone = dot screen (layers at 15°/30°), noise = grain',
+    },
+    textureStep:    { type: 'number', defaultValueHint: 4,  description: 'Halftone cell size in px' },
+    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100): larger halftone dots / denser noise' },
   },
   importPath: '@/components/plasmic-components/OffsetShape',
 };

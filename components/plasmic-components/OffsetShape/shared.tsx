@@ -45,10 +45,101 @@ export function invTable(contrast: number): string {
 // ---------------------------------------------------------------------------
 
 export type TintMode = 'shape' | 'image';
+export type TextureMode = 'none' | 'noise' | 'halftone';
 
 const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
 
-export function shapeFilterJSX(id: string, color: string) {
+// Standard screen angles (index = layer order: 0=C,1=M,2=Y,3=K / A,B,...)
+const SCREEN_ANGLES = [15, 30, 45, 60];
+
+// Returns an inline SVG data URI sized exactly step×step, pre-rasterised with
+// a rotated halftone dot centred in the cell. feTile in the filter repeats this
+// tile so the visual frequency is exactly 1 dot per step×step px.
+//
+// Rotation at non-45° angles means the dot grid origin shifts — we compensate
+// by filling a step×step viewport with a rotated *pattern* that has multiple
+// dots so no cell ever clips at the edges. The canvas is sqrt(2)× oversize
+// (covers the diagonal) so we can rotate without blank corners, then the SVG
+// viewBox crops back to step×step.
+export function rotatedDotScreenUri(step: number, dotSizePct: number, angleDeg: number): string {
+  const s = Math.max(2, Math.round(step));
+  const r = (Math.max(1, Math.min(99, dotSizePct)) / 100) * (s / 2);
+  // Pad enough to cover the rotated diagonal without clipping
+  const pad = Math.ceil(s * 0.5);
+  const full = s + pad * 2;
+  // The pattern tile is s×s with a centred dot; we rotate the whole pattern
+  // around the centre of the full canvas so dots near edges stay in frame.
+  const cx = full / 2;
+  const cy = full / 2;
+  const svg = [
+    `<svg xmlns="http://www.w3.org/2000/svg"`,
+    ` width="${s}" height="${s}"`,
+    ` viewBox="${pad} ${pad} ${s} ${s}">`,
+    `<defs>`,
+    `<pattern id="p" x="0" y="0" width="${s}" height="${s}" patternUnits="userSpaceOnUse"`,
+    ` patternTransform="rotate(${angleDeg},${cx},${cy})">`,
+    `<circle cx="${s / 2}" cy="${s / 2}" r="${r}" fill="black"/>`,
+    `</pattern>`,
+    `</defs>`,
+    `<rect x="0" y="0" width="${full}" height="${full}" fill="url(#p)"/>`,
+    `</svg>`,
+  ].join('');
+  if (typeof btoa !== 'undefined') {
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+  }
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+// contrast 0–100: maps to how many of 10 discrete steps pass (higher = more ink).
+// e.g. contrast=50 → "0 0 0 0 0 1 1 1 1 1", contrast=80 → "0 0 1 1 1 1 1 1 1 1"
+function noiseTableValues(contrast: number): string {
+  const n = 10;
+  const ones = Math.round(Math.max(1, Math.min(n - 1, (contrast / 100) * n)));
+  return Array.from({ length: n }, (_, i) => (i >= n - ones ? 1 : 0)).join(' ');
+}
+
+export function shapeFilterJSX(
+  id: string, color: string,
+  texture: TextureMode = 'none',
+  layerIndex = 0,
+  step = 4, contrast = 60,
+) {
+  if (texture === 'halftone') {
+    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
+    const s = Math.max(2, Math.round(step));
+    const uri = rotatedDotScreenUri(s, contrast, angle);
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        <feImage href={uri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
+        <feTile in="screen" result="tiled" />
+        <feComposite in="tiled" in2="SourceAlpha" operator="in" result="dots" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="dots" operator="in" />
+      </filter>
+    );
+  }
+
+  if (texture === 'noise') {
+    const freq = (0.4 / Math.max(1, step)).toFixed(4);
+    const tv = noiseTableValues(contrast);
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2"
+                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
+        <feComponentTransfer in="grey" result="grain">
+          <feFuncR type="discrete" tableValues={tv} />
+          <feFuncG type="discrete" tableValues={tv} />
+          <feFuncB type="discrete" tableValues={tv} />
+          <feFuncA type="discrete" tableValues={tv} />
+        </feComponentTransfer>
+        <feComposite in="grain" in2="SourceAlpha" operator="in" result="maskedGrain" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="maskedGrain" operator="in" />
+      </filter>
+    );
+  }
+
   return (
     <filter id={id} colorInterpolationFilters="sRGB">
       <feFlood floodColor={color} result="flood" />
@@ -57,7 +148,64 @@ export function shapeFilterJSX(id: string, color: string) {
   );
 }
 
-export function imageFilterJSX(id: string, color: string, imageContrast: number) {
+export function imageFilterJSX(
+  id: string, color: string, imageContrast: number,
+  texture: TextureMode = 'none',
+  layerIndex = 0,
+  step = 4, contrast = 60,
+) {
+  // Luminance mask: dark areas of the image = more ink
+  const lumaMask = (
+    <>
+      <feColorMatrix type="matrix" values={LUMA_MATRIX} result="luma" />
+      <feComponentTransfer in="luma" result="lumaMasked">
+        <feFuncA type="table" tableValues={invTable(imageContrast)} />
+      </feComponentTransfer>
+      <feComposite in="lumaMasked" in2="SourceAlpha" operator="in" result="imageMask" />
+    </>
+  );
+
+  if (texture === 'halftone') {
+    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
+    const s = Math.max(2, Math.round(step));
+    const screenUri = rotatedDotScreenUri(s, contrast, angle);
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        {lumaMask}
+        <feImage href={screenUri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
+        <feTile in="screen" result="tiled" />
+        {/* Dots clipped by image luminance mask */}
+        <feComposite in="tiled" in2="imageMask" operator="in" result="dots" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="dots" operator="in" />
+      </filter>
+    );
+  }
+
+  if (texture === 'noise') {
+    const freq = (0.4 / Math.max(1, step)).toFixed(4);
+    const tv = noiseTableValues(contrast);
+    return (
+      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+        {lumaMask}
+        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2"
+                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
+        <feComponentTransfer in="grey" result="grain">
+          <feFuncR type="discrete" tableValues={tv} />
+          <feFuncG type="discrete" tableValues={tv} />
+          <feFuncB type="discrete" tableValues={tv} />
+          <feFuncA type="discrete" tableValues={tv} />
+        </feComponentTransfer>
+        {/* Grain clipped by image luminance mask */}
+        <feComposite in="grain" in2="imageMask" operator="in" result="maskedGrain" />
+        <feFlood floodColor={color} result="ink" />
+        <feComposite in="ink" in2="maskedGrain" operator="in" />
+      </filter>
+    );
+  }
+
+  // none
   return (
     <filter id={id} colorInterpolationFilters="sRGB">
       <feColorMatrix type="matrix" values={LUMA_MATRIX} result="luma" />
@@ -167,7 +315,6 @@ export function useOffsetActivity(
       // when startTsRef is reset by the second mount after the first RAF fired.
       const tSec = Math.max(0, (now - startTsRef.current) / 1000);
       const a = smoothstep(Math.max(0, Math.min(1, activityRef.current)));
-      if (a > 0.01 && a < 0.99) console.log('[offset] a=', a.toFixed(3), 'x0=', (layersRef.current[0]?.dxSign ?? '?'));
 
       for (const layer of layers) {
         const [bx, by, br] = prefersReduced ? [0, 0, 0] : sampleBreathe(layer.wobble, tSec);
@@ -227,8 +374,8 @@ export function useOffsetActivity(
     writeTransforms(startTsRef.current);
     startLoop();
 
-    const onEnter = () => { hoveringRef.current = true;  console.log('[offset] enter, activity=', activityRef.current); };
-    const onLeave = () => { hoveringRef.current = false; console.log('[offset] leave, activity=', activityRef.current); };
+    const onEnter = () => { hoveringRef.current = true; };
+    const onLeave = () => { hoveringRef.current = false; };
 
     host.addEventListener('mouseenter', onEnter);
     host.addEventListener('mouseleave', onLeave);

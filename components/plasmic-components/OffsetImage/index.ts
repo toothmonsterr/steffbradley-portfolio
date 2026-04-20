@@ -6,25 +6,15 @@ export const OffsetImageMeta = {
   name: 'OffsetImage',
   displayName: 'Offset Image',
   description:
-    'Two independent content slots overlaid with misregistration. Drop two different images (or any content) to create a two-plate offset effect. By default slots render in their natural colors; enable tintSlots to paint each slot with its own ink color.',
+    'Two independent image slots overlaid with misregistration. Each slot is tinted via luminance separation — dark areas absorb the ink color while light areas stay clear — ideal for photos and images. For solid shapes and text use Offset Shape instead.',
   props: {
     slotA:  { type: 'slot', description: 'First plate content (negatively offset)' },
     slotB:  { type: 'slot', description: 'Second plate content (positively offset)' },
 
-    tintSlots: {
-      type: 'boolean',
-      defaultValueHint: false,
-      description: 'Off (default): slots render in their natural colors. On: each slot is tinted with its ink color.',
-    },
-    colorA: { type: 'color', defaultValueHint: '#FF6A50', description: 'Tint for slot A (used when tintSlots is on)' },
-    colorB: { type: 'color', defaultValueHint: '#DDEA44', description: 'Tint for slot B (used when tintSlots is on)' },
-    mode: {
-      type: 'choice',
-      options: ['shape', 'image'],
-      defaultValueHint: 'shape',
-      description: 'Tint strategy (when tintSlots is on). shape: flood the slot silhouette. image: luminance separation.',
-    },
-    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Contrast curve for image tint mode (higher = deeper blacks)' },
+    tintSlots:     { type: 'boolean', defaultValueHint: false, description: 'When on, each slot is tinted via luminance separation using colorA/colorB. When off, slots render in their natural colors.' },
+    colorA:        { type: 'color', defaultValueHint: '#FF6A50', description: 'Ink color for slot A (used when tintSlots is on)' },
+    colorB:        { type: 'color', defaultValueHint: '#DDEA44', description: 'Ink color for slot B (used when tintSlots is on)' },
+    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Contrast of the luminance tint — higher = richer ink, deeper shadows (used when tintSlots is on)' },
 
     offsetX:   { type: 'number', defaultValueHint: 4, description: 'Horizontal misregistration per layer (px)' },
     offsetY:   { type: 'number', defaultValueHint: 3, description: 'Vertical misregistration per layer (px)' },
@@ -41,6 +31,14 @@ export const OffsetImageMeta = {
     },
     jitter:        { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude (px)' },
     easeDuration:  { type: 'number', defaultValueHint: 0.6, description: 'Ease-in / ease-out duration for the hover transition (seconds)' },
+    texture: {
+      type: 'choice',
+      options: ['none', 'halftone', 'noise'],
+      defaultValueHint: 'none',
+      description: 'Ink texture: none = solid luminance tint, halftone = dot screen, noise = grain',
+    },
+    textureStep:    { type: 'number', defaultValueHint: 4,  description: 'Halftone cell size in px' },
+    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100): larger halftone dots / denser noise' },
   },
   importPath: '@/components/plasmic-components/OffsetImage',
 };

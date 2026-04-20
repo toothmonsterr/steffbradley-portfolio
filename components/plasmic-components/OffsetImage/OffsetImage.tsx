@@ -4,12 +4,11 @@ import styles from './OffsetImage.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import {
   buildWobble,
-  shapeFilterJSX,
   imageFilterJSX,
   useOffsetActivity,
   useLayerMotionValues,
   type Interaction,
-  type TintMode,
+  type TextureMode,
 } from '../OffsetShape/shared';
 
 export interface OffsetImageProps {
@@ -17,16 +16,18 @@ export interface OffsetImageProps {
   slotB?: React.ReactNode;
   colorA?: string;
   colorB?: string;
+  /** When true, applies luminance-separation tinting to each slot using colorA/colorB */
   tintSlots?: boolean;
-  mode?: TintMode;
   imageContrast?: number;
   offsetX?: number;
   offsetY?: number;
   blendMode?: 'normal' | 'multiply' | 'darken' | 'screen' | 'overlay';
   interaction?: Interaction;
   jitter?: number;
-  /** Ease-in / ease-out duration (seconds) for the hover transition */
   easeDuration?: number;
+  texture?: TextureMode;
+  textureStep?: number;
+  textureContrast?: number;
   className?: string;
 }
 
@@ -35,15 +36,17 @@ export function OffsetImage({
   slotB,
   colorA        = '#FF6A50',
   colorB        = '#DDEA44',
-  tintSlots     = false,
-  mode          = 'shape',
-  imageContrast = 1.3,
-  offsetX       = 4,
-  offsetY       = 3,
-  blendMode     = 'multiply',
-  interaction   = 'hover',
-  jitter        = 1.2,
-  easeDuration  = 0.6,
+  tintSlots      = false,
+  imageContrast  = 1.3,
+  offsetX        = 4,
+  offsetY        = 3,
+  blendMode      = 'multiply',
+  interaction    = 'hover',
+  jitter         = 1.2,
+  easeDuration   = 0.6,
+  texture        = 'none' as TextureMode,
+  textureStep    = 4,
+  textureContrast = 60,
   className,
 }: OffsetImageProps) {
   const uid       = useId().replace(/:/g, '');
@@ -69,10 +72,6 @@ export function OffsetImage({
     layers,
   });
 
-  const filterJSX = mode === 'image'
-    ? (id: string, color: string) => imageFilterJSX(id, color, imageContrast)
-    : shapeFilterJSX;
-
   return (
     <span
       ref={hostRef}
@@ -81,8 +80,8 @@ export function OffsetImage({
       {tintSlots && (
         <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
           <defs>
-            {filterJSX(filterAId, colorA)}
-            {filterJSX(filterBId, colorB)}
+            {imageFilterJSX(filterAId, colorA, imageContrast, texture, 0, textureStep, textureContrast)}
+            {imageFilterJSX(filterBId, colorB, imageContrast, texture, 1, textureStep, textureContrast)}
           </defs>
         </svg>
       )}

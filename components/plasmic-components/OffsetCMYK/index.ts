@@ -40,6 +40,14 @@ export const OffsetCMYKMeta = {
     },
     jitter:       { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude (px)' },
     easeDuration: { type: 'number', defaultValueHint: 0.6, description: 'Ease-in / ease-out duration for hover (s)' },
+    texture: {
+      type: 'choice',
+      options: ['none', 'halftone', 'noise'],
+      defaultValueHint: 'none',
+      description: 'Ink texture: none = solid channel fill, halftone = dot screen at standard screen angles (15°/30°/45°/60°), noise = grain',
+    },
+    textureStep:    { type: 'number', defaultValueHint: 4,  description: 'Halftone cell size in px' },
+    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100): larger halftone dots / denser noise' },
   },
   importPath: '@/components/plasmic-components/OffsetCMYK',
 };

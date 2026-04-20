@@ -40,6 +40,11 @@ export const tokens = {
     'error-50':  colorError['50'],
     'error-75':  colorError['75'],
     'error-100': colorError['100'],
+    // Navy opacity scale
+    'navy-0':  '#00427F00',
+    'navy-25': '#00427F40',
+    'navy-50': '#00427F80',
+    'navy-75': '#00427FBF',
   },
   fontFamily,
   spacingPx,

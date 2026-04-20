@@ -154,9 +154,11 @@ export function DotOverlay({
         activityRef.current = Math.max(target, activityRef.current - delta);
       }
 
-      // Cursor follow (exponential lerp, smooth enough here)
-      curRef.current.x += (targetRef.current.x - curRef.current.x) * 0.18;
-      curRef.current.y += (targetRef.current.y - curRef.current.y) * 0.18;
+      // Cursor follow — frame-rate-independent exponential lerp.
+      // 0.25 is the per-second "smoothing" base; pow normalises for dt.
+      const lerpFactor = 1 - Math.pow(1 - 0.25, dt * 60);
+      curRef.current.x += (targetRef.current.x - curRef.current.x) * lerpFactor;
+      curRef.current.y += (targetRef.current.y - curRef.current.y) * lerpFactor;
 
       render();
 
@@ -188,7 +190,11 @@ export function DotOverlay({
       targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
       startLoop();
     };
-    const onEnter = () => {
+    const onEnter = (e: MouseEvent) => {
+      const rect = host.getBoundingClientRect();
+      const pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      curRef.current = { ...pos };
+      targetRef.current = { ...pos };
       hoveringRef.current = true;
       canvas.classList.add(styles.active);
       startLoop();
