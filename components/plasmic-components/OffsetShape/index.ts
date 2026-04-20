@@ -34,7 +34,9 @@ export const OffsetShapeMeta = {
       description: 'Ink texture: none = solid fill, halftone = dot screen (layers at 15°/30°), noise = grain',
     },
     textureStep:    { type: 'number', defaultValueHint: 4,  description: 'Halftone cell size in px' },
-    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100): larger halftone dots / denser noise' },
+    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100+): larger halftone dots / denser noise. Values above 100 let dots overlap for a heavy ink look.' },
+    textureHoverContrast: { type: 'number', description: 'Halftone only. When set, dot size grows toward this value (%) as the cursor approaches. Leave blank to disable proximity effect.' },
+    textureProximityRadius: { type: 'number', defaultValueHint: 150, description: 'Halftone hover: radius in px over which the dot-size effect ramps. Cursor inside this distance from the element edge triggers growth.' },
   },
   importPath: '@/components/plasmic-components/OffsetShape',
 };

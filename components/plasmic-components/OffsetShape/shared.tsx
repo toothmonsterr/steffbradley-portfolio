@@ -378,6 +378,150 @@ export function useOffsetActivity(
   }, [hostRef]);
 }
 
+// ---------------------------------------------------------------------------
+// Halftone proximity effect
+// ---------------------------------------------------------------------------
+
+// Builds a full-element SVG where each dot's radius is sized by its distance
+// from the (lerped) cursor. Mirrors the radial formula from CursorShadow:
+//   t = 1 - dist/radius  (1 at cursor, 0 at edge of proximity zone)
+//   dotPct = base + (hover - base) * sqrt(t)   ← sqrt gives smooth falloff
+function buildProximityHalftoneSVG(
+  w: number, h: number, step: number,
+  baseDotSize: number, hoverDotSize: number,
+  cursorX: number, cursorY: number,
+  radius: number,
+): string {
+  const half    = step / 2;
+  const baseR   = (Math.max(1, baseDotSize) / 100) * half;
+  const baseStr = baseR.toFixed(2);   // pre-formatted for the common case
+  const parts: string[] = [];
+
+  for (let gy = 0; gy * step <= h; gy++) {
+    for (let gx = 0; gx * step <= w; gx++) {
+      const px = gx * step + half;
+      const py = gy * step + half;
+      // AABB fast-reject: if either axis alone exceeds radius the dot is
+      // guaranteed outside the circle, so skip the more expensive hypot.
+      const dxAbs = Math.abs(px - cursorX);
+      const dyAbs = Math.abs(py - cursorY);
+      if (dxAbs > radius || dyAbs > radius) {
+        parts.push(`<circle cx="${px}" cy="${py}" r="${baseStr}"/>`);
+      } else {
+        const dist    = Math.hypot(dxAbs, dyAbs);
+        const t       = Math.max(0, 1 - dist / radius);
+        const dotPct  = baseDotSize + (hoverDotSize - baseDotSize) * Math.sqrt(t);
+        const r       = (Math.max(1, dotPct) / 100) * half;
+        parts.push(`<circle cx="${px}" cy="${py}" r="${r.toFixed(2)}"/>`);
+      }
+    }
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><g fill="black">${parts.join('')}</g></svg>`;
+  if (typeof btoa !== 'undefined') return `data:image/svg+xml;base64,${btoa(svg)}`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+/**
+ * Drives per-dot halftone sizing based on cursor proximity.
+ * Each dot's radius is computed from its distance to the cursor, so the effect
+ * follows the cursor spatially rather than scaling the whole pattern uniformly.
+ *
+ * Generates a full-element SVG each frame and sets it as the feImage source
+ * (sized to the element, so feTile shows it exactly once with no repeat seam).
+ *
+ * filterIds: IDs of the <filter> elements whose <feImage> to update.
+ * Pass an empty array to disable.
+ */
+export function useHalftoneProximity(
+  hostRef: React.RefObject<HTMLElement | null>,
+  filterIds: string[],
+  opts: {
+    step: number;
+    baseDotSize: number;
+    hoverDotSize: number;
+    /** px radius over which the effect ramps (default 150) */
+    proximityRadius?: number;
+    prefersReduced?: boolean;
+  },
+) {
+  const optsRef = useRef(opts);
+  optsRef.current = opts;
+
+  // target = raw mouse position, cur = lerped position (mirrors CursorShadow).
+  const targetRef = useRef({ x: -9999, y: -9999 });
+  const curRef    = useRef({ x: -9999, y: -9999 });
+  const rafRef = useRef(0);
+  const filterIdsRef = useRef(filterIds);
+  filterIdsRef.current = filterIds;
+  // Track last rendered state so we skip regeneration when nothing changed.
+  const prevRef = useRef({ x: NaN, y: NaN, w: 0, h: 0 });
+
+  useEffect(() => {
+    if (!filterIds.length) return;
+    // No cursor on touch-only devices — skip entirely so mobile pays nothing.
+    if (typeof window !== 'undefined' && !window.matchMedia('(pointer: fine)').matches) return;
+
+    const onMove = (e: MouseEvent) => {
+      targetRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+
+    const tick = () => {
+      const host = hostRef.current;
+      const { step, baseDotSize, hoverDotSize, proximityRadius = 150, prefersReduced } = optsRef.current;
+      const ids = filterIdsRef.current;
+
+      // Don't burn a full SVG build before the mouse has been seen at all.
+      if (targetRef.current.x === -9999) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      // Lerp cursor toward target (same 0.13 factor as CursorShadow).
+      curRef.current.x += (targetRef.current.x - curRef.current.x) * 0.13;
+      curRef.current.y += (targetRef.current.y - curRef.current.y) * 0.13;
+
+      if (host && ids.length) {
+        const rect = host.getBoundingClientRect();
+        const w = Math.ceil(rect.width);
+        const h = Math.ceil(rect.height);
+        // Cursor in element-local coordinates.
+        const localX = prefersReduced ? -9999 : curRef.current.x - rect.left;
+        const localY = prefersReduced ? -9999 : curRef.current.y - rect.top;
+
+        const prev = prevRef.current;
+        const moved = Math.abs(localX - prev.x) > 0.3 || Math.abs(localY - prev.y) > 0.3;
+        const resized = w !== prev.w || h !== prev.h;
+
+        if ((moved || resized) && w > 0 && h > 0) {
+          prevRef.current = { x: localX, y: localY, w, h };
+          const uri = buildProximityHalftoneSVG(w, h, step, baseDotSize, hoverDotSize, localX, localY, proximityRadius);
+          for (const id of ids) {
+            const feImage = document.getElementById(id)?.querySelector('feImage');
+            if (feImage) {
+              feImage.setAttribute('href', uri);
+              feImage.setAttribute('width', String(w));
+              feImage.setAttribute('height', String(h));
+            }
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    };
+  // Re-mount only when enabled/disabled state changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hostRef, filterIds.length]);
+}
+
 // Convenience: create the motion values + LayerSpec for one layer.
 // useRef keeps the object identity stable across renders.
 export function useLayerMotionValues(dxSign: number, dySign: number, wobble: number[][]): LayerSpec {

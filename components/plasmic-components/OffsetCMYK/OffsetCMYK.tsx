@@ -5,6 +5,7 @@ import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import {
   buildWobble,
   useOffsetActivity,
+  useHalftoneProximity,
   useLayerMotionValues,
   rotatedDotScreenUri,
   type Interaction,
@@ -45,6 +46,10 @@ export interface OffsetCMYKProps {
   texture?: TextureMode;
   textureStep?: number;
   textureContrast?: number;
+  /** When set, dots grow to this size (%) as cursor approaches the element */
+  textureHoverContrast?: number;
+  /** px radius over which the hover dot-size effect ramps (default 150) */
+  textureProximityRadius?: number;
   className?: string;
 }
 
@@ -177,6 +182,8 @@ export function OffsetCMYK({
   texture        = 'none' as TextureMode,
   textureStep    = 4,
   textureContrast = 60,
+  textureHoverContrast,
+  textureProximityRadius,
   className,
 }: OffsetCMYKProps) {
   const uid  = useId().replace(/:/g, '');
@@ -209,6 +216,20 @@ export function OffsetCMYK({
     easeDuration,
     prefersReduced,
     layers,
+  });
+
+  const halftoneIds = useMemo(
+    () => texture === 'halftone' && textureHoverContrast != null
+      ? [ids.C, ids.M, ids.Y, ids.K]
+      : [],
+    [texture, textureHoverContrast, ids.C, ids.M, ids.Y, ids.K],
+  );
+  useHalftoneProximity(hostRef, halftoneIds, {
+    step: textureStep,
+    baseDotSize: textureContrast,
+    hoverDotSize: textureHoverContrast ?? textureContrast,
+    proximityRadius: textureProximityRadius,
+    prefersReduced,
   });
 
   const renderLayer = (filterId: string) => (

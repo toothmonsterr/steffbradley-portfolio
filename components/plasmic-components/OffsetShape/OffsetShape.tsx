@@ -6,6 +6,7 @@ import {
   buildWobble,
   shapeFilterJSX,
   useOffsetActivity,
+  useHalftoneProximity,
   useLayerMotionValues,
   type Interaction,
   type TextureMode,
@@ -25,8 +26,12 @@ export interface OffsetShapeProps {
   texture?: TextureMode;
   /** Halftone cell size in px (used when texture = halftone) */
   textureStep?: number;
-  /** Halftone dot radius as % of cell 0–100 (used when texture = halftone) */
+  /** Halftone dot radius as % of cell 0–100+ (used when texture = halftone) */
   textureContrast?: number;
+  /** When set, dots grow to this size (%) as cursor approaches the element */
+  textureHoverContrast?: number;
+  /** px radius over which the hover dot-size effect ramps (default 150) */
+  textureProximityRadius?: number;
   className?: string;
 }
 
@@ -43,6 +48,8 @@ export function OffsetShape({
   texture       = 'none',
   textureStep   = 4,
   textureContrast = 60,
+  textureHoverContrast,
+  textureProximityRadius,
   className,
 }: OffsetShapeProps) {
   const uid        = useId().replace(/:/g, '');
@@ -60,6 +67,18 @@ export function OffsetShape({
   const layers = [layerA, layerB];
 
   useOffsetActivity(hostRef, { interaction, offsetX, offsetY, easeDuration, prefersReduced, layers });
+
+  const halftoneIds = useMemo(
+    () => texture === 'halftone' && textureHoverContrast != null ? [filterAId, filterBId] : [],
+    [texture, textureHoverContrast, filterAId, filterBId],
+  );
+  useHalftoneProximity(hostRef, halftoneIds, {
+    step: textureStep,
+    baseDotSize: textureContrast,
+    hoverDotSize: textureHoverContrast ?? textureContrast,
+    proximityRadius: textureProximityRadius,
+    prefersReduced,
+  });
 
   const layerCopy = (filterId: string) => (
     <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>

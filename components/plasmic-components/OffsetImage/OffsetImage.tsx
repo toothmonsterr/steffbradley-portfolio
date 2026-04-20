@@ -6,6 +6,7 @@ import {
   buildWobble,
   imageFilterJSX,
   useOffsetActivity,
+  useHalftoneProximity,
   useLayerMotionValues,
   type Interaction,
   type TextureMode,
@@ -28,6 +29,10 @@ export interface OffsetImageProps {
   texture?: TextureMode;
   textureStep?: number;
   textureContrast?: number;
+  /** When set, dots grow to this size (%) as cursor approaches the element */
+  textureHoverContrast?: number;
+  /** px radius over which the hover dot-size effect ramps (default 150) */
+  textureProximityRadius?: number;
   className?: string;
 }
 
@@ -47,6 +52,8 @@ export function OffsetImage({
   texture        = 'none' as TextureMode,
   textureStep    = 4,
   textureContrast = 60,
+  textureHoverContrast,
+  textureProximityRadius,
   className,
 }: OffsetImageProps) {
   const uid       = useId().replace(/:/g, '');
@@ -70,6 +77,20 @@ export function OffsetImage({
     easeDuration,
     prefersReduced,
     layers,
+  });
+
+  const halftoneIds = useMemo(
+    () => tintSlots && texture === 'halftone' && textureHoverContrast != null
+      ? [filterAId, filterBId]
+      : [],
+    [tintSlots, texture, textureHoverContrast, filterAId, filterBId],
+  );
+  useHalftoneProximity(hostRef, halftoneIds, {
+    step: textureStep,
+    baseDotSize: textureContrast,
+    hoverDotSize: textureHoverContrast ?? textureContrast,
+    proximityRadius: textureProximityRadius,
+    prefersReduced,
   });
 
   return (
