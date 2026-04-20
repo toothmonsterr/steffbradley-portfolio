@@ -32,6 +32,8 @@ export interface OffsetShapeProps {
   textureHoverContrast?: number;
   /** px radius over which the hover dot-size effect ramps (default 150) */
   textureProximityRadius?: number;
+  /** Falloff curve: 0.5 = wide soft halo, 1 = linear, 2+ = tight spot (default 0.5) */
+  textureHoverFeather?: number;
   className?: string;
 }
 
@@ -50,6 +52,7 @@ export function OffsetShape({
   textureContrast = 60,
   textureHoverContrast,
   textureProximityRadius,
+  textureHoverFeather,
   className,
 }: OffsetShapeProps) {
   const uid        = useId().replace(/:/g, '');
@@ -77,6 +80,7 @@ export function OffsetShape({
     baseDotSize: textureContrast,
     hoverDotSize: textureHoverContrast ?? textureContrast,
     proximityRadius: textureProximityRadius,
+    feather: textureHoverFeather,
     prefersReduced,
   });
 

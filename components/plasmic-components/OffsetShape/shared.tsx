@@ -390,7 +390,7 @@ function buildProximityHalftoneSVG(
   w: number, h: number, step: number,
   baseDotSize: number, hoverDotSize: number,
   cursorX: number, cursorY: number,
-  radius: number,
+  radius: number, feather: number,
 ): string {
   const half    = step / 2;
   const baseR   = (Math.max(1, baseDotSize) / 100) * half;
@@ -410,7 +410,7 @@ function buildProximityHalftoneSVG(
       } else {
         const dist    = Math.hypot(dxAbs, dyAbs);
         const t       = Math.max(0, 1 - dist / radius);
-        const dotPct  = baseDotSize + (hoverDotSize - baseDotSize) * Math.sqrt(t);
+        const dotPct  = baseDotSize + (hoverDotSize - baseDotSize) * Math.pow(t, feather);
         const r       = (Math.max(1, dotPct) / 100) * half;
         parts.push(`<circle cx="${px}" cy="${py}" r="${r.toFixed(2)}"/>`);
       }
@@ -441,6 +441,8 @@ export function useHalftoneProximity(
     hoverDotSize: number;
     /** px radius over which the effect ramps (default 150) */
     proximityRadius?: number;
+    /** Falloff curve exponent — 0.5 = wide soft halo, 1 = linear, 2+ = tight concentrated spot (default 0.5) */
+    feather?: number;
     prefersReduced?: boolean;
   },
 ) {
@@ -468,7 +470,7 @@ export function useHalftoneProximity(
 
     const tick = () => {
       const host = hostRef.current;
-      const { step, baseDotSize, hoverDotSize, proximityRadius = 150, prefersReduced } = optsRef.current;
+      const { step, baseDotSize, hoverDotSize, proximityRadius = 150, feather = 0.5, prefersReduced } = optsRef.current;
       const ids = filterIdsRef.current;
 
       // Don't burn a full SVG build before the mouse has been seen at all.
@@ -495,7 +497,7 @@ export function useHalftoneProximity(
 
         if ((moved || resized) && w > 0 && h > 0) {
           prevRef.current = { x: localX, y: localY, w, h };
-          const uri = buildProximityHalftoneSVG(w, h, step, baseDotSize, hoverDotSize, localX, localY, proximityRadius);
+          const uri = buildProximityHalftoneSVG(w, h, step, baseDotSize, hoverDotSize, localX, localY, proximityRadius, feather);
           for (const id of ids) {
             const feImage = document.getElementById(id)?.querySelector('feImage');
             if (feImage) {
