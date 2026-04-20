@@ -30,6 +30,8 @@ export interface OffsetShapeProps {
   textureContrast?: number;
   /** When set, dots grow to this size (%) as cursor approaches the element */
   textureHoverContrast?: number;
+  /** Enables or disables the halftone hover proximity effect (default true) */
+  textureHoverEnabled?: boolean;
   /** px radius over which the hover dot-size effect ramps (default 150) */
   textureProximityRadius?: number;
   /** Falloff curve: 0.5 = wide soft halo, 1 = linear, 2+ = tight spot (default 0.5) */
@@ -51,6 +53,7 @@ export function OffsetShape({
   textureStep   = 4,
   textureContrast = 60,
   textureHoverContrast,
+  textureHoverEnabled = true,
   textureProximityRadius,
   textureHoverFeather,
   className,
@@ -72,8 +75,8 @@ export function OffsetShape({
   useOffsetActivity(hostRef, { interaction, offsetX, offsetY, easeDuration, prefersReduced, layers });
 
   const halftoneIds = useMemo(
-    () => texture === 'halftone' && textureHoverContrast != null ? [filterAId, filterBId] : [],
-    [texture, textureHoverContrast, filterAId, filterBId],
+    () => texture === 'halftone' && textureHoverContrast != null && textureHoverEnabled ? [filterAId, filterBId] : [],
+    [texture, textureHoverContrast, textureHoverEnabled, filterAId, filterBId],
   );
   useHalftoneProximity(hostRef, halftoneIds, {
     step: textureStep,

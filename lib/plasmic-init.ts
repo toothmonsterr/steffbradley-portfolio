@@ -78,6 +78,9 @@ import { OffsetCMYK, OffsetCMYKMeta }           from '@/components/plasmic-compo
 import { HalftoneDots, HalftoneDotsMeta }       from '@/components/plasmic-components/HalftoneDots';
 import { GradientBlob, GradientBlobMeta }       from '@/components/plasmic-components/GradientBlob';
 import { DotOverlay, DotOverlayMeta }           from '@/components/plasmic-components/DotOverlay';
+import { TornEdge, TornEdgeMeta }               from '@/components/plasmic-components/TornEdge';
+import { InkBleed, InkBleedMeta }               from '@/components/plasmic-components/InkBleed';
+import { PrintColorbar, PrintColorbarMeta }     from '@/components/plasmic-components/PrintColorbar';
 
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
@@ -88,5 +91,8 @@ PLASMIC.registerComponent(OffsetImage,     OffsetImageMeta     as any);
 PLASMIC.registerComponent(OffsetCMYK,      OffsetCMYKMeta      as any);
 PLASMIC.registerComponent(HalftoneDots,    HalftoneDotsMeta    as any);
 PLASMIC.registerComponent(GradientBlob,    GradientBlobMeta    as any);
-PLASMIC.registerComponent(DotOverlay,      DotOverlayMeta      as any);
+PLASMIC.registerComponent(DotOverlay,    DotOverlayMeta    as any);
+PLASMIC.registerComponent(TornEdge,      TornEdgeMeta      as any);
+PLASMIC.registerComponent(InkBleed,      InkBleedMeta      as any);
+PLASMIC.registerComponent(PrintColorbar, PrintColorbarMeta as any);
 /* eslint-enable @typescript-eslint/no-explicit-any */

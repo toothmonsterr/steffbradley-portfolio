@@ -1,0 +1,18 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Filter is applied to this shell; content inside fills its bounding box. */
+.filterShell {
+  display: block;
+}

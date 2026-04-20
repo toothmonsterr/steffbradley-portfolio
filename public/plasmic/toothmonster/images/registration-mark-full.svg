@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="54" viewBox="0 0 40 54">
+  <!-- Target -->
+  <g stroke="#000000" fill="none" stroke-width="1">
+    <circle cx="20" cy="20" r="19.5"/>
+    <circle cx="20" cy="20" r="10"/>
+    <line x1="0" y1="20" x2="40" y2="20"/>
+    <line x1="20" y1="0" x2="20" y2="40"/>
+  </g>
+  <!-- Colorbar (4px gap below target) -->
+  <g transform="translate(0,44)">
+    <rect x="0"      y="0" width="6.667" height="10" fill="#00AEEF"/>
+    <rect x="6.667"  y="0" width="6.667" height="10" fill="#EC008C"/>
+    <rect x="13.333" y="0" width="6.667" height="10" fill="#FFF200"/>
+    <rect x="20"     y="0" width="6.667" height="10" fill="#000000"/>
+    <rect x="26.667" y="0" width="6.667" height="10" fill="#FFFFFF" stroke="#000000" stroke-width="0.5"/>
+    <rect x="33.333" y="0" width="6.667" height="10" fill="#000000"/>
+  </g>
+</svg>
