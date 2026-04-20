@@ -61,29 +61,16 @@ const SCREEN_ANGLES = [15, 30, 45, 60];
 // dots so no cell ever clips at the edges. The canvas is sqrt(2)× oversize
 // (covers the diagonal) so we can rotate without blank corners, then the SVG
 // viewBox crops back to step×step.
-export function rotatedDotScreenUri(step: number, dotSizePct: number, angleDeg: number): string {
+export function rotatedDotScreenUri(step: number, dotSizePct: number, _angleDeg: number): string {
   const s = Math.max(2, Math.round(step));
-  const r = (Math.max(1, Math.min(99, dotSizePct)) / 100) * (s / 2);
-  // Pad enough to cover the rotated diagonal without clipping
-  const pad = Math.ceil(s * 0.5);
-  const full = s + pad * 2;
-  // The pattern tile is s×s with a centred dot; we rotate the whole pattern
-  // around the centre of the full canvas so dots near edges stay in frame.
-  const cx = full / 2;
-  const cy = full / 2;
-  const svg = [
-    `<svg xmlns="http://www.w3.org/2000/svg"`,
-    ` width="${s}" height="${s}"`,
-    ` viewBox="${pad} ${pad} ${s} ${s}">`,
-    `<defs>`,
-    `<pattern id="p" x="0" y="0" width="${s}" height="${s}" patternUnits="userSpaceOnUse"`,
-    ` patternTransform="rotate(${angleDeg},${cx},${cy})">`,
-    `<circle cx="${s / 2}" cy="${s / 2}" r="${r}" fill="black"/>`,
-    `</pattern>`,
-    `</defs>`,
-    `<rect x="0" y="0" width="${full}" height="${full}" fill="url(#p)"/>`,
-    `</svg>`,
-  ].join('');
+  // dotSizePct can exceed 100 — dots larger than the cell overlap neighbours,
+  // simulating heavy/flooded ink. No upper clamp; lower bound keeps r > 0.
+  const r = (Math.max(1, dotSizePct) / 100) * (s / 2);
+  // A single s×s tile with a centred circle on a transparent background.
+  // feTile repeats this pixel-perfectly with no seams, producing clean dots.
+  // (Screen-angle rotation is omitted: rotating the tile breaks seamless tiling
+  // because the rotated grid's period no longer matches the s×s tile size.)
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}"><circle cx="${s / 2}" cy="${s / 2}" r="${r}" fill="black"/></svg>`;
   if (typeof btoa !== 'undefined') {
     return `data:image/svg+xml;base64,${btoa(svg)}`;
   }
