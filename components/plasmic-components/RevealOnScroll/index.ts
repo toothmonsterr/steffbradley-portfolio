@@ -6,7 +6,7 @@ export const RevealOnScrollMeta = {
   name: 'RevealOnScroll',
   displayName: 'Reveal on Scroll',
   description:
-    'Wraps slot content and transitions it from blurry, desaturated, and grainy to its normal clean state as it scrolls into view.',
+    'Wraps slot content and transitions it from blurry, desaturated, and organic to its normal clean state as it scrolls into view. Add a NoiseOverlay in the slot for grain texture.',
   props: {
     children: {
       type: 'slot',
@@ -22,32 +22,32 @@ export const RevealOnScrollMeta = {
       defaultValueHint: 30,
       description: 'Max displacement scale — controls how noisy/wavy the blur looks',
     },
-    noiseIntensity: {
+    warpSize: {
       type: 'number',
-      defaultValueHint: 0.5,
-      description: 'Max grain overlay opacity at the start of the reveal (0–1)',
+      defaultValueHint: 1,
+      description: 'Size of the warp turbulence — larger = broader waves, smaller = tighter ripple',
+    },
+    startOpacity: {
+      type: 'number',
+      defaultValueHint: 0,
+      description: 'Opacity at rest before the reveal begins (0–1)',
     },
     endRatio: {
       type: 'number',
       defaultValueHint: 0.35,
       description: 'Viewport fraction (0–1) where reveal completes — 0.1 = fast, 0.7 = slow long reveal',
     },
-    grainSize: {
-      type: 'number',
-      defaultValueHint: 1.2,
-      description: 'Noise grain size — larger = chunkier grain',
-    },
-    noiseColor: {
-      type: 'color',
-      defaultValueHint: '#201B2A',
-      description: 'Grain overlay color',
+    playOnce: {
+      type: 'boolean',
+      defaultValueHint: false,
+      description: 'When on, the reveal plays once and stays revealed if the user scrolls back up',
     },
     trigger: {
       type: 'choice',
-      options: ['scroll', 'always'],
+      options: ['scroll', 'load', 'always'],
       defaultValueHint: 'scroll',
       description:
-        'scroll: reveal as element scrolls into view. always: fully revealed — use in Plasmic Studio to preview content.',
+        'scroll: reveal as element scrolls into view. load: reveal once on mount. always: fully revealed — use in Plasmic Studio to preview content.',
     },
   },
   importPath: '@/components/plasmic-components/RevealOnScroll',
