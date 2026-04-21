@@ -128,7 +128,7 @@ export function shapeFilterJSX(
   }
 
   return (
-    <filter id={id} colorInterpolationFilters="sRGB">
+    <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
       <feFlood floodColor={color} result="flood" />
       <feComposite in="flood" in2="SourceAlpha" operator="in" />
     </filter>

@@ -13,10 +13,9 @@
 }
 
 /* Sizer — invisible copy of children that establishes the wrapper's layout
-   dimensions. Only the offset ink layers + overlap are visible. */
+   dimensions. inline-block so it hugs the child's natural size. */
 .sizer {
-  display: block;
-  position: relative;
+  display: inline-block;
   visibility: hidden;
   pointer-events: none;
 }
@@ -30,15 +29,13 @@
   will-change: transform;
 }
 
-/* SVG filters are applied to filterShell. filterInner fills the box. */
+/* filterShell sizes to its content so SourceAlpha matches the child exactly.
+   display: inline-flex prevents it from stretching to the layer width. */
 .filterShell {
-  display: block;
-  width: 100%;
-  height: 100%;
+  display: inline-flex;
+  align-items: flex-start;
 }
 
 .filterInner {
-  display: block;
-  width: 100%;
-  height: 100%;
+  display: contents;
 }
