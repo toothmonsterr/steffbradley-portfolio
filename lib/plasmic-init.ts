@@ -82,6 +82,7 @@ import { TornEdge, TornEdgeMeta }               from '@/components/plasmic-compo
 import { InkBleed, InkBleedMeta }               from '@/components/plasmic-components/InkBleed';
 import { PrintColorbar, PrintColorbarMeta }     from '@/components/plasmic-components/PrintColorbar';
 import { TornSection, TornSectionMeta }         from '@/components/plasmic-components/TornSection';
+import { RevealOnScroll, RevealOnScrollMeta }   from '@/components/plasmic-components/RevealOnScroll';
 
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
@@ -97,4 +98,5 @@ PLASMIC.registerComponent(TornEdge,      TornEdgeMeta      as any);
 PLASMIC.registerComponent(InkBleed,      InkBleedMeta      as any);
 PLASMIC.registerComponent(PrintColorbar, PrintColorbarMeta as any);
 PLASMIC.registerComponent(TornSection,   TornSectionMeta   as any);
+PLASMIC.registerComponent(RevealOnScroll, RevealOnScrollMeta as any);
 /* eslint-enable @typescript-eslint/no-explicit-any */
