@@ -7,6 +7,7 @@ import {
   imageFilterJSX,
   useOffsetActivity,
   useHalftoneProximity,
+  useHalftoneScreen,
   useLayerMotionValues,
   type Interaction,
   type TextureMode,
@@ -99,6 +100,12 @@ export function OffsetImage({
     feather: textureHoverFeather,
     prefersReduced,
   });
+
+  const screenIds = useMemo(
+    () => tintSlots && texture === 'halftone' ? [filterAId, filterBId] : [],
+    [tintSlots, texture, filterAId, filterBId],
+  );
+  useHalftoneScreen(hostRef, screenIds, { step: textureStep, contrast: textureContrast, prefersReduced });
 
   return (
     <span

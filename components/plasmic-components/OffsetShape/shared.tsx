@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useMotionValue, type MotionValue } from 'motion/react';
 
 // ---------------------------------------------------------------------------
@@ -28,13 +28,15 @@ export function buildWobble(seed: number, mag: number): number[][] {
 }
 
 // feFuncA table values for image-mode luminance → alpha with a contrast curve.
+// Negative contrast inverts the curve: light areas get ink instead of dark areas.
 export function invTable(contrast: number): string {
   const n = 9;
-  const k = Math.max(0.1, contrast);
+  const inverted = contrast < 0;
+  const k = Math.max(0.1, Math.abs(contrast));
   const values: number[] = [];
   for (let i = 0; i < n; i++) {
     const t = i / (n - 1);
-    const shaped = Math.pow(1 - t, 1 / k);
+    const shaped = Math.pow(inverted ? t : 1 - t, 1 / k);
     values.push(Math.max(0, Math.min(1, shaped)));
   }
   return values.map((v) => v.toFixed(3)).join(' ');
@@ -61,19 +63,40 @@ const SCREEN_ANGLES = [15, 30, 45, 60];
 // dots so no cell ever clips at the edges. The canvas is sqrt(2)× oversize
 // (covers the diagonal) so we can rotate without blank corners, then the SVG
 // viewBox crops back to step×step.
+// Generates a full w×h SVG with a rotated halftone dot grid.
+// Used by feImage sized to the full filter region — no feTile needed.
+export function buildHalftoneSVG(w: number, h: number, step: number, dotSizePct: number, angleDeg: number): string {
+  const s    = Math.max(2, step);
+  const r    = (Math.max(1, dotSizePct) / 100) * (s / 2);
+  const rad  = (angleDeg * Math.PI) / 180;
+  const cos  = Math.cos(rad);
+  const sin  = Math.sin(rad);
+  const diag = Math.ceil(Math.hypot(w, h));
+  // Number of cells needed to cover the diagonal in each grid axis direction
+  const n    = Math.ceil(diag / s) + 2;
+  const cx   = w / 2;
+  const cy   = h / 2;
+
+  const circles: string[] = [];
+  for (let gi = -n; gi <= n; gi++) {
+    for (let gj = -n; gj <= n; gj++) {
+      const px = cx + cos * gi * s - sin * gj * s;
+      const py = cy + sin * gi * s + cos * gj * s;
+      if (px + r < 0 || px - r > w || py + r < 0 || py - r > h) continue;
+      circles.push(`<circle cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="${r.toFixed(2)}"/>`);
+    }
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><g fill="black">${circles.join('')}</g></svg>`;
+  if (typeof btoa !== 'undefined') return `data:image/svg+xml;base64,${btoa(svg)}`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+// Legacy alias used by the hover proximity builder (proximity SVG is already full-size).
 export function rotatedDotScreenUri(step: number, dotSizePct: number, _angleDeg: number): string {
   const s = Math.max(2, Math.round(step));
-  // dotSizePct can exceed 100 — dots larger than the cell overlap neighbours,
-  // simulating heavy/flooded ink. No upper clamp; lower bound keeps r > 0.
   const r = (Math.max(1, dotSizePct) / 100) * (s / 2);
-  // A single s×s tile with a centred circle on a transparent background.
-  // feTile repeats this pixel-perfectly with no seams, producing clean dots.
-  // (Screen-angle rotation is omitted: rotating the tile breaks seamless tiling
-  // because the rotated grid's period no longer matches the s×s tile size.)
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}"><circle cx="${s / 2}" cy="${s / 2}" r="${r}" fill="black"/></svg>`;
-  if (typeof btoa !== 'undefined') {
-    return `data:image/svg+xml;base64,${btoa(svg)}`;
-  }
+  if (typeof btoa !== 'undefined') return `data:image/svg+xml;base64,${btoa(svg)}`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
@@ -92,14 +115,11 @@ export function shapeFilterJSX(
   step = 4, contrast = 60,
 ) {
   if (texture === 'halftone') {
-    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
-    const s = Math.max(2, Math.round(step));
-    const uri = rotatedDotScreenUri(s, contrast, angle);
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-        <feImage href={uri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
-        <feTile in="screen" result="tiled" />
-        <feComposite in="tiled" in2="SourceAlpha" operator="in" result="dots" />
+        {/* href populated imperatively by useHalftoneScreen after mount */}
+        <feImage href="" x="0%" y="0%" width="100%" height="100%" result="screen" preserveAspectRatio="none" />
+        <feComposite in="screen" in2="SourceAlpha" operator="in" result="dots" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="dots" operator="in" />
       </filter>
@@ -153,16 +173,12 @@ export function imageFilterJSX(
   );
 
   if (texture === 'halftone') {
-    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
-    const s = Math.max(2, Math.round(step));
-    const screenUri = rotatedDotScreenUri(s, contrast, angle);
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
         {lumaMask}
-        <feImage href={screenUri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
-        <feTile in="screen" result="tiled" />
-        {/* Dots clipped by image luminance mask */}
-        <feComposite in="tiled" in2="imageMask" operator="in" result="dots" />
+        {/* href populated imperatively by useHalftoneScreen after mount */}
+        <feImage href="" x="0%" y="0%" width="100%" height="100%" result="screen" preserveAspectRatio="none" />
+        <feComposite in="screen" in2="imageMask" operator="in" result="dots" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="dots" operator="in" />
       </filter>
@@ -522,6 +538,65 @@ export function useHalftoneProximity(
   // Re-mount only when enabled/disabled state changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostRef, filterIds.length]);
+}
+
+/**
+ * Populates the feImage href for halftone filters with a full-size rotated dot
+ * grid SVG, measured from the host element. Re-runs on resize.
+ *
+ * filterIds: array of filter element IDs whose first <feImage> to populate.
+ * Each entry maps to one layer angle via SCREEN_ANGLES[index].
+ */
+export function useHalftoneScreen(
+  hostRef: React.RefObject<HTMLElement | null>,
+  filterIds: string[],
+  opts: { step: number; contrast: number; prefersReduced?: boolean },
+) {
+  const optsRef = useRef(opts);
+  optsRef.current = opts;
+  const filterIdsRef = useRef(filterIds);
+  filterIdsRef.current = filterIds;
+  const updateRef = useRef<() => void>(() => undefined);
+
+  // Mount/resize effect — sets up ResizeObserver once
+  useEffect(() => {
+    if (!filterIds.length) return;
+
+    const update = () => {
+      const host = hostRef.current;
+      if (!host) return;
+      const rect = host.getBoundingClientRect();
+      const w = Math.ceil(rect.width);
+      const h = Math.ceil(rect.height);
+      if (w === 0 || h === 0) return;
+      const { step, contrast } = optsRef.current;
+      for (let i = 0; i < filterIdsRef.current.length; i++) {
+        const id = filterIdsRef.current[i];
+        const angle = SCREEN_ANGLES[i % SCREEN_ANGLES.length];
+        const uri = buildHalftoneSVG(w, h, step, contrast, angle);
+        const feImage = document.getElementById(id)?.querySelector('feImage');
+        if (feImage) {
+          feImage.setAttribute('href', uri);
+          feImage.setAttribute('width', String(w));
+          feImage.setAttribute('height', String(h));
+          feImage.setAttribute('x', '0');
+          feImage.setAttribute('y', '0');
+        }
+      }
+    };
+
+    updateRef.current = update;
+    update();
+    const ro = new ResizeObserver(update);
+    if (hostRef.current) ro.observe(hostRef.current);
+    return () => ro.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hostRef, filterIds.length]);
+
+  // Re-render screen when step or contrast change without remounting the observer
+  useEffect(() => {
+    updateRef.current();
+  }, [opts.step, opts.contrast]);
 }
 
 // Convenience: create the motion values + LayerSpec for one layer.

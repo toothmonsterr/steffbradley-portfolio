@@ -7,6 +7,7 @@ import {
   shapeFilterJSX,
   useOffsetActivity,
   useHalftoneProximity,
+  useHalftoneScreen,
   useLayerMotionValues,
   type Interaction,
   type TextureMode,
@@ -86,6 +87,12 @@ export function OffsetShape({
     feather: textureHoverFeather,
     prefersReduced,
   });
+
+  const screenIds = useMemo(
+    () => texture === 'halftone' ? [filterAId, filterBId] : [],
+    [texture, filterAId, filterBId],
+  );
+  useHalftoneScreen(hostRef, screenIds, { step: textureStep, contrast: textureContrast, prefersReduced });
 
   const layerCopy = (filterId: string) => (
     <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>

@@ -6,8 +6,8 @@ import {
   buildWobble,
   useOffsetActivity,
   useHalftoneProximity,
+  useHalftoneScreen,
   useLayerMotionValues,
-  rotatedDotScreenUri,
   type Interaction,
   type TextureMode,
 } from '../OffsetShape/shared';
@@ -117,16 +117,12 @@ function channelFilter(
   );
 
   if (texture === 'halftone') {
-    const angle = SCREEN_ANGLES[layerIndex % SCREEN_ANGLES.length];
-    const s = Math.max(2, Math.round(step));
-    const uri = rotatedDotScreenUri(s, dotSize, angle);
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
         {densityChain}
-        <feImage href={uri} x="0" y="0" width={s} height={s} result="screen" preserveAspectRatio="none" />
-        <feTile in="screen" result="tiled" />
-        {/* Dots clipped by channel density */}
-        <feComposite in="tiled" in2="curved" operator="in" result="dots" />
+        {/* href populated imperatively by useHalftoneScreen after mount */}
+        <feImage href="" x="0" y="0" width="100%" height="100%" result="screen" preserveAspectRatio="none" />
+        <feComposite in="screen" in2="curved" operator="in" result="dots" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="dots" operator="in" />
       </filter>
@@ -238,6 +234,12 @@ export function OffsetCMYK({
     feather: textureHoverFeather,
     prefersReduced,
   });
+
+  const screenIds = useMemo(
+    () => texture === 'halftone' ? [ids.C, ids.M, ids.Y, ids.K] : [],
+    [texture, ids.C, ids.M, ids.Y, ids.K],
+  );
+  useHalftoneScreen(hostRef, screenIds, { step: textureStep, contrast: textureContrast, prefersReduced });
 
   const renderLayer = (filterId: string) => (
     <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>
