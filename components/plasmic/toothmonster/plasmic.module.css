@@ -481,11 +481,11 @@
   --plasmic-token-line-height-lg: var(--token-A2j3-JqnAka1);
   --token-rxZyXiMtINZ_: 0.125rem;
   --plasmic-token-size-2: var(--token-rxZyXiMtINZ_);
-  --token-HvtSPSdy-1oc: #0000001a;
+  --token-HvtSPSdy-1oc: var(--token-pE-xz_FnrxQO);
   --plasmic-token-interaction-hovered: var(--token-HvtSPSdy-1oc);
-  --token-OtOfpI-FGkX1: #ffffff40;
+  --token-OtOfpI-FGkX1: var(--token-LkdqoXrtkl3R);
   --plasmic-token-interaction-disabled: var(--token-OtOfpI-FGkX1);
-  --token-WYpfNa69vqXU: #00000033;
+  --token-WYpfNa69vqXU: var(--token-KTFKXa-tct8j);
   --plasmic-token-interaction-pressed: var(--token-WYpfNa69vqXU);
   --token-5ylaoG25mAaq: 0.625rem;
   --plasmic-token-size-10: var(--token-5ylaoG25mAaq);
@@ -493,6 +493,14 @@
   --plasmic-token-size-12: var(--token-zlKCr218vPjz);
   --token-UHzC1QpoO0wt: var(--token-Exqtdtc1L1Pg);
   --plasmic-token-size-button: var(--token-UHzC1QpoO0wt);
+  --token-LkdqoXrtkl3R: #00427f00;
+  --plasmic-token-navy-0: var(--token-LkdqoXrtkl3R);
+  --token-pE-xz_FnrxQO: #00427f40;
+  --plasmic-token-navy-25: var(--token-pE-xz_FnrxQO);
+  --token-KTFKXa-tct8j: #00427f80;
+  --plasmic-token-navy-50: var(--token-KTFKXa-tct8j);
+  --token-LG2hZvrjgSr7: #00427fbf;
+  --plasmic-token-navy-75: var(--token-LG2hZvrjgSr7);
 }
 
 .plasmic_tokens {
@@ -503,6 +511,15 @@
     ((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) -
       var(--plsmc-viewport-gap)
   );
+}
+
+@keyframes vis1100SjdqDRybjyH {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .plasmic_default_styles {
@@ -529,7 +546,7 @@
   --mixin-gHmLu1nCbwSX_letter-spacing: -0.5px;
   --mixin-gHmLu1nCbwSX_line-height: 1.1;
   --mixin-gHmLu1nCbwSX_white-space: pre-wrap;
-  --mixin-dhNxkbpUtTs2_color: #0070f3;
+  --mixin-dhNxkbpUtTs2_color: var(--token-doCHQ9G8_OsB);
   --mixin-dhNxkbpUtTs2_white-space: pre-wrap;
   --mixin-wda5FSHdtp8L_font-size: 32px;
   --mixin-wda5FSHdtp8L_font-weight: 600;
@@ -617,10 +634,11 @@
   --mixin-Ff92_w-1-4yk_font-weight: 600;
   --mixin-Ff92_w-1-4yk_line-height: 1.5;
   --mixin-Ff92_w-1-4yk_white-space: pre-wrap;
-  --mixin-Opxu9vEeeAyg_color: #3291ff;
+  --mixin-Opxu9vEeeAyg_color: var(--token-B34tJ4Y-Hjpw);
   --mixin-Opxu9vEeeAyg_white-space: pre-wrap;
   --mixin-85kfRnB0_kGE_white-space: pre-wrap;
   --mixin-UVNCIsoZjESe_white-space: pre-wrap;
+  --mixin-igHmZVdLG1Et_white-space: pre-wrap;
 }
 
 .plasmic_mixins {
@@ -1388,4 +1406,11 @@ p:where(.root_reset.p__67C2x),
 :where(.root_reset .__wab_expr_html_text) p,
 :where(.root_reset_tags) p,
 p:where(.root_reset_tags) {
+}
+
+:where(.root_reset) a:where(.a__67C2x):not(:hover),
+a:where(.root_reset.a__67C2x):not(:hover),
+:where(.root_reset .__wab_expr_html_text) a:not(:hover),
+:where(.root_reset_tags) a:not(:hover),
+a:where(.root_reset_tags):not(:hover) {
 }

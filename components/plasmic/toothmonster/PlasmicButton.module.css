@@ -25,9 +25,12 @@
   background: var(--token-g9z2pwocfSZz);
 }
 .rootcolor_neutral:global(.__wab_instance) {
-  background: var(--token-xfXrF6IuLHLl);
+  background: var(--token-OVGehJbU725h);
 }
-.rootcolor_muted:global(.__wab_instance) {
+.rootcolor_peach:global(.__wab_instance) {
+  background: var(--token-5QKIfNB0tRzE);
+}
+.rootcolor_blue:global(.__wab_instance) {
   background: var(--token-WRRVAbe826uH);
 }
 .rootcolor_success:global(.__wab_instance) {
@@ -87,14 +90,17 @@
   z-index: 10;
   right: 0;
   bottom: 0;
+  mix-blend-mode: color;
   border-radius: var(--token-yBp3zIJjjXFk);
   padding: 8px;
 }
 .root[data-hovered] .hover {
-  background: var(--token-HvtSPSdy-1oc);
+  background: var(--token-WRRVAbe826uH);
+  opacity: 0.2;
 }
 .root[data-pressed] .hover {
-  background: var(--token-WYpfNa69vqXU);
+  background: var(--token-WRRVAbe826uH);
+  opacity: 0.75;
 }
 .root[data-disabled] .hover {
   background: var(--token-OtOfpI-FGkX1);
@@ -173,7 +179,7 @@
 .softBackgroundcolor_neutral {
   background: #e5e7eb;
 }
-.softBackgroundcolor_muted {
+.softBackgroundcolor_blue {
   background: #f3f4f6;
 }
 .softBackgroundcolor_success {
@@ -201,6 +207,9 @@
 .softBackgroundroundedFull {
   border-radius: 99px;
 }
+.softBackgroundcolor_neutral_type_soft {
+  background: var(--token-6U10-UCl9glp);
+}
 .softBackgroundcolor_success_type_soft {
   background: var(--token-DaYyFU8bZ15H);
 }
@@ -223,7 +232,7 @@
 .bordercolor_neutral {
   border-color: #d1d5db;
 }
-.bordercolor_muted {
+.bordercolor_blue {
   border-color: #e5e7eb;
 }
 .bordercolor_success {
@@ -264,7 +273,7 @@
 .bordertype_bordered_color_neutral {
   border-color: var(--token-HVmbyCCDRVIn);
 }
-.bordertype_bordered_color_muted {
+.bordertype_bordered_color_blue {
   border-color: var(--token-IMo3F8MR-_qL);
 }
 .bordertype_bordered_color_success {
@@ -312,7 +321,7 @@
 .slotTargetStartcolor_neutral {
   color: #f9fafb;
 }
-.slotTargetStartcolor_muted {
+.slotTargetStartcolor_blue {
   color: #e5e7eb;
 }
 .slotTargetStartcolor_success {
@@ -339,7 +348,7 @@
 .slotTargetStarttype_bordered_color_neutral {
   color: #111827;
 }
-.slotTargetStarttype_bordered_color_muted {
+.slotTargetStarttype_bordered_color_blue {
   color: #6b7280;
 }
 .slotTargetStartcolor_success_type_soft {
@@ -376,7 +385,7 @@
 .slotTargetLabelcolor_neutral {
   color: var(--token-B0qKLpHjT84g);
 }
-.slotTargetLabelcolor_muted {
+.slotTargetLabelcolor_blue {
   color: var(--token-6U10-UCl9glp);
 }
 .slotTargetLabelcolor_success {
@@ -400,7 +409,7 @@
 .slotTargetLabelcolor_success_type_soft {
   color: var(--token-7crWCh4Jk9Bk);
 }
-.slotTargetLabeltype_bordered_color_muted {
+.slotTargetLabeltype_bordered_color_blue {
   color: var(--token-zT50wK_s6GQj);
 }
 .slotTargetLabelcolor_warning_type_soft {
@@ -436,7 +445,7 @@
 .slotTargetEndcolor_neutral {
   color: #f9fafb;
 }
-.slotTargetEndcolor_muted {
+.slotTargetEndcolor_blue {
   color: #e5e7eb;
 }
 .slotTargetEndcolor_success {
@@ -463,7 +472,7 @@
 .slotTargetEndtype_bordered_color_neutral {
   color: #111827;
 }
-.slotTargetEndtype_bordered_color_muted {
+.slotTargetEndtype_bordered_color_blue {
   color: #6b7280;
 }
 .slotTargetEndcolor_success_type_soft {

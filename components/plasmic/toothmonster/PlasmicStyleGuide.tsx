@@ -59,13 +59,6 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
-import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
-import { GradientBlob } from "@/components/plasmic-components/GradientBlob"; // plasmic-import: e8qsCr99-93Q/codeComponent
-import { HalftoneDots } from "@/components/plasmic-components/HalftoneDots"; // plasmic-import: _MSv54ZDU1SB/codeComponent
-import { DotOverlay } from "@/components/plasmic-components/DotOverlay"; // plasmic-import: 8p09mZd-cKv0/codeComponent
-import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
-import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -73,10 +66,6 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicStyleGuide.module.css"; // plasmic-import: KestoklH4saO/css
-
-import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
-import ChevronDownIcon from "./icons/PlasmicIcon__ChevronDown"; // plasmic-import: G6S5umLx_RKu/icon
-import TriangleFilledIcon from "./icons/PlasmicIcon__TriangleFilled"; // plasmic-import: hzk1wD5mxQ4B/icon
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -122,13 +111,6 @@ export const PlasmicStyleGuide__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicStyleGuide__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
-  gradientBlob?: Flex__<typeof GradientBlob>;
-  halftoneDots?: Flex__<typeof HalftoneDots>;
-  dotOverlay?: Flex__<typeof DotOverlay>;
-  floatingElement?: Flex__<typeof FloatingElement>;
-  offsetShape?: Flex__<typeof OffsetShape>;
-  svg?: Flex__<"svg">;
 };
 
 export interface DefaultStyleGuideProps {}
@@ -203,147 +185,20 @@ function PlasmicStyleGuide__RenderFunc(props: {
             styleTokensClassNames,
             sty.root
           )}
-        >
-          <div
-            data-plasmic-name={"freeBox"}
-            data-plasmic-override={overrides.freeBox}
-            className={classNames(projectcss.all, sty.freeBox)}
-          >
-            <Button
-              className={classNames("__wab_instance", sty.button__lgSr)}
-              effect={
-                <NoiseOverlay
-                  animate={"always"}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.noiseOverlay__qly6W
-                  )}
-                  color={true ? "#FF6A50" : undefined}
-                  grainSize={2}
-                />
-              }
-            />
-
-            <Button
-              className={classNames("__wab_instance", sty.button___9Tay7)}
-              effect={
-                <GradientBlob
-                  data-plasmic-name={"gradientBlob"}
-                  data-plasmic-override={overrides.gradientBlob}
-                  animate={"hover"}
-                  blobCount={8}
-                  className={classNames("__wab_instance", sty.gradientBlob)}
-                  color1={true ? "#FFAB7B" : undefined}
-                  color2={true ? "#295037" : undefined}
-                  color3={true ? "#FF6A50" : undefined}
-                  color4={true ? "#52A159" : undefined}
-                />
-              }
-            />
-
-            <Button
-              className={classNames("__wab_instance", sty.button__iQtPa)}
-              effect={
-                <HalftoneDots
-                  data-plasmic-name={"halftoneDots"}
-                  data-plasmic-override={overrides.halftoneDots}
-                  className={classNames("__wab_instance", sty.halftoneDots)}
-                  cursor={"shift"}
-                  dotColorA={true ? "#FFAB7B" : undefined}
-                  dotColorB={true ? "#FF6A50" : undefined}
-                />
-              }
-            />
-
-            <Button
-              className={classNames("__wab_instance", sty.button__bWo4M)}
-              effect={
-                <DotOverlay
-                  data-plasmic-name={"dotOverlay"}
-                  data-plasmic-override={overrides.dotOverlay}
-                  className={classNames("__wab_instance", sty.dotOverlay)}
-                  dotEdgeMax={100}
-                  dotEdgeMin={10}
-                  falloffRadius={30}
-                  step={8}
-                />
-              }
-            />
-
-            <FloatingElement
-              data-plasmic-name={"floatingElement"}
-              data-plasmic-override={overrides.floatingElement}
-              className={classNames("__wab_instance", sty.floatingElement)}
-            >
-              <Button
-                className={classNames("__wab_instance", sty.button___1AVqk)}
-                effect={
-                  <NoiseOverlay
-                    className={classNames(
-                      "__wab_instance",
-                      sty.noiseOverlay__yT68
-                    )}
-                  />
-                }
-              />
-            </FloatingElement>
-          </div>
-          <OffsetShape
-            data-plasmic-name={"offsetShape"}
-            data-plasmic-override={overrides.offsetShape}
-            className={classNames("__wab_instance", sty.offsetShape)}
-            showOriginal={false}
-          >
-            <TriangleFilledIcon
-              data-plasmic-name={"svg"}
-              data-plasmic-override={overrides.svg}
-              className={classNames(projectcss.all, sty.svg)}
-              role={"img"}
-            />
-          </OffsetShape>
-        </div>
+        />
       </div>
     </React.Fragment>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "freeBox",
-    "gradientBlob",
-    "halftoneDots",
-    "dotOverlay",
-    "floatingElement",
-    "offsetShape",
-    "svg"
-  ],
-  freeBox: [
-    "freeBox",
-    "gradientBlob",
-    "halftoneDots",
-    "dotOverlay",
-    "floatingElement"
-  ],
-  gradientBlob: ["gradientBlob"],
-  halftoneDots: ["halftoneDots"],
-  dotOverlay: ["dotOverlay"],
-  floatingElement: ["floatingElement"],
-  offsetShape: ["offsetShape", "svg"],
-  svg: ["svg"]
+  root: ["root"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
-  gradientBlob: typeof GradientBlob;
-  halftoneDots: typeof HalftoneDots;
-  dotOverlay: typeof DotOverlay;
-  floatingElement: typeof FloatingElement;
-  offsetShape: typeof OffsetShape;
-  svg: "svg";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -408,13 +263,6 @@ export const PlasmicStyleGuide = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
-    gradientBlob: makeNodeComponent("gradientBlob"),
-    halftoneDots: makeNodeComponent("halftoneDots"),
-    dotOverlay: makeNodeComponent("dotOverlay"),
-    floatingElement: makeNodeComponent("floatingElement"),
-    offsetShape: makeNodeComponent("offsetShape"),
-    svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicStyleGuide
     internalVariantProps: PlasmicStyleGuide__VariantProps,

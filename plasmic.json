@@ -26200,6 +26200,19 @@
           "cssFilePath": "plasmic/toothmonster/PlasmicButton.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "uEuM32AhsVsN",
+          "name": "NavBanner",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/toothmonster/PlasmicNavBanner.tsx",
+          "importSpec": {
+            "modulePath": "NavBanner.tsx"
+          },
+          "cssFilePath": "plasmic/toothmonster/PlasmicNavBanner.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -26237,6 +26250,26 @@
           "id": "9fph0KMRmqAr",
           "name": "CirclesparkleSvgIcon",
           "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__CirclesparkleSvg.tsx"
+        },
+        {
+          "id": "9p7vOHOdQjX9",
+          "name": "LogoSvgIcon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__LogoSvg.tsx"
+        },
+        {
+          "id": "50B3DCWiTd7u",
+          "name": "LogoDarkSvgIcon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__LogoDarkSvg.tsx"
+        },
+        {
+          "id": "pWs2kk6k4Y9P",
+          "name": "LogoLightSvg2Icon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__LogoLightSvg2.tsx"
+        },
+        {
+          "id": "I0pUA66htPll",
+          "name": "LogoLightSvg3Icon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__LogoLightSvg3.tsx"
         }
       ],
       "images": [
@@ -26304,6 +26337,36 @@
           "id": "0H2FUrgEn78z",
           "name": "donut_2.gif",
           "filePath": "../public/plasmic/toothmonster/images/donut2Gif.gif"
+        },
+        {
+          "id": "ueEpl3OOHun8",
+          "name": "eyes.gif",
+          "filePath": "../public/plasmic/toothmonster/images/eyesGif.gif"
+        },
+        {
+          "id": "fRekaoPIlvHa",
+          "name": "toothcontact.gif",
+          "filePath": "../public/plasmic/toothmonster/images/toothcontactGif.gif"
+        },
+        {
+          "id": "-k_Czwoqk6ML",
+          "name": "logo-dark.svg 2",
+          "filePath": "../public/plasmic/toothmonster/images/logoDarkSvg2.svg"
+        },
+        {
+          "id": "VErmy66xCJ-3",
+          "name": "logo-light.svg",
+          "filePath": "../public/plasmic/toothmonster/images/logoLightSvg.svg"
+        },
+        {
+          "id": "jtxOMsuUZ-Mw",
+          "name": "favicon.png",
+          "filePath": "../public/plasmic/toothmonster/images/faviconPng.png"
+        },
+        {
+          "id": "j8BQau-ukaw9",
+          "name": "circlesparkle.svg 2",
+          "filePath": "../public/plasmic/toothmonster/images/circlesparkleSvg2.svg"
         }
       ],
       "indirect": false,
@@ -26384,6 +26447,24 @@
           "name": "OffsetCMYK",
           "displayName": "OffsetCMYK",
           "componentImportPath": "@/components/plasmic-components/OffsetCMYK"
+        },
+        {
+          "id": "eKjwK6QLHAhi",
+          "name": "TornEdge",
+          "displayName": "TornEdge",
+          "componentImportPath": "@/components/plasmic-components/TornEdge"
+        },
+        {
+          "id": "x-cwBn9SIvTe",
+          "name": "InkBleed",
+          "displayName": "InkBleed",
+          "componentImportPath": "@/components/plasmic-components/InkBleed"
+        },
+        {
+          "id": "U2s1k6P0DpVo",
+          "name": "PrintColorbar",
+          "displayName": "PrintColorbar",
+          "componentImportPath": "@/components/plasmic-components/PrintColorbar"
         }
       ],
       "customFunctions": []
@@ -26598,6 +26679,56 @@
         }
       ],
       "customFunctions": []
+    },
+    {
+      "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
+      "projectApiToken": "DIkcfhBwjMCJSjcxfBkMuy4NImyytq5EWylxVcpS9t9EpdhnPQuBgBGxmk00AB1itMFa1KXTxOKnrjN2PN9nlA",
+      "projectName": "react-awesome-reveal",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/react_awesome_reveal/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "styleTokensProviderFilePath": "plasmic/react_awesome_reveal/PlasmicStyleTokensProvider.tsx",
+      "dataTokensFilePath": "",
+      "projectModuleFilePath": "plasmic/react_awesome_reveal/plasmic.tsx",
+      "codeComponents": [
+        {
+          "id": "R6s1FdhksG",
+          "name": "Reveal",
+          "displayName": "hostless-reveal",
+          "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
+        }
+      ],
+      "customFunctions": []
+    },
+    {
+      "projectId": "7nJ7UcFmq9UzB6eXfC5z4a",
+      "projectApiToken": "uZp069FLSLNVA2dpWnqC3BUaj3flvtNBNXt6e1b67rm4Uh6lGHgYJ65FCBXlOFTB5KDW7RmmOxIAzgHYCg",
+      "projectName": "plasmic-nav",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/plasmic_nav/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "styleTokensProviderFilePath": "plasmic/plasmic_nav/PlasmicStyleTokensProvider.tsx",
+      "dataTokensFilePath": "",
+      "projectModuleFilePath": "plasmic/plasmic_nav/plasmic.tsx",
+      "codeComponents": [
+        {
+          "id": "jGx9tiKJoex",
+          "name": "NavigationBar",
+          "displayName": "hostless-plasmic-navigation-bar",
+          "componentImportPath": "@plasmicpkgs/plasmic-nav"
+        }
+      ],
+      "customFunctions": []
     }
   ],
   "globalVariants": {
@@ -26607,6 +26738,12 @@
         "name": "Screen",
         "projectId": "d2Pfbr6bN5UwJ4ss7Fh3HB",
         "contextFilePath": "plasmic/library_tabler_3_2_icons/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "xeEojA99TgwN",
+        "name": "Screen",
+        "projectId": "67C2x4VH9CGyuASG98L3XF",
+        "contextFilePath": "plasmic/toothmonster/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
