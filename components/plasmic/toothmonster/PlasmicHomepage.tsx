@@ -60,6 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
+import { RevealOnScroll } from "@/components/plasmic-components/RevealOnScroll"; // plasmic-import: kqOT32TkSKDq/codeComponent
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -113,6 +115,8 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
   navBanner?: Flex__<typeof NavBanner>;
+  revealOnScroll?: Flex__<typeof RevealOnScroll>;
+  noiseOverlay?: Flex__<typeof NoiseOverlay>;
 };
 
 export interface DefaultHomepageProps {}
@@ -217,6 +221,116 @@ function PlasmicHomepage__RenderFunc(props: {
             effectVisible={true}
             shadow={true}
           />
+
+          <PlasmicImg__
+            alt={""}
+            className={classNames(sty.img__vDDji)}
+            displayHeight={"auto"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"auto"}
+            loading={"lazy"}
+            src={{
+              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
+              fullWidth: 500,
+              fullHeight: 500,
+              aspectRatio: undefined
+            }}
+          />
+
+          <PlasmicImg__
+            alt={""}
+            className={classNames(sty.img__z3XOe)}
+            displayHeight={"auto"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"auto"}
+            loading={"lazy"}
+            src={{
+              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
+              fullWidth: 500,
+              fullHeight: 500,
+              aspectRatio: undefined
+            }}
+          />
+
+          <PlasmicImg__
+            alt={""}
+            className={classNames(sty.img__pBe0Y)}
+            displayHeight={"auto"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"auto"}
+            loading={"lazy"}
+            src={{
+              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
+              fullWidth: 500,
+              fullHeight: 500,
+              aspectRatio: undefined
+            }}
+          />
+
+          <RevealOnScroll
+            data-plasmic-name={"revealOnScroll"}
+            data-plasmic-override={overrides.revealOnScroll}
+            blurAmount={100}
+            className={classNames("__wab_instance", sty.revealOnScroll)}
+            displaceAmount={70}
+            endRatio={0.9}
+            playOnce={true}
+            startOpacity={0}
+            trigger={"scroll"}
+            warpSize={8}
+          >
+            <NoiseOverlay
+              data-plasmic-name={"noiseOverlay"}
+              data-plasmic-override={overrides.noiseOverlay}
+              animate={"always"}
+              className={classNames("__wab_instance", sty.noiseOverlay)}
+              color={true ? "#FF6A50" : undefined}
+            />
+
+            <PlasmicImg__
+              alt={""}
+              className={classNames(sty.img__nTgeW)}
+              displayHeight={"auto"}
+              displayMaxHeight={"none"}
+              displayMaxWidth={"100%"}
+              displayMinHeight={"0"}
+              displayMinWidth={"0"}
+              displayWidth={"auto"}
+              loading={"lazy"}
+              src={{
+                src: "/plasmic/toothmonster/images/tooth3DGif.gif",
+                fullWidth: 500,
+                fullHeight: 500,
+                aspectRatio: undefined
+              }}
+            />
+          </RevealOnScroll>
+          <PlasmicImg__
+            alt={""}
+            className={classNames(sty.img__eiiK2)}
+            displayHeight={"auto"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"auto"}
+            loading={"lazy"}
+            src={{
+              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
+              fullWidth: 500,
+              fullHeight: 500,
+              aspectRatio: undefined
+            }}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -224,8 +338,10 @@ function PlasmicHomepage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navBanner"],
-  navBanner: ["navBanner"]
+  root: ["root", "navBanner", "revealOnScroll", "noiseOverlay"],
+  navBanner: ["navBanner"],
+  revealOnScroll: ["revealOnScroll", "noiseOverlay"],
+  noiseOverlay: ["noiseOverlay"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -233,6 +349,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   navBanner: typeof NavBanner;
+  revealOnScroll: typeof RevealOnScroll;
+  noiseOverlay: typeof NoiseOverlay;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -298,6 +416,8 @@ export const PlasmicHomepage = Object.assign(
   {
     // Helper components rendering sub-elements
     navBanner: makeNodeComponent("navBanner"),
+    revealOnScroll: makeNodeComponent("revealOnScroll"),
+    noiseOverlay: makeNodeComponent("noiseOverlay"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,

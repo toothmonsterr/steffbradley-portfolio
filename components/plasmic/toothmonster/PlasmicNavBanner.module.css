@@ -1,3 +1,81 @@
-.root {
+.root:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: sticky;
+  left: 0px;
+  top: 0px;
+  z-index: 1;
+  padding: var(--token-K0mS66ClT3RA) var(--token-OBRata9djSd9);
+}
+.navigationBar:global(.__wab_instance) {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+  object-fit: cover;
+}
+.link__xBeoZ {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0px;
+}
+.img__enFiB {
+  object-fit: cover;
+  height: 40px;
+}
+.img__enFiB > picture > img {
+  object-fit: cover;
+}
+.img__yKhTs {
+  object-fit: cover;
+}
+.img__yKhTs > picture > img {
+  object-fit: cover;
+}
+.img__nxp70 {
+  object-fit: cover;
+}
+.img__nxp70 > picture > img {
+  object-fit: cover;
+}
+.link__tvF {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.link__aqx6U {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.link__xgET {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox {
   display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 8px;
 }
