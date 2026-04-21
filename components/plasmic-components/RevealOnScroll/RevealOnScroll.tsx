@@ -13,8 +13,28 @@ export interface RevealOnScrollProps {
   warpSize?: number;
   /** Opacity at rest before the reveal begins (0–1) */
   startOpacity?: number;
-  /** Viewport fraction (0–1) where the reveal completes — 0.1 = fast, 0.7 = slow */
-  endRatio?: number;
+  /**
+   * element — reveal is driven by the element's own position in the viewport (default).
+   *           Use for content sections that reveal as they scroll into view.
+   * page    — reveal is driven by raw page scroll offset in px.
+   *           Use for fixed/sticky elements like a header nav that reacts to
+   *           how far the page has scrolled regardless of the element's own position.
+   */
+  scrollMode?: 'element' | 'page';
+  /**
+   * element mode: how far the element has entered the viewport before reveal starts (0–100).
+   *   0 = element just enters screen bottom, 50 = element top at center, 100 = element top at top.
+   * page mode: page scroll offset in px at which the reveal begins.
+   *   e.g. 80 = reveal starts after scrolling 80px down the page.
+   */
+  triggerPoint?: number;
+  /**
+   * element mode: scroll distance the reveal takes, in viewport heights (0.1–2.0).
+   *   0.1 = snappy, 0.5 = medium, 1.5 = slow.
+   * page mode: px of page scroll over which the reveal completes.
+   *   e.g. 120 = reveal completes over 120px of scrolling after the trigger.
+   */
+  revealDuration?: number;
   /** When true, the reveal plays once and stays revealed if the user scrolls back up */
   playOnce?: boolean;
   /**
@@ -32,7 +52,9 @@ export function RevealOnScroll({
   displaceAmount = 30,
   warpSize = 1,
   startOpacity = 0,
-  endRatio = 0.35,
+  scrollMode = 'element',
+  triggerPoint = 20,
+  revealDuration = 0.5,
   playOnce = false,
   trigger = 'scroll',
   className,
@@ -41,27 +63,47 @@ export function RevealOnScroll({
   const uid = useId().replace(/:/g, '');
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // SVG filter element refs — updated imperatively each frame
   const turbRef     = useRef<SVGFETurbulenceElement>(null);
   const blurRef     = useRef<SVGFEGaussianBlurElement>(null);
   const displaceRef = useRef<SVGFEDisplacementMapElement>(null);
   const saturateRef = useRef<SVGFEColorMatrixElement>(null);
 
-  const seedRef       = useRef(0);
-  const maxProgressRef = useRef(0);  // high-water mark for playOnce
-  const warpFrequency = 0.03 / Math.max(0.1, warpSize);
+  const seedRef        = useRef(0);
+  const maxProgressRef = useRef(0);
+  const warpFrequency  = 0.03 / Math.max(0.1, warpSize);
+
+  // ── Element-mode scroll progress (useScroll, element-relative) ──────────
+  const startViewport = 1 - triggerPoint / 100;
+  const endViewport   = Math.max(0, startViewport - revealDuration);
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: ['start end', `start ${endRatio}`],
+    offset: [`start ${startViewport.toFixed(3)}`, `start ${endViewport.toFixed(3)}`],
   });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
 
-  // effectiveProgress: tracks smoothProgress but never decreases when playOnce is true
-  const effectiveProgress = useMotionValue(0);
-  const contentOpacity = useTransform(effectiveProgress, [0, 1], [startOpacity, 1]);
+  // ── Page-mode scroll progress (raw window.scrollY) ───────────────────────
+  const pageProgress = useMotionValue(0);
+  useEffect(() => {
+    if (scrollMode !== 'page' || trigger !== 'scroll') return;
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const start   = triggerPoint;
+      const end     = triggerPoint + Math.max(1, revealDuration);
+      const raw     = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
+      pageProgress.set(raw);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // sync on mount
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [scrollMode, trigger, triggerPoint, revealDuration, pageProgress]);
 
-  // load trigger: animate effectiveProgress 0 → 1 on mount
+  const smoothPageProgress = useSpring(pageProgress, { stiffness: 80, damping: 25 });
+
+  // ── Effective progress ────────────────────────────────────────────────────
+  const effectiveProgress = useMotionValue(0);
+  const contentOpacity    = useTransform(effectiveProgress, [0, 1], [startOpacity, 1]);
+
   useEffect(() => {
     if (trigger !== 'load' || prefersReduced) return;
     const controls = animate(effectiveProgress, 1, { duration: 1.5, ease: 'easeOut' });
@@ -69,14 +111,11 @@ export function RevealOnScroll({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger, prefersReduced]);
 
-  // Imperative SVG attribute updates — zero React re-renders.
-  // For scroll: drives effectiveProgress from scroll position.
-  // For load:   effectiveProgress is driven by the useEffect above; we just read it.
   useAnimationFrame(() => {
     if (prefersReduced || trigger === 'always') return;
 
     if (trigger === 'scroll') {
-      const raw = smoothProgress.get();
+      const raw = scrollMode === 'page' ? smoothPageProgress.get() : smoothProgress.get();
       const p   = playOnce ? Math.max(maxProgressRef.current, raw) : raw;
       maxProgressRef.current = p;
       effectiveProgress.set(p);
@@ -97,7 +136,6 @@ export function RevealOnScroll({
 
   const filterId = `reveal-content-${uid}`;
 
-  // In 'always' mode or when reduced motion is preferred: fully revealed immediately
   if (trigger === 'always' || prefersReduced) {
     return (
       <div ref={rootRef} className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
@@ -108,16 +146,8 @@ export function RevealOnScroll({
 
   return (
     <div ref={rootRef} className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
-
-      {/* Zero-size SVG carrying the filter definition */}
       <svg width="0" height="0" className={styles.defs} aria-hidden="true" focusable="false">
         <defs>
-          {/*
-            Noisy blur: feTurbulence drives feDisplacementMap which warps the Gaussian blur,
-            making it organic and wavery rather than a clean circle. All three attributes
-            (stdDeviation, scale, saturate values) collapse to their neutral state as
-            scroll progress → 1.
-          */}
           <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%">
             <feTurbulence
               ref={turbRef}
@@ -161,7 +191,6 @@ export function RevealOnScroll({
       >
         {children}
       </motion.div>
-
     </div>
   );
 }

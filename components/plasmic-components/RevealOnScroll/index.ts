@@ -32,10 +32,21 @@ export const RevealOnScrollMeta = {
       defaultValueHint: 0,
       description: 'Opacity at rest before the reveal begins (0–1)',
     },
-    endRatio: {
+    scrollMode: {
+      type: 'choice',
+      options: ['element', 'page'],
+      defaultValueHint: 'element',
+      description: 'element: reveal driven by the element\'s own position scrolling into view. page: reveal driven by raw page scroll offset in px — use for fixed/sticky elements like a header nav.',
+    },
+    triggerPoint: {
       type: 'number',
-      defaultValueHint: 0.35,
-      description: 'Viewport fraction (0–1) where reveal completes — 0.1 = fast, 0.7 = slow long reveal',
+      defaultValueHint: 20,
+      description: 'element mode: how far element has entered viewport before reveal starts (0–100). page mode: page scroll offset in px where reveal begins (e.g. 80 = after scrolling 80px).',
+    },
+    revealDuration: {
+      type: 'number',
+      defaultValueHint: 0.5,
+      description: 'element mode: scroll distance in viewport heights (0.1 = snappy, 1.5 = slow). page mode: px of scroll over which the reveal completes (e.g. 120 = completes over 120px).',
     },
     playOnce: {
       type: 'boolean',

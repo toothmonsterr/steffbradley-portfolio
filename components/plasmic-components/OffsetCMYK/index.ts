@@ -35,7 +35,7 @@ export const OffsetCMYKMeta = {
 
     interaction: {
       type: 'choice',
-      options: ['hover', 'always', 'inverse'],
+      options: ['hover', 'always', 'inverse', 'click'],
       defaultValueHint: 'hover',
     },
     jitter:       { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude (px)' },

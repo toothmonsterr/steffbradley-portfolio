@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import styles from './GradientBlob.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
-import { findHoverHost } from '@/hooks/findHoverHost';
 import { colorOrDefault } from '@/hooks/colorDefault';
 
 export interface GradientBlobProps {
@@ -132,23 +131,19 @@ export function GradientBlob({
     const canvas = canvasRef.current;
     if (!root || !canvas) return;
 
-    const host = findHoverHost(root);
-    if (!host) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = host.offsetWidth;
-      canvas.height = host.offsetHeight;
+      canvas.width = root.offsetWidth;
+      canvas.height = root.offsetHeight;
     };
     resize();
     const ro = new ResizeObserver(() => {
       resize();
-      // Re-render on resize even if paused
       renderFrame();
     });
-    ro.observe(host);
+    ro.observe(root);
 
     // Offscreen canvas for raw unblurred blobs — composited onto visible canvas
     // with blur applied, so contrast/blur operate on the combined alpha.
@@ -257,19 +252,13 @@ export function GradientBlob({
     }
 
     // animate === 'hover'
-    const onEnter = () => {
-      hovered = true;
-      startLoop();
-    };
-    const onLeave = () => {
-      hovered = false;
-      startLoop(); // ensure we're running so the rate can ease out
-    };
-    host.addEventListener('mouseenter', onEnter);
-    host.addEventListener('mouseleave', onLeave);
+    const onEnter = () => { hovered = true; startLoop(); };
+    const onLeave = () => { hovered = false; startLoop(); };
+    root.addEventListener('mouseenter', onEnter);
+    root.addEventListener('mouseleave', onLeave);
     return () => {
-      host.removeEventListener('mouseenter', onEnter);
-      host.removeEventListener('mouseleave', onLeave);
+      root.removeEventListener('mouseenter', onEnter);
+      root.removeEventListener('mouseleave', onLeave);
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
       ro.disconnect();

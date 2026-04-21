@@ -226,7 +226,7 @@ export function imageFilterJSX(
 // Activity ramp (shared RAF driver)
 // ---------------------------------------------------------------------------
 
-export type Interaction = 'hover' | 'always' | 'inverse';
+export type Interaction = 'hover' | 'always' | 'inverse' | 'click';
 
 export interface LayerSpec {
   dxSign: number;
@@ -310,6 +310,8 @@ export function useOffsetActivity(
     const { interaction } = optsRef.current;
     activityRef.current = interaction === 'inverse' ? 1 : 0;
     startTsRef.current = performance.now();
+    // click mode: hoveringRef acts as a toggle — true = active, false = rest
+    const clickedRef = { current: false };
 
     const writeTransforms = (now: number) => {
       const { offsetX, offsetY, prefersReduced, sizerX, sizerY, sizerRotate, sizerWobble } = optsRef.current;
@@ -349,7 +351,7 @@ export function useOffsetActivity(
 
       const target = ia === 'always'
         ? restActivity
-        : hoveringRef.current ? hoverActivity : restActivity;
+        : (ia === 'click' ? clickedRef.current : hoveringRef.current) ? hoverActivity : restActivity;
 
       const cur = activityRef.current;
       const delta = dt / easeSec;
@@ -379,13 +381,21 @@ export function useOffsetActivity(
 
     const onEnter = () => { hoveringRef.current = true; };
     const onLeave = () => { hoveringRef.current = false; };
+    const onClick = () => { clickedRef.current = !clickedRef.current; startLoop(); };
 
-    host.addEventListener('mouseenter', onEnter);
-    host.addEventListener('mouseleave', onLeave);
+    if (optsRef.current.interaction === 'click') {
+      host.addEventListener('click', onClick);
+      host.addEventListener('touchend', onClick, { passive: true });
+    } else {
+      host.addEventListener('mouseenter', onEnter);
+      host.addEventListener('mouseleave', onLeave);
+    }
 
     return () => {
       host.removeEventListener('mouseenter', onEnter);
       host.removeEventListener('mouseleave', onLeave);
+      host.removeEventListener('click', onClick);
+      host.removeEventListener('touchend', onClick);
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
       lastTsRef.current = 0;

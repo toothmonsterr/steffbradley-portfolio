@@ -25,9 +25,9 @@ export const OffsetImageMeta = {
     },
     interaction: {
       type: 'choice',
-      options: ['hover', 'always', 'inverse'],
+      options: ['hover', 'always', 'inverse', 'click'],
       defaultValueHint: 'hover',
-      description: 'hover: misregistered at rest, eases into alignment on hover. always: permanently misregistered. inverse: aligned at rest, eases apart on hover.',
+      description: 'hover: misregistered at rest, eases into alignment on hover. always: permanently misregistered. inverse: aligned at rest, eases apart on hover. click: toggles misregistration on tap/click.',
     },
     jitter:        { type: 'number', defaultValueHint: 1.2, description: 'Sub-pixel wobble magnitude (px)' },
     easeDuration:  { type: 'number', defaultValueHint: 0.6, description: 'Ease-in / ease-out duration for the hover transition (seconds)' },
