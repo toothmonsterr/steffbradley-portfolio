@@ -26465,6 +26465,18 @@
           "name": "PrintColorbar",
           "displayName": "PrintColorbar",
           "componentImportPath": "@/components/plasmic-components/PrintColorbar"
+        },
+        {
+          "id": "8y_E0U1V1ob-",
+          "name": "TornSection",
+          "displayName": "TornSection",
+          "componentImportPath": "@/components/plasmic-components/TornSection"
+        },
+        {
+          "id": "kqOT32TkSKDq",
+          "name": "RevealOnScroll",
+          "displayName": "RevealOnScroll",
+          "componentImportPath": "@/components/plasmic-components/RevealOnScroll"
         }
       ],
       "customFunctions": []
