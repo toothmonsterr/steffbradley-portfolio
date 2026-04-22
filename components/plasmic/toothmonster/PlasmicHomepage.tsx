@@ -62,6 +62,9 @@ import {
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
 import { RevealOnScroll } from "@/components/plasmic-components/RevealOnScroll"; // plasmic-import: kqOT32TkSKDq/codeComponent
 import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
+import { GradientBlob } from "@/components/plasmic-components/GradientBlob"; // plasmic-import: e8qsCr99-93Q/codeComponent
+import { TornSection } from "@/components/plasmic-components/TornSection"; // plasmic-import: 8y_E0U1V1ob-/codeComponent
+import { ModelViewer } from "@/components/plasmic-components/ModelViewer"; // plasmic-import: F99Tz_Qd8rVB/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -117,6 +120,10 @@ export type PlasmicHomepage__OverridesType = {
   navBanner?: Flex__<typeof NavBanner>;
   revealOnScroll?: Flex__<typeof RevealOnScroll>;
   noiseOverlay?: Flex__<typeof NoiseOverlay>;
+  gradientBlob?: Flex__<typeof GradientBlob>;
+  tornSection?: Flex__<typeof TornSection>;
+  columns?: Flex__<"div">;
+  _3DModelViewer?: Flex__<typeof ModelViewer>;
 };
 
 export interface DefaultHomepageProps {}
@@ -159,6 +166,8 @@ function PlasmicHomepage__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const globalVariants = _useGlobalVariants();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -214,123 +223,110 @@ function PlasmicHomepage__RenderFunc(props: {
           <NavBanner
             data-plasmic-name={"navBanner"}
             data-plasmic-override={overrides.navBanner}
-            blurredBg={true}
             bottomTear={true}
             className={classNames("__wab_instance", sty.navBanner)}
             color={"midnight"}
+            effect={
+              <RevealOnScroll
+                data-plasmic-name={"revealOnScroll"}
+                data-plasmic-override={overrides.revealOnScroll}
+                className={classNames("__wab_instance", sty.revealOnScroll)}
+                playOnce={false}
+                scrollMode={"page"}
+                triggerPoint={120}
+              >
+                <NoiseOverlay
+                  data-plasmic-name={"noiseOverlay"}
+                  data-plasmic-override={overrides.noiseOverlay}
+                  animate={"always"}
+                  className={classNames("__wab_instance", sty.noiseOverlay)}
+                  color={true ? "#201B2A" : undefined}
+                />
+
+                <GradientBlob
+                  data-plasmic-name={"gradientBlob"}
+                  data-plasmic-override={overrides.gradientBlob}
+                  className={classNames("__wab_instance", sty.gradientBlob)}
+                  color1={true ? "#00427F" : undefined}
+                  color2={true ? "#FF6A50" : undefined}
+                  color3={true ? "#52A159" : undefined}
+                  color4={true ? "#CEBEE3" : undefined}
+                />
+              </RevealOnScroll>
+            }
             effectVisible={true}
             shadow={true}
           />
 
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__vDDji)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            loading={"lazy"}
-            src={{
-              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
-              fullWidth: 500,
-              fullHeight: 500,
-              aspectRatio: undefined
-            }}
-          />
-
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__z3XOe)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            loading={"lazy"}
-            src={{
-              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
-              fullWidth: 500,
-              fullHeight: 500,
-              aspectRatio: undefined
-            }}
-          />
-
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__pBe0Y)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            loading={"lazy"}
-            src={{
-              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
-              fullWidth: 500,
-              fullHeight: 500,
-              aspectRatio: undefined
-            }}
-          />
-
-          <RevealOnScroll
-            data-plasmic-name={"revealOnScroll"}
-            data-plasmic-override={overrides.revealOnScroll}
-            blurAmount={100}
-            className={classNames("__wab_instance", sty.revealOnScroll)}
-            displaceAmount={70}
-            endRatio={0.9}
-            playOnce={true}
-            startOpacity={0}
-            trigger={"scroll"}
-            warpSize={8}
+          <TornSection
+            data-plasmic-name={"tornSection"}
+            data-plasmic-override={overrides.tornSection}
+            backgroundColor={"midnight"}
+            className={classNames("__wab_instance", sty.tornSection)}
+            tornBottom={true}
+            tornBottomDepth={
+              hasVariant(globalVariants, "screen", "mobile") ? 2 : undefined
+            }
+            tornBottomStepSize={
+              hasVariant(globalVariants, "screen", "mobile") ? 6 : undefined
+            }
           >
-            <NoiseOverlay
-              data-plasmic-name={"noiseOverlay"}
-              data-plasmic-override={overrides.noiseOverlay}
-              animate={"always"}
-              className={classNames("__wab_instance", sty.noiseOverlay)}
-              color={true ? "#FF6A50" : undefined}
-            />
-
-            <PlasmicImg__
-              alt={""}
-              className={classNames(sty.img__nTgeW)}
-              displayHeight={"auto"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"100%"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"auto"}
-              loading={"lazy"}
-              src={{
-                src: "/plasmic/toothmonster/images/tooth3DGif.gif",
-                fullWidth: 500,
-                fullHeight: 500,
-                aspectRatio: undefined
-              }}
-            />
-          </RevealOnScroll>
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__eiiK2)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            loading={"lazy"}
-            src={{
-              src: "/plasmic/toothmonster/images/tooth3DGif.gif",
-              fullWidth: 500,
-              fullHeight: 500,
-              aspectRatio: undefined
-            }}
-          />
+            <div
+              data-plasmic-name={"columns"}
+              data-plasmic-override={overrides.columns}
+              className={classNames(projectcss.all, sty.columns)}
+            >
+              <div className={classNames(projectcss.all, sty.column___2GzTv)}>
+                <h1
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.h1,
+                    projectcss.h1__67C2x,
+                    projectcss.__wab_text,
+                    sty.h1__g57Iq
+                  )}
+                >
+                  {"You won't believe what happens next."}
+                </h1>
+                <h1
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.h1,
+                    projectcss.h1__67C2x,
+                    projectcss.__wab_text,
+                    sty.h1___2PyZv
+                  )}
+                >
+                  {"You won't believe what happens next."}
+                </h1>
+                <h1
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.h1,
+                    projectcss.h1__67C2x,
+                    projectcss.__wab_text,
+                    sty.h1___4Baho
+                  )}
+                >
+                  {"You won't believe what happens next."}
+                </h1>
+              </div>
+              <div className={classNames(projectcss.all, sty.column___77LZa)}>
+                <ModelViewer
+                  data-plasmic-name={"_3DModelViewer"}
+                  data-plasmic-override={overrides._3DModelViewer}
+                  className={classNames("__wab_instance", sty._3DModelViewer)}
+                  enableZoom={false}
+                  environment={"park"}
+                  fallbackImageUrl={
+                    "/plasmic/toothmonster/images/tooth3DiconGif.gif"
+                  }
+                  minDistance={5}
+                  modelUrl={"/models/tooth.glb"}
+                />
+              </div>
+            </div>
+          </TornSection>
         </div>
       </div>
     </React.Fragment>
@@ -338,10 +334,23 @@ function PlasmicHomepage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navBanner", "revealOnScroll", "noiseOverlay"],
-  navBanner: ["navBanner"],
-  revealOnScroll: ["revealOnScroll", "noiseOverlay"],
-  noiseOverlay: ["noiseOverlay"]
+  root: [
+    "root",
+    "navBanner",
+    "revealOnScroll",
+    "noiseOverlay",
+    "gradientBlob",
+    "tornSection",
+    "columns",
+    "_3DModelViewer"
+  ],
+  navBanner: ["navBanner", "revealOnScroll", "noiseOverlay", "gradientBlob"],
+  revealOnScroll: ["revealOnScroll", "noiseOverlay", "gradientBlob"],
+  noiseOverlay: ["noiseOverlay"],
+  gradientBlob: ["gradientBlob"],
+  tornSection: ["tornSection", "columns", "_3DModelViewer"],
+  columns: ["columns", "_3DModelViewer"],
+  _3DModelViewer: ["_3DModelViewer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -351,6 +360,10 @@ type NodeDefaultElementType = {
   navBanner: typeof NavBanner;
   revealOnScroll: typeof RevealOnScroll;
   noiseOverlay: typeof NoiseOverlay;
+  gradientBlob: typeof GradientBlob;
+  tornSection: typeof TornSection;
+  columns: "div";
+  _3DModelViewer: typeof ModelViewer;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -418,6 +431,10 @@ export const PlasmicHomepage = Object.assign(
     navBanner: makeNodeComponent("navBanner"),
     revealOnScroll: makeNodeComponent("revealOnScroll"),
     noiseOverlay: makeNodeComponent("noiseOverlay"),
+    gradientBlob: makeNodeComponent("gradientBlob"),
+    tornSection: makeNodeComponent("tornSection"),
+    columns: makeNodeComponent("columns"),
+    _3DModelViewer: makeNodeComponent("_3DModelViewer"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,

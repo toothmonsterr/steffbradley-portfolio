@@ -61,6 +61,9 @@ import {
 
 import { TornSection } from "@/components/plasmic-components/TornSection"; // plasmic-import: 8y_E0U1V1ob-/codeComponent
 import { NavigationBar } from "@plasmicpkgs/plasmic-nav";
+import { RevealOnScroll } from "@/components/plasmic-components/RevealOnScroll"; // plasmic-import: kqOT32TkSKDq/codeComponent
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
+import { GradientBlob } from "@/components/plasmic-components/GradientBlob"; // plasmic-import: e8qsCr99-93Q/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -68,6 +71,10 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicNavBanner.module.css"; // plasmic-import: uEuM32AhsVsN/css
+
+import LogoLightSvg3Icon from "./icons/PlasmicIcon__LogoLightSvg3"; // plasmic-import: I0pUA66htPll/icon
+import ChevronDownIcon from "./icons/PlasmicIcon__ChevronDown"; // plasmic-import: G6S5umLx_RKu/icon
+import MinusIcon from "./icons/PlasmicIcon__Minus"; // plasmic-import: J5T4Inp-G80y/icon
 
 createPlasmicElementProxy;
 
@@ -94,17 +101,17 @@ export const PlasmicNavBanner__VariantProps = new Array<VariantPropType>(
   "shadow"
 );
 
-export type PlasmicNavBanner__ArgsType = {};
+export type PlasmicNavBanner__ArgsType = { effect?: React.ReactNode };
 type ArgPropType = keyof PlasmicNavBanner__ArgsType;
-export const PlasmicNavBanner__ArgProps = new Array<ArgPropType>();
+export const PlasmicNavBanner__ArgProps = new Array<ArgPropType>("effect");
 
 export type PlasmicNavBanner__OverridesType = {
   root?: Flex__<typeof TornSection>;
   navigationBar?: Flex__<typeof NavigationBar>;
-  freeBox?: Flex__<"div">;
 };
 
 export interface DefaultNavBannerProps {
+  effect?: React.ReactNode;
   color?: SingleChoiceArg<"midnight" | "navy" | "coral" | "cream">;
   effectVisible?: SingleBooleanChoiceArg<"effectVisible">;
   bottomTear?: SingleBooleanChoiceArg<"bottomTear">;
@@ -206,14 +213,45 @@ function PlasmicNavBanner__RenderFunc(props: {
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
+      backgroundColor={
+        hasVariant($state, "color", "cream")
+          ? "cream"
+          : hasVariant($state, "color", "coral")
+            ? "coral"
+            : hasVariant($state, "color", "navy")
+              ? "navy"
+              : hasVariant($state, "color", "midnight")
+                ? "midnight"
+                : "transparent"
+      }
       className={classNames(
         "__wab_instance",
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        sty.root
+        sty.root,
+        {
+          [sty.rootblurredBg]: hasVariant($state, "blurredBg", "blurredBg"),
+          [sty.rootbottomTear]: hasVariant($state, "bottomTear", "bottomTear"),
+          [sty.rootcolor_coral]: hasVariant($state, "color", "coral"),
+          [sty.rootcolor_cream]: hasVariant($state, "color", "cream"),
+          [sty.rootcolor_midnight]: hasVariant($state, "color", "midnight"),
+          [sty.rootcolor_navy]: hasVariant($state, "color", "navy"),
+          [sty.rooteffectVisible]: hasVariant(
+            $state,
+            "effectVisible",
+            "effectVisible"
+          ),
+          [sty.rootshadow]: hasVariant($state, "shadow", "shadow")
+        }
       )}
+      tornBottom={
+        hasVariant($state, "bottomTear", "bottomTear") ? true : undefined
+      }
+      tornTopRoughness={
+        hasVariant($state, "bottomTear", "bottomTear") ? 8 : undefined
+      }
     >
       <NavigationBar
         data-plasmic-name={"navigationBar"}
@@ -224,23 +262,44 @@ function PlasmicNavBanner__RenderFunc(props: {
               projectcss.all,
               projectcss.a,
               projectcss.a__67C2x,
-              sty.link__xBeoZ
+              sty.link__xBeoZ,
+              {
+                [sty.linkbottomTear__xBeoZt01Q7]: hasVariant(
+                  $state,
+                  "bottomTear",
+                  "bottomTear"
+                ),
+                [sty.linkcolor_cream__xBeoZ9ImL]: hasVariant(
+                  $state,
+                  "color",
+                  "cream"
+                ),
+                [sty.linkeffectVisible__xBeoZyuJl7]: hasVariant(
+                  $state,
+                  "effectVisible",
+                  "effectVisible"
+                )
+              }
             )}
             component={Link}
-            href={"#"}
+            href={"/"}
             legacyBehavior={false}
             platform={"nextjs"}
           >
-            <PlasmicImg__
-              alt={""}
-              className={classNames(sty.img__enFiB)}
-              displayHeight={"40px"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"none"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"auto"}
-              src={"https://static1.plasmic.app/nav-logo-placeholder.svg"}
+            <LogoLightSvg3Icon
+              className={classNames(projectcss.all, sty.svg__yjLqg, {
+                [sty.svgcolor_cream__yjLqg9ImL]: hasVariant(
+                  $state,
+                  "color",
+                  "cream"
+                ),
+                [sty.svgeffectVisible__yjLqgyuJl7]: hasVariant(
+                  $state,
+                  "effectVisible",
+                  "effectVisible"
+                )
+              })}
+              role={"img"}
             />
           </PlasmicLink__>
         }
@@ -250,11 +309,13 @@ function PlasmicNavBanner__RenderFunc(props: {
             "bottomTear",
             "bottomTear"
           ),
+          [sty.navigationBarcolor_coral]: hasVariant($state, "color", "coral"),
           [sty.navigationBarcolor_midnight]: hasVariant(
             $state,
             "color",
             "midnight"
           ),
+          [sty.navigationBarcolor_navy]: hasVariant($state, "color", "navy"),
           [sty.navigationBareffectVisible]: hasVariant(
             $state,
             "effectVisible",
@@ -263,28 +324,55 @@ function PlasmicNavBanner__RenderFunc(props: {
           [sty.navigationBarshadow]: hasVariant($state, "shadow", "shadow")
         })}
         closeButton={
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__nxp70)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"none"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            src={"https://static1.plasmic.app/close.svg"}
+          <MinusIcon
+            className={classNames(projectcss.all, sty.svg__tqkj, {
+              [sty.svgcolor_midnight__tqkj93TEr]: hasVariant(
+                $state,
+                "color",
+                "midnight"
+              ),
+              [sty.svgeffectVisible__tqkjYuJl7]: hasVariant(
+                $state,
+                "effectVisible",
+                "effectVisible"
+              )
+            })}
+            role={"img"}
           />
+        }
+        forceOpenMenu={
+          hasVariant(globalVariants, "screen", "mobile") ? false : undefined
         }
         itemsGap={8}
         menuItems={
-          <React.Fragment>
+          <div
+            className={classNames(projectcss.all, sty.freeBox__xOcgf, {
+              [sty.freeBoxcolor_cream__xOcgf9ImL]: hasVariant(
+                $state,
+                "color",
+                "cream"
+              ),
+              [sty.freeBoxeffectVisible__xOcgfyuJl7]: hasVariant(
+                $state,
+                "effectVisible",
+                "effectVisible"
+              )
+            })}
+          >
             <PlasmicLink__
               className={classNames(
                 projectcss.all,
                 projectcss.a,
                 projectcss.a__67C2x,
                 projectcss.__wab_text,
-                sty.link__tvF
+                sty.link__tvF,
+                {
+                  [sty.linkcolor_cream__tvF9ImL]: hasVariant(
+                    $state,
+                    "color",
+                    "cream"
+                  )
+                }
               )}
               component={Link}
               href={"/"}
@@ -299,7 +387,14 @@ function PlasmicNavBanner__RenderFunc(props: {
                 projectcss.a,
                 projectcss.a__67C2x,
                 projectcss.__wab_text,
-                sty.link__aqx6U
+                sty.link__aqx6U,
+                {
+                  [sty.linkcolor_cream__aqx6U9ImL]: hasVariant(
+                    $state,
+                    "color",
+                    "cream"
+                  )
+                }
               )}
               component={Link}
               href={"/"}
@@ -314,7 +409,14 @@ function PlasmicNavBanner__RenderFunc(props: {
                 projectcss.a,
                 projectcss.a__67C2x,
                 projectcss.__wab_text,
-                sty.link__xgET
+                sty.link__xgET,
+                {
+                  [sty.linkcolor_cream__xgET9ImL]: hasVariant(
+                    $state,
+                    "color",
+                    "cream"
+                  )
+                }
               )}
               component={Link}
               href={"/"}
@@ -323,19 +425,23 @@ function PlasmicNavBanner__RenderFunc(props: {
             >
               {"Contact"}
             </PlasmicLink__>
-          </React.Fragment>
+          </div>
         }
         openButton={
-          <PlasmicImg__
-            alt={""}
-            className={classNames(sty.img__yKhTs)}
-            displayHeight={"auto"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"none"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"auto"}
-            src={"https://static1.plasmic.app/menu.svg"}
+          <ChevronDownIcon
+            className={classNames(projectcss.all, sty.svg__rzWJb, {
+              [sty.svgcolor_midnight__rzWJb93TEr]: hasVariant(
+                $state,
+                "color",
+                "midnight"
+              ),
+              [sty.svgeffectVisible__rzWJbyuJl7]: hasVariant(
+                $state,
+                "effectVisible",
+                "effectVisible"
+              )
+            })}
+            role={"img"}
           />
         }
         responsiveBreakpoint={
@@ -344,18 +450,63 @@ function PlasmicNavBanner__RenderFunc(props: {
       />
 
       <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox)}
-      />
+        className={classNames(projectcss.all, sty.freeBox__umKkW, {
+          [sty.freeBoxeffectVisible__umKkWyuJl7]: hasVariant(
+            $state,
+            "effectVisible",
+            "effectVisible"
+          )
+        })}
+      >
+        {(hasVariant($state, "effectVisible", "effectVisible") ? true : false)
+          ? renderPlasmicSlot({
+              defaultContents: (
+                <RevealOnScroll
+                  className={classNames(
+                    "__wab_instance",
+                    sty.revealOnScroll__hrZAw
+                  )}
+                  playOnce={true}
+                >
+                  <NoiseOverlay
+                    animate={"always"}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.noiseOverlay__de8Iu
+                    )}
+                    color={true ? "#201B2A" : undefined}
+                  />
+
+                  <GradientBlob
+                    className={classNames(
+                      "__wab_instance",
+                      sty.gradientBlob__bFt4G,
+                      {
+                        [sty.gradientBlobeffectVisible__bFt4GyuJl7]: hasVariant(
+                          $state,
+                          "effectVisible",
+                          "effectVisible"
+                        )
+                      }
+                    )}
+                    color1={true ? "#00427F" : undefined}
+                    color2={true ? "#FF6A50" : undefined}
+                    color3={true ? "#52A159" : undefined}
+                    color4={true ? "#CEBEE3" : undefined}
+                  />
+                </RevealOnScroll>
+              ),
+              value: args.effect
+            })
+          : null}
+      </div>
     </TornSection>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navigationBar", "freeBox"],
-  navigationBar: ["navigationBar"],
-  freeBox: ["freeBox"]
+  root: ["root", "navigationBar"],
+  navigationBar: ["navigationBar"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -363,7 +514,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: typeof TornSection;
   navigationBar: typeof NavigationBar;
-  freeBox: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -429,7 +579,6 @@ export const PlasmicNavBanner = Object.assign(
   {
     // Helper components rendering sub-elements
     navigationBar: makeNodeComponent("navigationBar"),
-    freeBox: makeNodeComponent("freeBox"),
 
     // Metadata about props expected for PlasmicNavBanner
     internalVariantProps: PlasmicNavBanner__VariantProps,

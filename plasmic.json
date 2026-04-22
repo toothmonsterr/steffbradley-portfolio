@@ -26367,6 +26367,11 @@
           "id": "j8BQau-ukaw9",
           "name": "circlesparkle.svg 2",
           "filePath": "../public/plasmic/toothmonster/images/circlesparkleSvg2.svg"
+        },
+        {
+          "id": "Y4hOwq1oIn_1",
+          "name": "IMG_1513.png",
+          "filePath": "../public/plasmic/toothmonster/images/img1513Png.png"
         }
       ],
       "indirect": false,
@@ -26477,6 +26482,18 @@
           "name": "RevealOnScroll",
           "displayName": "RevealOnScroll",
           "componentImportPath": "@/components/plasmic-components/RevealOnScroll"
+        },
+        {
+          "id": "x76UsdmowRE0",
+          "name": "HalftoneMask",
+          "displayName": "HalftoneMask",
+          "componentImportPath": "@/components/plasmic-components/HalftoneMask"
+        },
+        {
+          "id": "a94v3Y28luuM",
+          "name": "NoiseMask",
+          "displayName": "NoiseMask",
+          "componentImportPath": "@/components/plasmic-components/NoiseMask"
         }
       ],
       "customFunctions": []
