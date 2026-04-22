@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import styles from './ModelViewer.module.css';
 
-// Dynamic import with ssr: false — R3F cannot run server-side.
-// The ModelViewerScene component imports Three.js which requires a browser context.
 const ModelViewerScene = dynamic(
   () => import('./ModelViewerScene').then((m) => m.ModelViewerScene),
-  {
-    ssr: false,
-    loading: () => (
-      <div className={styles.placeholder}>loading 3d model…</div>
-    ),
-  }
+  { ssr: false, loading: () => null }
 );
 
 export interface ModelViewerProps {
   modelUrl?: string;
   fallbackImageUrl?: string;
   environment?: 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby' | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
-  autoRotate?: boolean;
-  controls?: 'orbit' | 'presentation';
+  interactionMode?: 'auto-rotate' | 'drag' | 'cursor-tilt';
+  enableZoom?: boolean;
+  cameraDistance?: number;
+  cameraX?: number;
+  cameraY?: number;
+  minDistance?: number;
+  maxDistance?: number;
+  maxTilt?: number;
+  background?: string;
   height?: string;
   className?: string;
 }
@@ -28,23 +28,61 @@ export function ModelViewer({
   modelUrl,
   fallbackImageUrl,
   environment = 'studio',
-  autoRotate = true,
-  controls = 'orbit',
+  interactionMode = 'auto-rotate',
+  enableZoom = false,
+  cameraDistance = 3,
+  cameraX = 0,
+  cameraY = 0,
+  minDistance = 1,
+  maxDistance = 10,
+  maxTilt = 20,
+  background = 'transparent',
   height = '480px',
   className,
 }: ModelViewerProps) {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <div
       className={[styles.container, className ?? ''].filter(Boolean).join(' ')}
-      style={{ '--viewer-height': height } as React.CSSProperties}
+      style={{ '--viewer-height': height, background } as React.CSSProperties}
     >
       {modelUrl ? (
-        <ModelViewerScene
-          modelUrl={modelUrl}
-          environment={environment}
-          autoRotate={autoRotate}
-          controls={controls}
-        />
+        <>
+          {fallbackImageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={fallbackImageUrl}
+              alt=""
+              className={styles.fallback}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+                opacity: loaded ? 0 : 1,
+                transition: 'opacity 0.4s ease',
+                pointerEvents: 'none',
+              }}
+              draggable={false}
+            />
+          )}
+          <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: 1 }}>
+            <ModelViewerScene
+              modelUrl={modelUrl}
+              environment={environment}
+              interactionMode={interactionMode}
+              enableZoom={enableZoom}
+              cameraDistance={cameraDistance}
+              cameraX={cameraX}
+              cameraY={cameraY}
+              minDistance={minDistance}
+              maxDistance={maxDistance}
+              maxTilt={maxTilt}
+              background={background}
+              onLoaded={() => setLoaded(true)}
+            />
+          </div>
+        </>
       ) : fallbackImageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={fallbackImageUrl} alt="" className={styles.fallback} draggable={false} />

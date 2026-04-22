@@ -1,57 +1,167 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { useGLTF, Environment, OrbitControls, PresentationControls, Html } from '@react-three/drei';
+import React, { Suspense, useRef, useEffect, useCallback } from 'react';
+import { Canvas, useThree, useFrame } from '@react-three/fiber';
+import { useGLTF, Environment, OrbitControls } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import * as THREE from 'three';
 
 type EnvironmentPreset =
   | 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby'
   | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
 
-interface ModelProps {
-  url: string;
-}
+type InteractionMode = 'auto-rotate' | 'drag' | 'cursor-tilt';
 
-function Model({ url }: ModelProps) {
+function Model({ url, onLoaded }: { url: string; onLoaded: () => void }) {
   const { scene } = useGLTF(url);
+  useEffect(() => { onLoaded(); }, [onLoaded]);
   return <primitive object={scene} />;
 }
 
-function Loader() {
+function TransparentBackground() {
+  const { scene } = useThree();
+  scene.background = null;
+  return null;
+}
+
+function CameraOffset({ x, y }: { x: number; y: number }) {
+  const { camera } = useThree();
+  useEffect(() => {
+    camera.position.x = x;
+    camera.position.y = y;
+    camera.updateProjectionMatrix();
+  }, [camera, x, y]);
+  return null;
+}
+
+
+function TiltScene({
+  url,
+  onLoaded,
+  environment,
+  targetRef,
+  maxTilt,
+}: {
+  url: string;
+  onLoaded: () => void;
+  environment: EnvironmentPreset;
+  targetRef: React.RefObject<{ x: number; y: number }>;
+  maxTilt: number;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!groupRef.current || !targetRef.current) return;
+    const tx = (-targetRef.current.y * maxTilt * Math.PI) / 180;
+    const ty = (targetRef.current.x * maxTilt * Math.PI) / 180;
+    groupRef.current.rotation.x += (tx - groupRef.current.rotation.x) * 0.08;
+    groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * 0.08;
+  });
+
+  const { scene } = useGLTF(url);
+  useEffect(() => { onLoaded(); }, [onLoaded]);
+
   return (
-    <Html center>
-      <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--color-neutral-50)' }}>
-        loading…
-      </span>
-    </Html>
+    <>
+      <group ref={groupRef}>
+        <primitive object={scene} />
+      </group>
+      <Environment preset={environment} background={false} />
+    </>
   );
 }
 
 export interface ModelViewerSceneProps {
   modelUrl: string;
   environment?: EnvironmentPreset;
-  autoRotate?: boolean;
-  controls?: 'orbit' | 'presentation';
+  interactionMode?: InteractionMode;
+  enableZoom?: boolean;
+  cameraDistance?: number;
+  cameraX?: number;
+  cameraY?: number;
+  minDistance?: number;
+  maxDistance?: number;
+  maxTilt?: number;
+  background?: string;
+  onLoaded?: () => void;
 }
 
-// This component renders the actual R3F canvas.
-// It is dynamically imported by ModelViewer.tsx with ssr: false.
 export function ModelViewerScene({
   modelUrl,
   environment = 'studio',
-  autoRotate = true,
-  controls = 'orbit',
+  interactionMode = 'auto-rotate',
+  enableZoom = false,
+  cameraDistance = 3,
+  cameraX = 0,
+  cameraY = 0,
+  minDistance = 1,
+  maxDistance = 10,
+  maxTilt = 20,
+  background = 'transparent',
+  onLoaded,
 }: ModelViewerSceneProps) {
+  const controlsRef = useRef<OrbitControlsImpl>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const isTransparent = !background || background === 'transparent';
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (interactionMode !== 'cursor-tilt' || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    cursorRef.current = {
+      x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
+    };
+  }, [interactionMode]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (interactionMode !== 'cursor-tilt') return;
+    cursorRef.current = { x: 0, y: 0 };
+  }, [interactionMode]);
+
   return (
-    <Canvas camera={{ position: [0, 0, 3], fov: 45 }}>
-      <ambientLight intensity={0.5} />
-      <Suspense fallback={<Loader />}>
-        <Model url={modelUrl} />
-        <Environment preset={environment} background={false} />
-        {controls === 'orbit' ? (
-          <OrbitControls autoRotate={autoRotate} autoRotateSpeed={1.5} enableZoom={false} />
-        ) : (
-          <PresentationControls global polar={[-0.4, 0.2]} azimuth={[-1, 1]} />
-        )}
-      </Suspense>
-    </Canvas>
+    <div
+      ref={containerRef}
+      style={{ width: '100%', height: '100%' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Canvas
+        camera={{ position: [cameraX, cameraY, cameraDistance], fov: 45 }}
+        gl={{ alpha: true, antialias: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, isTransparent ? 0 : 1);
+        }}
+        style={{ background: isTransparent ? 'transparent' : background }}
+      >
+        {isTransparent && <TransparentBackground />}
+        <CameraOffset x={cameraX} y={cameraY} />
+        <ambientLight intensity={0.5} />
+        <Suspense fallback={null}>
+          {interactionMode === 'cursor-tilt' ? (
+            <TiltScene
+              url={modelUrl}
+              onLoaded={onLoaded ?? (() => {})}
+              environment={environment}
+              targetRef={cursorRef}
+              maxTilt={maxTilt}
+            />
+          ) : (
+            <>
+              <Model url={modelUrl} onLoaded={onLoaded ?? (() => {})} />
+              <Environment preset={environment} background={false} />
+              <OrbitControls
+                ref={controlsRef}
+                autoRotate={interactionMode === 'auto-rotate'}
+                autoRotateSpeed={1.5}
+                enableZoom={enableZoom}
+                enablePan={false}
+                enableRotate={interactionMode === 'drag'}
+                minDistance={minDistance}
+                maxDistance={maxDistance}
+              />
+            </>
+          )}
+        </Suspense>
+      </Canvas>
+    </div>
   );
 }
