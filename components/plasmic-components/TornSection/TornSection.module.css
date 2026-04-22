@@ -2,3 +2,20 @@
   position: relative;
   width: 100%;
 }
+
+/* Background fill — absolutely covers the full section so it always fills the
+   frame, even when the section is taller than its children.
+   clip-path is here (not on .section) so filter: drop-shadow on the root
+   traces the torn edge correctly and is not clipped. */
+.bg {
+  position: absolute;
+  inset: 0;
+  /* Flex so slot children can use flex: 1 or height: 100% to fill the layer */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Children in normal flow, above the background */
+.content {
+  position: relative;
+}

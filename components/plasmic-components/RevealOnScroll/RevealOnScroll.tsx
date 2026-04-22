@@ -78,7 +78,8 @@ export function RevealOnScroll({
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: [`start ${startViewport.toFixed(3)}`, `start ${endViewport.toFixed(3)}`],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    offset: [`start ${startViewport.toFixed(3)}`, `start ${endViewport.toFixed(3)}`] as any,
   });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
 

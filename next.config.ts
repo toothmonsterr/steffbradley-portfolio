@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Required: three.js ships as ESM and must be transpiled for Next.js
   transpilePackages: ['three'],
+  images: {
+    remotePatterns: [
+      // Plasmic asset CDN — images uploaded via Plasmic Studio
+      { protocol: 'https', hostname: 'site-assets.plasmic.app' },
+      // Plasmic img CDN (resized/optimised variants)
+      { protocol: 'https', hostname: 'img.plasmic.app' },
+    ],
+  },
 };
 
 export default nextConfig;

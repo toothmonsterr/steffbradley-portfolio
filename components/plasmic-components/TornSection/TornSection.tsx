@@ -2,25 +2,6 @@ import React, { useMemo } from 'react';
 import { mulberry32 } from '../OffsetShape/shared';
 import styles from './TornSection.module.css';
 
-// Brand palette — matches tokens/primitives.ts so Plasmic authors pick by name.
-const BRAND_COLORS: Record<string, string> = {
-  cream:      '#EADBC2',
-  lavender:   '#CEBEE3',
-  coral:      '#FF6A50',
-  peach:      '#FFAB7B',
-  chartreuse: '#DDEA44',
-  green:      '#52A159',
-  navy:       '#00427F',
-  brick:      '#802E28',
-  sienna:     '#80553E',
-  olive:      '#607522',
-  forest:     '#295037',
-  midnight:   '#201B2A',
-  white:      '#FFFFFF',
-  transparent: 'transparent',
-};
-
-export const BRAND_COLOR_OPTIONS = Object.keys(BRAND_COLORS);
 
 // Number of virtual x-steps; higher = finer profile resolution.
 const VSTEPS = 200;
@@ -89,9 +70,8 @@ function buildClipPath(
 
 export interface TornSectionProps {
   children?: React.ReactNode;
-
-  /** Background color — choose from brand palette */
-  backgroundColor?: string;
+  /** Background slot — clipped to the torn shape. Drop in a solid color div, GradientBlob, NoiseOverlay, etc. */
+  background?: React.ReactNode;
 
   // Top tear
   tornTop?: boolean;
@@ -114,7 +94,7 @@ export interface TornSectionProps {
 
 export function TornSection({
   children,
-  backgroundColor = 'cream',
+  background,
   tornTop = false,
   tornTopSeed = 1,
   tornTopRoughness = 5,
@@ -127,7 +107,6 @@ export function TornSection({
   tornBottomDepth = 4,
   className,
 }: TornSectionProps) {
-  const resolvedColor = BRAND_COLORS[backgroundColor] ?? backgroundColor;
 
   const topProfile = useMemo(
     () => tornTop ? buildTornProfile(tornTopSeed, tornTopRoughness, tornTopStepSize) : null,
@@ -145,14 +124,16 @@ export function TornSection({
   );
 
   return (
-    <div
-      className={[styles.section, className ?? ''].filter(Boolean).join(' ')}
-      style={{
-        backgroundColor: resolvedColor,
-        clipPath,
-      }}
-    >
-      {children}
+    <div className={[styles.section, className ?? ''].filter(Boolean).join(' ')}>
+      {/* Absolutely-positioned background — clipped to the torn shape.
+          clip-path lives here (not on root) so drop-shadow on root is not clipped. */}
+      <div className={styles.bg} style={{ clipPath }}>
+        {background}
+      </div>
+      {/* Content in normal flow — sizes the section when height is auto */}
+      <div className={styles.content}>
+        {children}
+      </div>
     </div>
   );
 }

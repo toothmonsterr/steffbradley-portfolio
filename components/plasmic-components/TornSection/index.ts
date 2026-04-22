@@ -1,4 +1,4 @@
-import { TornSection, BRAND_COLOR_OPTIONS } from './TornSection';
+import { TornSection } from './TornSection';
 
 export { TornSection };
 
@@ -6,15 +6,12 @@ export const TornSectionMeta = {
   name: 'TornSection',
   displayName: 'Torn Section',
   description:
-    'Full-width section with a brand background color and optional torn-paper clip-path edges at the top and/or bottom. The tear is cut directly into the section\'s background so any color or content behind it shows through.',
+    'Full-width section with a background color and optional torn-paper clip-path edges at the top and/or bottom. The tear is cut directly into the section\'s background so any color or content behind it shows through.',
   props: {
-    children: { type: 'slot', description: 'Section content' },
-
-    backgroundColor: {
-      type: 'choice',
-      options: BRAND_COLOR_OPTIONS,
-      defaultValueHint: 'cream',
-      description: 'Background color from the brand palette',
+    children:   { type: 'slot', description: 'Section content' },
+    background: {
+      type: 'slot',
+      description: 'Background layer — clipped to the torn shape. Add a solid color div, GradientBlob, NoiseOverlay, or any combination.',
     },
 
     // Top tear
