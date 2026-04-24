@@ -11,7 +11,26 @@
   overflow: hidden;
 }
 
-/* Filter is applied to this shell; content inside fills its bounding box. */
-.filterShell {
+/* Content establishes the wrapper's layout dimensions (natural flow). */
+.content {
   display: block;
+  position: relative;
+}
+
+/* Bleed layer — absolutely positioned behind the content, sized to the
+   wrapper via inset: 0. The filter output extends beyond this box via the
+   filter's x/y/width/height region, so the bleed can spill outward. */
+.bleed {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The bleed's inner content copy is invisible in terms of rendered pixels —
+   the filter replaces the output entirely with just the bleed. We only
+   need it here so the filter has a SourceAlpha to dilate from. */
+.bleedSource {
+  display: block;
+  width: 100%;
+  height: 100%;
 }

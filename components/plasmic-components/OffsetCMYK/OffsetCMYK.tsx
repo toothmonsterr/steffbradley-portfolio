@@ -41,22 +41,6 @@ export interface OffsetCMYKProps {
   /** CSS mix-blend-mode between the ink plates */
   blendMode?: 'multiply' | 'darken' | 'screen' | 'overlay';
 
-  /**
-   * When true (default), the blend modes only affect the plates within this
-   * component (via `isolation: isolate`). When false, the plates blend with
-   * whatever is behind the component on the page.
-   */
-  isolateBlend?: boolean;
-
-  /**
-   * Solid color painted behind the plates. When set, it gives the blend modes
-   * a concrete backdrop to multiply/darken against — strongly recommended when
-   * isolateBlend is on, otherwise the toggle can look like a no-op on light
-   * pages (multiply × transparent-through-to-white = identity).
-   * Default: undefined (wrapper stays transparent).
-   */
-  backdropColor?: string;
-
   /** Channel contrast — higher = richer inks, deeper shadows */
   channelContrast?: number;
 
@@ -203,7 +187,6 @@ export function OffsetCMYK({
   offsetX      = 4,
   offsetY      = 3,
   blendMode    = 'multiply',
-  isolateBlend = true,
   channelContrast = 1.4,
 
   interaction    = 'hover',
@@ -292,7 +275,6 @@ export function OffsetCMYK({
     <span
       ref={hostRef}
       className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
-      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>

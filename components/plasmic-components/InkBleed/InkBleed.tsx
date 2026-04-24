@@ -12,6 +12,11 @@ export interface InkBleedProps {
   noiseFrequency?: number;
   /** Fraction 0–1 controlling fiber sparseness: 0 = dense, 1 = sparse */
   noiseThreshold?: number;
+  /**
+   * Blend mode applied ONLY to the bleed halo (the noisy ink ring around the
+   * content). The children on top render normally, untouched. Set to 'multiply'
+   * etc. to make the halo darken the page; children stay pristine.
+   */
   blendMode?: React.CSSProperties['mixBlendMode'];
   /**
    * When true (default), the blend mode only affects the bleed within this
@@ -47,7 +52,7 @@ export function InkBleed({
       className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
       style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
     >
-      {/* Hidden defs SVG — same pattern as OffsetShape */}
+      {/* Hidden defs SVG */}
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
           <filter
@@ -58,13 +63,13 @@ export function InkBleed({
             width="160%"
             height="160%"
           >
-            {/* ── 1. Expand the content silhouette outward ─────────────────── */}
+            {/* 1. Expand the content silhouette outward */}
             <feMorphology in="SourceAlpha" operator="dilate" radius={spread} result="expanded" />
 
-            {/* ── 2. Soften the expanded edge ──────────────────────────────── */}
+            {/* 2. Soften the expanded edge */}
             <feGaussianBlur in="expanded" stdDeviation={softness} result="expandedEdge" />
 
-            {/* ── 3. Paper-fiber noise mask ────────────────────────────────── */}
+            {/* 3. Paper-fiber noise mask */}
             <feTurbulence
               type="fractalNoise"
               baseFrequency={noiseFrequency.toFixed(4)}
@@ -72,40 +77,43 @@ export function InkBleed({
               stitchTiles="stitch"
               result="noise"
             />
-            {/* Map noise RGB luminance → alpha so we can threshold it */}
             <feColorMatrix
               type="matrix"
               values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0"
               in="noise"
               result="noiseAlpha"
             />
-            {/* Binary threshold → fiber mask (1 = ink, 0 = clear paper) */}
             <feComponentTransfer in="noiseAlpha" result="grain">
               <feFuncA type="discrete" tableValues={tv} />
             </feComponentTransfer>
 
-            {/* ── 4. Clip bleed region by paper fiber ─────────────────────── */}
+            {/* 4. Clip bleed region by paper fiber */}
             <feComposite in="expandedEdge" in2="grain" operator="in" result="roughBleed" />
 
-            {/* ── 5. Colorise with ink color ───────────────────────────────── */}
+            {/* 5. Colorise with ink color — NOTE: no feMerge with SourceGraphic.
+                The filter output is ONLY the bleed, so the children rendered
+                as source for the filter don't appear visibly. */}
             <feFlood floodColor={bleedColor} result="ink" />
-            <feComposite in="ink" in2="roughBleed" operator="in" result="bleedLayer" />
-
-            {/* ── 6. Composite: bleed behind original content ──────────────── */}
-            <feMerge>
-              <feMergeNode in="bleedLayer" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+            <feComposite in="ink" in2="roughBleed" operator="in" />
           </filter>
         </defs>
       </svg>
 
+      {/* Bleed layer — absolutely positioned behind the content. The filter
+          replaces the rendered output with the bleed only; the children inside
+          are invisible (filter discards SourceGraphic), but they supply the
+          SourceAlpha silhouette the filter dilates from. Blend mode applies
+          here only. */}
       <span
-        className={styles.filterShell}
+        className={styles.bleed}
         style={{ filter: `url(#${filterId})`, mixBlendMode: blendMode }}
+        aria-hidden="true"
       >
-        {children}
+        <span className={styles.bleedSource}>{children}</span>
       </span>
+
+      {/* Content on top — rendered normally, no blend mode, no filter. */}
+      <span className={styles.content}>{children}</span>
     </span>
   );
 }
