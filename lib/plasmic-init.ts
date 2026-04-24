@@ -86,6 +86,7 @@ import { HalftoneMask, HalftoneMaskMeta }       from '@/components/plasmic-compo
 import { NoiseMask, NoiseMaskMeta }             from '@/components/plasmic-components/NoiseMask';
 import { RevealOnScroll, RevealOnScrollMeta }   from '@/components/plasmic-components/RevealOnScroll';
 import { NextImage, NextImageMeta }             from '@/components/plasmic-components/NextImage';
+import { StickerPeel, StickerPeelMeta }         from '@/components/plasmic-components/StickerPeel';
 
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
@@ -105,4 +106,5 @@ PLASMIC.registerComponent(HalftoneMask, HalftoneMaskMeta  as any);
 PLASMIC.registerComponent(NoiseMask,    NoiseMaskMeta     as any);
 PLASMIC.registerComponent(RevealOnScroll, RevealOnScrollMeta as any);
 PLASMIC.registerComponent(NextImage,           NextImageMeta           as any);
+PLASMIC.registerComponent(StickerPeel,         StickerPeelMeta         as any);
 /* eslint-enable @typescript-eslint/no-explicit-any */

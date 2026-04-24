@@ -21,6 +21,11 @@ export const DotOverlayMeta = {
       options: ['normal', 'multiply', 'darken', 'overlay', 'screen', 'soft-light', 'color-burn'],
       defaultValueHint: 'normal',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: false,
+      description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off (default), the dots blend with whatever is behind on the page.',
+    },
     trigger: {
       type: 'choice',
       options: ['hover', 'always', 'never'],

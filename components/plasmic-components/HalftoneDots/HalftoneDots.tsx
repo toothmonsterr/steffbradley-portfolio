@@ -21,6 +21,12 @@ export interface HalftoneDotsProps {
   /** CSS mix-blend-mode applied between the two ink layers */
   blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
   /**
+   * When true, the blend mode only affects content within this component
+   * (via `isolation: isolate`). When false (default), the halftone blends
+   * with whatever is behind the overlay on the page.
+   */
+  isolateBlend?: boolean;
+  /**
    * Cursor behavior on hover of the host element.
    *   none  — static, no reaction (cheapest)
    *   shift — the two layers drift apart (misregistration)
@@ -67,6 +73,7 @@ export function HalftoneDots({
   dotSize = 40,
   maxOpacity = 1,
   blendMode = 'multiply',
+  isolateBlend = false,
   cursor = 'none',
   iconUrl,
   iconSize = '96px',
@@ -324,7 +331,12 @@ export function HalftoneDots({
     : {};
 
   return (
-    <div ref={rootRef} className={[styles.root, className ?? ''].filter(Boolean).join(' ')} aria-hidden="true">
+    <div
+      ref={rootRef}
+      className={[styles.root, className ?? ''].filter(Boolean).join(' ')}
+      aria-hidden="true"
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       <canvas
         ref={canvasRef}
         className={styles.canvas}

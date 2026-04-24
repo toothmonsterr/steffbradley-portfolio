@@ -21,6 +21,11 @@ export const HalftoneDotsMeta = {
       defaultValueHint: 'multiply',
       description: 'Blend between the two ink layers',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: false,
+      description: 'Reset blend context: when on, the blend mode only affects the two ink layers inside this component. When off (default), the halftone blends with whatever is behind on the page.',
+    },
     cursor: {
       type: 'choice',
       options: ['none', 'shift', 'pulse'],

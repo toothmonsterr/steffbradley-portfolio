@@ -20,6 +20,12 @@ export interface OffsetShapeProps {
   offsetX?: number;
   offsetY?: number;
   blendMode?: 'multiply' | 'darken' | 'screen' | 'overlay';
+  /**
+   * When true (default), the blend modes only affect the layers within this
+   * component (via `isolation: isolate`). When false, the layers blend with
+   * whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
   interaction?: Interaction;
   jitter?: number;
   easeDuration?: number;
@@ -47,6 +53,7 @@ export function OffsetShape({
   offsetX       = 4,
   offsetY       = 3,
   blendMode     = 'multiply',
+  isolateBlend  = true,
   interaction   = 'hover',
   jitter        = 1.2,
   easeDuration  = 0.6,
@@ -104,6 +111,7 @@ export function OffsetShape({
     <span
       ref={hostRef}
       className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>

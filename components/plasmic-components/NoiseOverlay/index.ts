@@ -16,6 +16,11 @@ export const NoiseOverlayMeta = {
       options: ['multiply', 'overlay', 'soft-light', 'darken', 'screen', 'normal'],
       defaultValueHint: 'multiply',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: false,
+      description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off (default), the grain blends with whatever is behind on the page.',
+    },
     animate: {
       type: 'choice',
       options: ['never', 'hover', 'always'],

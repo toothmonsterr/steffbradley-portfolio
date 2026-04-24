@@ -20,6 +20,11 @@ export const InkBleedMeta = {
       defaultValueHint: 'normal',
       description: 'How the bleed layer blends with elements behind it',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: true,
+      description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off, the bleed blends with whatever is behind on the page.',
+    },
   },
   importPath: '@/components/plasmic-components/InkBleed',
 };

@@ -36,6 +36,11 @@ export const HalftoneMaskMeta = {
       defaultValueHint: 'normal',
       description: 'CSS mix-blend-mode applied to the filtered layer',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: false,
+      description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off (default), the halftone blends with whatever is behind on the page.',
+    },
   },
   importPath: '@/components/plasmic-components/HalftoneMask',
 };

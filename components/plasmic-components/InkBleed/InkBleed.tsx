@@ -13,6 +13,12 @@ export interface InkBleedProps {
   /** Fraction 0–1 controlling fiber sparseness: 0 = dense, 1 = sparse */
   noiseThreshold?: number;
   blendMode?: React.CSSProperties['mixBlendMode'];
+  /**
+   * When true (default), the blend mode only affects the bleed within this
+   * component (via `isolation: isolate`). When false, the bleed blends with
+   * whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
   className?: string;
 }
 
@@ -24,6 +30,7 @@ export function InkBleed({
   noiseFrequency = 0.08,
   noiseThreshold = 0.5,
   blendMode,
+  isolateBlend   = true,
   className,
 }: InkBleedProps) {
   const uid      = useId().replace(/:/g, '');
@@ -36,7 +43,10 @@ export function InkBleed({
   const tv   = Array.from({ length: N }, (_, i) => (i >= N - ones ? 1 : 0)).join(' ');
 
   return (
-    <span className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
+    <span
+      className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       {/* Hidden defs SVG — same pattern as OffsetShape */}
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>

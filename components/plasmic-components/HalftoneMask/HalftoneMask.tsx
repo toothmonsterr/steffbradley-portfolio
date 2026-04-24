@@ -25,6 +25,12 @@ export interface HalftoneMaskProps {
   imageContrast?: number;
   angleIndex?: number;
   blendMode?: 'normal' | 'multiply' | 'darken' | 'screen' | 'overlay' | 'soft-light';
+  /**
+   * When true, the blend mode only affects content within this component
+   * (via `isolation: isolate`). When false (default), the halftone blends
+   * with whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
   easeDuration?: number;
   className?: string;
 }
@@ -42,6 +48,7 @@ export function HalftoneMask({
   imageContrast = 1.3,
   angleIndex = 0,
   blendMode = 'normal',
+  isolateBlend = false,
   easeDuration = 0.4,
   className,
 }: HalftoneMaskProps) {
@@ -152,7 +159,11 @@ export function HalftoneMask({
   }, [hoverContrast]);
 
   return (
-    <span ref={wrapperRef} className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
+    <span
+      ref={wrapperRef}
+      className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">

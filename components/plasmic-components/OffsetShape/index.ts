@@ -19,6 +19,11 @@ export const OffsetShapeMeta = {
       defaultValueHint: 'multiply',
       description: 'How the ink layers blend with each other',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: true,
+      description: 'Reset blend context: when on, blend modes only affect the layers inside this component. When off, layers blend with whatever is behind on the page.',
+    },
     interaction: {
       type: 'choice',
       options: ['hover', 'always', 'inverse', 'click'],

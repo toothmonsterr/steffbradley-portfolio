@@ -23,6 +23,11 @@ export const GradientBlobMeta = {
       options: ['normal', 'multiply', 'darken', 'overlay', 'screen', 'soft-light', 'color-burn'],
       defaultValueHint: 'normal',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: true,
+      description: 'Reset blend context: when on, the blend mode only affects the blobs inside this component. When off, blobs blend with whatever is behind on the page.',
+    },
     animate: {
       type: 'choice',
       options: ['never', 'hover', 'always'],

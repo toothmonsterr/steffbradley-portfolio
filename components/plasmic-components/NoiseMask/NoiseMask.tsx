@@ -45,6 +45,12 @@ export interface NoiseMaskProps {
   seed?: number;
   /** CSS mix-blend-mode */
   blendMode?: 'normal' | 'multiply' | 'darken' | 'screen' | 'overlay' | 'soft-light';
+  /**
+   * When true, the blend mode only affects content within this component
+   * (via `isolation: isolate`). When false (default), the grain blends with
+   * whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
   className?: string;
 }
 
@@ -60,6 +66,7 @@ export function NoiseMask({
   imageContrast = 1.3,
   seed = 1,
   blendMode = 'normal',
+  isolateBlend = false,
   className,
 }: NoiseMaskProps) {
   const uid = useId().replace(/:/g, '');
@@ -68,7 +75,10 @@ export function NoiseMask({
   const tv = noiseTableValues(contrast);
 
   return (
-    <span className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
+    <span
+      className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">

@@ -24,6 +24,12 @@ export interface GradientBlobProps {
   /** CSS mix-blend-mode */
   blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
   /**
+   * When true (default), the blend mode only affects content within this
+   * component (via `isolation: isolate`). When false, the blobs blend with
+   * whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
+  /**
    * When the blobs animate:
    *   never  — static, one draw (cheapest)
    *   hover  — loops while the host is hovered; eases to a stop when the cursor leaves
@@ -100,6 +106,7 @@ export function GradientBlob({
   seed = 1,
   maxOpacity = 1,
   blendMode = 'normal',
+  isolateBlend = true,
   animate = 'always',
   easeDuration = 0.8,
   className,
@@ -281,7 +288,12 @@ export function GradientBlob({
   }, [blobs, blurAmount, animate, easeDuration, prefersReduced]);
 
   return (
-    <div ref={rootRef} className={[styles.root, className ?? ''].filter(Boolean).join(' ')} aria-hidden="true">
+    <div
+      ref={rootRef}
+      className={[styles.root, className ?? ''].filter(Boolean).join(' ')}
+      aria-hidden="true"
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       <canvas
         ref={canvasRef}
         className={styles.canvas}

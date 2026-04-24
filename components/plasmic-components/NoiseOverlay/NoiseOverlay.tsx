@@ -14,6 +14,12 @@ export interface NoiseOverlayProps {
   /** CSS mix-blend-mode */
   blendMode?: 'multiply' | 'overlay' | 'soft-light' | 'darken' | 'screen' | 'normal';
   /**
+   * When true, the blend mode only affects content within this component
+   * (via `isolation: isolate`). When false (default), the grain blends with
+   * whatever is behind the overlay on the page.
+   */
+  isolateBlend?: boolean;
+  /**
    * When the grain flickers:
    *   never  — static grain (cheapest)
    *   hover  — flicker only while the hosting element is hovered
@@ -30,6 +36,7 @@ export function NoiseOverlay({
   grainSize = 1.2,
   color,
   blendMode = 'multiply',
+  isolateBlend = false,
   animate = 'never',
   seed = 0,
   className,
@@ -105,6 +112,7 @@ export function NoiseOverlay({
       style={{
         opacity: intensity,
         mixBlendMode: blendMode,
+        isolation: isolateBlend ? 'isolate' : 'auto',
       }}
       preserveAspectRatio="none"
     >

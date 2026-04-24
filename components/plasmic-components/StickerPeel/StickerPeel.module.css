@@ -1,0 +1,26 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+  --peel-size: var(--peel-size-base);
+}
+
+.hoverTrigger:hover {
+  --peel-size: var(--peel-size-hover);
+}
+
+.content {
+  transition: clip-path var(--ease-duration) ease;
+}
+
+.peel {
+  position: absolute;
+  width: var(--peel-size);
+  height: var(--peel-size);
+  pointer-events: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition:
+    width var(--ease-duration) ease,
+    height var(--ease-duration) ease,
+    transform var(--ease-duration) ease;
+}

@@ -30,6 +30,11 @@ export const OffsetCMYKMeta = {
       options: ['multiply', 'darken', 'screen', 'overlay'],
       defaultValueHint: 'multiply',
     },
+    isolateBlend: {
+      type: 'boolean',
+      defaultValueHint: true,
+      description: 'Reset blend context: when on, blend modes only affect the plates inside this component. When off, plates blend with whatever is behind on the page.',
+    },
 
     channelContrast: {
       type: 'number',

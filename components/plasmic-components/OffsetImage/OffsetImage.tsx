@@ -24,6 +24,12 @@ export interface OffsetImageProps {
   offsetX?: number;
   offsetY?: number;
   blendMode?: 'normal' | 'multiply' | 'darken' | 'screen' | 'overlay';
+  /**
+   * When true (default), the blend modes only affect the layers within this
+   * component (via `isolation: isolate`). When false, the layers blend with
+   * whatever is behind the component on the page.
+   */
+  isolateBlend?: boolean;
   interaction?: Interaction;
   jitter?: number;
   easeDuration?: number;
@@ -51,6 +57,7 @@ export const OffsetImage = React.memo(function OffsetImage({
   offsetX        = 4,
   offsetY        = 3,
   blendMode      = 'multiply',
+  isolateBlend   = true,
   interaction    = 'hover',
   jitter         = 1.2,
   easeDuration   = 0.6,
@@ -111,6 +118,7 @@ export const OffsetImage = React.memo(function OffsetImage({
     <span
       ref={hostRef}
       className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
     >
       {tintSlots && (
         <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">

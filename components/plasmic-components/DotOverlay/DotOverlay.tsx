@@ -25,6 +25,12 @@ export interface DotOverlayProps {
   maxOpacity?: number;
   /** CSS mix-blend-mode */
   blendMode?: 'normal' | 'multiply' | 'darken' | 'overlay' | 'screen' | 'soft-light' | 'color-burn';
+  /**
+   * When true, the blend mode only affects content within this component
+   * (via `isolation: isolate`). When false (default), the dots blend with
+   * whatever is behind the overlay on the page.
+   */
+  isolateBlend?: boolean;
   /** hover: activate on host hover. always: always on. never: hidden. */
   trigger?: 'hover' | 'always' | 'never';
   /** Ease-in / ease-out duration (seconds) for the cursor activity ramp */
@@ -55,6 +61,7 @@ export const DotOverlay = React.memo(function DotOverlay({
   scale = 1,
   maxOpacity = 1,
   blendMode = 'normal',
+  isolateBlend = false,
   trigger = 'hover',
   easeDuration = 0.45,
   className,
@@ -254,7 +261,12 @@ export const DotOverlay = React.memo(function DotOverlay({
   if (trigger === 'never') return null;
 
   return (
-    <div ref={rootRef} className={[styles.root, className ?? ''].filter(Boolean).join(' ')} aria-hidden="true">
+    <div
+      ref={rootRef}
+      className={[styles.root, className ?? ''].filter(Boolean).join(' ')}
+      aria-hidden="true"
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+    >
       <canvas
         ref={canvasRef}
         className={styles.canvas}
