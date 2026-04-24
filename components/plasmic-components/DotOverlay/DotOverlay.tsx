@@ -45,7 +45,7 @@ function lerpColor(a: [number, number, number], b: [number, number, number], t: 
   return `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(a[1] + (b[1] - a[1]) * t)},${Math.round(a[2] + (b[2] - a[2]) * t)})`;
 }
 
-export function DotOverlay({
+export const DotOverlay = React.memo(function DotOverlay({
   dotColorA,
   dotColorB,
   step = 14,
@@ -92,10 +92,24 @@ export function DotOverlay({
     // Smoothstep: symmetric ease-in and ease-out
     const smoothstep = (x: number) => x * x * (3 - 2 * x);
 
+    // Sentinels to skip re-paint when nothing has changed since last frame.
+    let lastActivity = -1;
+    let lastCurX = NaN;
+    let lastCurY = NaN;
+
     // Pure render — reads curRef + activityRef and paints one frame.
     const render = () => {
       const { width: w, height: h } = canvas;
       if (w === 0 || h === 0) return;
+
+      const curActivity = activityRef.current;
+      const curX = curRef.current.x;
+      const curY = curRef.current.y;
+      if (curActivity === lastActivity && curX === lastCurX && curY === lastCurY) return;
+      lastActivity = curActivity;
+      lastCurX = curX;
+      lastCurY = curY;
+
       ctx.clearRect(0, 0, w, h);
 
       const a = smoothstep(activityRef.current);
@@ -128,6 +142,8 @@ export function DotOverlay({
     const resize = () => {
       canvas.width = host.offsetWidth;
       canvas.height = host.offsetHeight;
+      // Invalidate sentinels so the first frame after resize always repaints.
+      lastActivity = -1;
       render();
     };
     resize();
@@ -249,4 +265,4 @@ export function DotOverlay({
       />
     </div>
   );
-}
+});

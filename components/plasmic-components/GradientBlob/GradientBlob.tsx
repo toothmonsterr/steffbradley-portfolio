@@ -107,6 +107,7 @@ export function GradientBlob({
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
+  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
   const prefersReduced = usePrefersReducedMotion();
 
   const colors = useMemo(
@@ -147,7 +148,9 @@ export function GradientBlob({
 
     // Offscreen canvas for raw unblurred blobs — composited onto visible canvas
     // with blur applied, so contrast/blur operate on the combined alpha.
-    const offscreen = document.createElement('canvas');
+    // Persisted in a ref so it survives effect re-runs (prop changes).
+    if (!offscreenRef.current) offscreenRef.current = document.createElement('canvas');
+    const offscreen = offscreenRef.current;
     const offCtx = offscreen.getContext('2d');
     if (!offCtx) return;
     const syncOffscreen = () => {
@@ -163,6 +166,7 @@ export function GradientBlob({
     let elapsed = 0;
     let playbackRate = animate === 'always' ? 1 : 0;
     let hovered = false;
+    let inViewport = true;
     const easeSec = Math.max(0.05, easeDuration);
     let lastNow = performance.now();
 
@@ -215,11 +219,12 @@ export function GradientBlob({
 
       // Advance virtual elapsed time by the shaped rate (so the loop itself
       // accelerates/decelerates smoothly, preserving continuity).
-      if (!prefersReduced) {
+      // Skip advancement while off-screen — the last rendered frame persists.
+      if (!prefersReduced && inViewport) {
         elapsed += dt * smoothstep(playbackRate);
       }
 
-      renderFrame();
+      if (inViewport) renderFrame();
 
       // Keep looping while animating or still easing out
       if (playbackRate > 0 || target > 0) {
@@ -242,12 +247,21 @@ export function GradientBlob({
       return () => ro.disconnect();
     }
 
+    // Pause the loop's virtual time while scrolled out of view — the last
+    // rendered frame persists so there's nothing jarring when we return.
+    const io = new IntersectionObserver((entries) => {
+      inViewport = entries[0].isIntersecting;
+      if (inViewport) startLoop();
+    }, { threshold: 0 });
+    io.observe(root);
+
     if (animate === 'always') {
       startLoop();
       return () => {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = 0;
         ro.disconnect();
+        io.disconnect();
       };
     }
 
@@ -262,6 +276,7 @@ export function GradientBlob({
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
       ro.disconnect();
+      io.disconnect();
     };
   }, [blobs, blurAmount, animate, easeDuration, prefersReduced]);
 

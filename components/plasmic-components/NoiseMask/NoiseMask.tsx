@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import styles from './NoiseMask.module.css';
+import { NextImage } from '../NextImage/NextImage';
 
 function noiseTableValues(contrast: number): string {
   const n = 10;
@@ -24,6 +25,14 @@ function invTable(contrast: number): string {
 export interface NoiseMaskProps {
   /** Image URL to apply the noise mask to */
   src?: string;
+  /** Intrinsic image width in px for Next.js optimization (default 800) */
+  width?: number;
+  /** Intrinsic image height in px for Next.js optimization (default 600) */
+  height?: number;
+  /** Mark as high-priority to disable lazy loading (above-the-fold) */
+  priority?: boolean;
+  /** Image quality 1–100 (default 75) */
+  quality?: number;
   /** Ink color */
   color?: string;
   /** Grain coarseness — larger = chunkier grain */
@@ -41,6 +50,10 @@ export interface NoiseMaskProps {
 
 export function NoiseMask({
   src,
+  width = 800,
+  height = 600,
+  priority = false,
+  quality,
   color = '#000000',
   step = 4,
   contrast = 60,
@@ -92,10 +105,23 @@ export function NoiseMask({
         style={{
           filter: `url(#${filterId})`,
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
+          position: 'relative',
+          display: 'inline-block',
+          width,
+          maxWidth: '100%',
+          aspectRatio: `${width} / ${height}`,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {src && <img src={src} alt="" className={styles.image} draggable={false} />}
+        {src && (
+          <NextImage
+            src={src}
+            fill
+            objectFit="contain"
+            priority={priority}
+            quality={quality}
+            className={styles.image}
+          />
+        )}
       </span>
     </span>
   );

@@ -11,10 +11,19 @@ import {
   type Interaction,
   type TextureMode,
 } from '../OffsetShape/shared';
+import { NextImage } from '../NextImage/NextImage';
 
 export interface OffsetCMYKProps {
   /** Source image to auto-separate into C / M / Y / K plates. */
   sourceImage?: string;
+  /** Intrinsic image width in px for Next.js optimization (default 800) */
+  width?: number;
+  /** Intrinsic image height in px for Next.js optimization (default 600) */
+  height?: number;
+  /** Mark as high-priority to disable lazy loading (above-the-fold) */
+  priority?: boolean;
+  /** Image quality 1–100 (default 75) */
+  quality?: number;
 
   /** Cyan ink color (default: process cyan) */
   colorC?: string;
@@ -165,6 +174,10 @@ function channelFilter(
 
 export function OffsetCMYK({
   sourceImage,
+  width  = 800,
+  height = 600,
+  priority = false,
+  quality,
 
   colorC       = '#00AEEF',  // process cyan
   colorM       = '#EC008C',  // process magenta
@@ -245,8 +258,14 @@ export function OffsetCMYK({
     <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>
       <span className={styles.filterInner}>
         {sourceImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={sourceImage} alt="" className={styles.sourceImage} draggable={false} />
+          <NextImage
+            src={sourceImage}
+            fill
+            objectFit="contain"
+            priority={priority}
+            quality={quality}
+            className={styles.sourceImage}
+          />
         ) : null}
       </span>
     </span>
@@ -266,14 +285,19 @@ export function OffsetCMYK({
         </defs>
       </svg>
 
-      {/* Sizer — an invisible copy of the source image establishes the
-          wrapper's intrinsic dimensions. */}
-      <span className={styles.sizer} aria-hidden="true">
-        {sourceImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={sourceImage} alt="" className={styles.sourceImage} draggable={false} />
-        ) : null}
-      </span>
+      {/* Sizer — reserves wrapper dimensions deterministically from the
+          width/height props. Uses aspect-ratio so the wrapper stays
+          responsive within its parent (scales down with max-width: 100%)
+          while preserving the declared ratio. */}
+      <span
+        className={styles.sizer}
+        aria-hidden="true"
+        style={{
+          width,
+          maxWidth: '100%',
+          aspectRatio: `${width} / ${height}`,
+        }}
+      />
 
       <motion.span
         className={styles.layer}

@@ -206,10 +206,11 @@ export function HalftoneDots({
 
       render();
 
-      if (activityRef.current !== target) {
+      if (Math.abs(activityRef.current - target) > 1e-6) {
         rafRef.current = requestAnimationFrame(tickAnim);
       } else {
-        // Reached target — one final render already happened above.
+        // Reached target — snap to exact value; one final render already happened above.
+        activityRef.current = target;
         runningRef.current = false;
         lastTickTs = 0;
       }

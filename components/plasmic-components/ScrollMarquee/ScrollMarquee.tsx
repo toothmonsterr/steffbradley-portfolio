@@ -14,7 +14,7 @@ export interface ScrollMarqueeProps {
   className?: string;
 }
 
-export function ScrollMarquee({
+export const ScrollMarquee = React.memo(function ScrollMarquee({
   children,
   speed = 80,
   direction = 'left',
@@ -77,4 +77,4 @@ export function ScrollMarquee({
       </motion.div>
     </div>
   );
-}
+});

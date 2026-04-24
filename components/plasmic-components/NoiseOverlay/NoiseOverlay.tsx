@@ -52,8 +52,9 @@ export function NoiseOverlay({
     let raf = 0;
     let last = 0;
     let s = seed;
+    let visible = true;
     const tick = (t: number) => {
-      if (t - last > 83) {
+      if (visible && t - last > 83) {
         s = (s + 1) % 1000;
         el.setAttribute('seed', String(s));
         last = t;
@@ -73,8 +74,12 @@ export function NoiseOverlay({
     };
 
     if (animate === 'always') {
+      const io = new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+      }, { threshold: 0 });
+      if (svgRef.current) io.observe(svgRef.current);
       start();
-      return () => stop();
+      return () => { stop(); io.disconnect(); };
     }
 
     // animate === 'hover' — attach listeners to the hover host

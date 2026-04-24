@@ -1,26 +1,23 @@
 import React, { useId, useEffect, useRef } from 'react';
 import styles from './HalftoneMask.module.css';
-import { buildHalftoneSVG } from '../OffsetShape/shared';
+import { buildHalftoneSVG, invTable } from '../OffsetShape/shared';
+import { NextImage } from '../NextImage/NextImage';
 
 const SCREEN_ANGLES = [15, 30, 45, 60];
 const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
-
-function invTable(contrast: number): string {
-  const n = 9;
-  const inverted = contrast < 0;
-  const k = Math.max(0.1, Math.abs(contrast));
-  const values: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const t = i / (n - 1);
-    values.push(Math.max(0, Math.min(1, Math.pow(inverted ? t : 1 - t, 1 / k))));
-  }
-  return values.map((v) => v.toFixed(3)).join(' ');
-}
 
 function smoothstep(x: number) { return x * x * (3 - 2 * x); }
 
 export interface HalftoneMaskProps {
   src?: string;
+  /** Intrinsic image width in px for Next.js optimization (default 800) */
+  width?: number;
+  /** Intrinsic image height in px for Next.js optimization (default 600) */
+  height?: number;
+  /** Mark as high-priority to disable lazy loading (above-the-fold) */
+  priority?: boolean;
+  /** Image quality 1–100 (default 75) */
+  quality?: number;
   color?: string;
   step?: number;
   contrast?: number;
@@ -34,6 +31,10 @@ export interface HalftoneMaskProps {
 
 export function HalftoneMask({
   src,
+  width = 800,
+  height = 600,
+  priority = false,
+  quality,
   color = '#000000',
   step = 4,
   contrast = 60,
@@ -86,9 +87,14 @@ export function HalftoneMask({
 
     updateScreenRef.current = update;
     update();
-    const ro = new ResizeObserver(update);
+    let debounceTimer = 0;
+    const debouncedUpdate = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(update, 150);
+    };
+    const ro = new ResizeObserver(debouncedUpdate);
     ro.observe(wrapper);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); clearTimeout(debounceTimer); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -168,10 +174,23 @@ export function HalftoneMask({
         style={{
           filter: `url(#${filterId})`,
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
+          position: 'relative',
+          display: 'inline-block',
+          width,
+          maxWidth: '100%',
+          aspectRatio: `${width} / ${height}`,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {src && <img src={src} alt="" className={styles.image} draggable={false} />}
+        {src && (
+          <NextImage
+            src={src}
+            fill
+            objectFit="contain"
+            priority={priority}
+            quality={quality}
+            className={styles.image}
+          />
+        )}
       </span>
     </span>
   );

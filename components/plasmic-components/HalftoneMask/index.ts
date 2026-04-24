@@ -9,6 +9,10 @@ export const HalftoneMaskMeta = {
     'Renders children through a halftone dot screen SVG filter. The dots are clipped to the child\'s alpha so transparent areas stay transparent. Use as a standalone ink-texture effect on any content.',
   props: {
     src:           { type: 'imageUrl',                        description: 'Source image — dark areas receive more ink' },
+    width:         { type: 'number', defaultValueHint: 800,   description: 'Intrinsic image width (px) — improves Next.js optimization and layout stability' },
+    height:        { type: 'number', defaultValueHint: 600,   description: 'Intrinsic image height (px) — improves Next.js optimization and layout stability' },
+    priority:      { type: 'boolean', defaultValueHint: false, description: 'Mark as high-priority (above-the-fold) to disable lazy loading' },
+    quality:       { type: 'number', description: 'Image quality 1–100 (default 75)' },
     color:         { type: 'color',  defaultValueHint: '#000000', description: 'Ink color' },
     step:          { type: 'number', defaultValueHint: 4,     description: 'Cell size in px — smaller = finer dot screen' },
     contrast:      { type: 'number', defaultValueHint: 60,    description: 'Dot size as % of cell (0–100)' },

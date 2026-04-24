@@ -10,11 +10,11 @@ type EnvironmentPreset =
 
 type InteractionMode = 'auto-rotate' | 'drag' | 'cursor-tilt';
 
-function Model({ url, onLoaded }: { url: string; onLoaded: () => void }) {
+const Model = React.memo(function Model({ url, onLoaded }: { url: string; onLoaded: () => void }) {
   const { scene } = useGLTF(url);
   useEffect(() => { onLoaded(); }, [onLoaded]);
   return <primitive object={scene} />;
-}
+});
 
 function TransparentBackground() {
   const { scene } = useThree();
@@ -33,7 +33,7 @@ function CameraOffset({ x, y }: { x: number; y: number }) {
 }
 
 
-function TiltScene({
+const TiltScene = React.memo(function TiltScene({
   url,
   onLoaded,
   environment,
@@ -49,11 +49,14 @@ function TiltScene({
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
-    if (!groupRef.current || !targetRef.current) return;
+    if (!groupRef.current) return;
     const tx = (-targetRef.current.y * maxTilt * Math.PI) / 180;
     const ty = (targetRef.current.x * maxTilt * Math.PI) / 180;
-    groupRef.current.rotation.x += (tx - groupRef.current.rotation.x) * 0.08;
-    groupRef.current.rotation.y += (ty - groupRef.current.rotation.y) * 0.08;
+    const dx = tx - groupRef.current.rotation.x;
+    const dy = ty - groupRef.current.rotation.y;
+    if (Math.abs(dx) < 0.0001 && Math.abs(dy) < 0.0001) return;
+    groupRef.current.rotation.x += dx * 0.08;
+    groupRef.current.rotation.y += dy * 0.08;
   });
 
   const { scene } = useGLTF(url);
@@ -67,7 +70,7 @@ function TiltScene({
       <Environment preset={environment} background={false} />
     </>
   );
-}
+});
 
 export interface ModelViewerSceneProps {
   modelUrl: string;
@@ -102,6 +105,8 @@ export function ModelViewerScene({
   const containerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const isTransparent = !background || background === 'transparent';
+
+  const stableOnLoaded = useCallback(() => { onLoaded?.(); }, [onLoaded]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (interactionMode !== 'cursor-tilt' || !containerRef.current) return;
@@ -139,14 +144,14 @@ export function ModelViewerScene({
           {interactionMode === 'cursor-tilt' ? (
             <TiltScene
               url={modelUrl}
-              onLoaded={onLoaded ?? (() => {})}
+              onLoaded={stableOnLoaded}
               environment={environment}
               targetRef={cursorRef}
               maxTilt={maxTilt}
             />
           ) : (
             <>
-              <Model url={modelUrl} onLoaded={onLoaded ?? (() => {})} />
+              <Model url={modelUrl} onLoaded={stableOnLoaded} />
               <Environment preset={environment} background={false} />
               <OrbitControls
                 ref={controlsRef}

@@ -12,6 +12,10 @@ export const OffsetCMYKMeta = {
       type: 'imageUrl',
       description: 'Source image to separate into CMYK channels',
     },
+    width:    { type: 'number', defaultValueHint: 800, description: 'Intrinsic image width (px) — improves Next.js optimization and layout stability' },
+    height:   { type: 'number', defaultValueHint: 600, description: 'Intrinsic image height (px) — improves Next.js optimization and layout stability' },
+    priority: { type: 'boolean', defaultValueHint: false, description: 'Mark as high-priority (above-the-fold) to disable lazy loading' },
+    quality:  { type: 'number', description: 'Image quality 1–100 (default 75)' },
 
     colorC: { type: 'color', defaultValueHint: '#00AEEF', description: 'Cyan ink color' },
     colorM: { type: 'color', defaultValueHint: '#EC008C', description: 'Magenta ink color' },

@@ -41,7 +41,7 @@ export interface OffsetImageProps {
   className?: string;
 }
 
-export function OffsetImage({
+export const OffsetImage = React.memo(function OffsetImage({
   slotA,
   slotB,
   colorA        = '#FF6A50',
@@ -75,7 +75,7 @@ export function OffsetImage({
   const layerB = useLayerMotionValues(1, 1, wobbleB);
 
   const hostRef = useRef<HTMLSpanElement>(null);
-  const layers = [layerA, layerB];
+  const layers = useMemo(() => [layerA, layerB], [layerA, layerB]);
 
   useOffsetActivity(hostRef, {
     interaction,
@@ -160,4 +160,4 @@ export function OffsetImage({
       </motion.span>
     </span>
   );
-}
+});

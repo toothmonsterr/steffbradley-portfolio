@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useEffect, useId, useMemo, useRef } from 'react';
 import { animate, motion, useAnimationFrame, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
 import styles from './RevealOnScroll.module.css';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
@@ -76,28 +76,35 @@ export function RevealOnScroll({
   const startViewport = 1 - triggerPoint / 100;
   const endViewport   = Math.max(0, startViewport - revealDuration);
 
+  const scrollOffset = useMemo(
+    () => [`start ${startViewport.toFixed(3)}`, `start ${endViewport.toFixed(3)}`],
+    [startViewport, endViewport]
+  );
   const { scrollYProgress } = useScroll({
     target: rootRef,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    offset: [`start ${startViewport.toFixed(3)}`, `start ${endViewport.toFixed(3)}`] as any,
+    offset: scrollOffset as any,
   });
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
 
   // ── Page-mode scroll progress (raw window.scrollY) ───────────────────────
   const pageProgress = useMotionValue(0);
+  const scrollParamsRef = useRef({ triggerPoint, revealDuration });
+  scrollParamsRef.current = { triggerPoint, revealDuration };
   useEffect(() => {
     if (scrollMode !== 'page' || trigger !== 'scroll') return;
     const onScroll = () => {
+      const { triggerPoint: tp, revealDuration: rd } = scrollParamsRef.current;
       const scrollY = window.scrollY;
-      const start   = triggerPoint;
-      const end     = triggerPoint + Math.max(1, revealDuration);
+      const start   = tp;
+      const end     = tp + Math.max(1, rd);
       const raw     = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
       pageProgress.set(raw);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // sync on mount
     return () => window.removeEventListener('scroll', onScroll);
-  }, [scrollMode, trigger, triggerPoint, revealDuration, pageProgress]);
+  }, [scrollMode, trigger, pageProgress]);
 
   const smoothPageProgress = useSpring(pageProgress, { stiffness: 80, damping: 25 });
 

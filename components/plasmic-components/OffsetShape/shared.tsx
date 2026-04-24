@@ -597,9 +597,14 @@ export function useHalftoneScreen(
 
     updateRef.current = update;
     update();
-    const ro = new ResizeObserver(update);
+    let debounceTimer = 0;
+    const debouncedUpdate = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(update, 150);
+    };
+    const ro = new ResizeObserver(debouncedUpdate);
     if (hostRef.current) ro.observe(hostRef.current);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); clearTimeout(debounceTimer); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostRef, filterIds.length]);
 
