@@ -60,11 +60,18 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
-import { RevealOnScroll } from "@/components/plasmic-components/RevealOnScroll"; // plasmic-import: kqOT32TkSKDq/codeComponent
-import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
-import { GradientBlob } from "@/components/plasmic-components/GradientBlob"; // plasmic-import: e8qsCr99-93Q/codeComponent
+import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
+import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
+import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
+import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // plasmic-import: bIanIbIW8b7U/codeComponent
+import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
+import { OffsetCMYK } from "@/components/plasmic-components/OffsetCMYK"; // plasmic-import: W6F38AxYTSP7/codeComponent
+import { ScrollMarquee } from "@/components/plasmic-components/ScrollMarquee"; // plasmic-import: K8ICcSEKq3PA/codeComponent
+import { CmsQueryRepeater } from "@plasmicpkgs/plasmic-cms";
+import { StickerPeel } from "@/components/plasmic-components/StickerPeel"; // plasmic-import: J7gKDwRqusOu/codeComponent
 import { TornSection } from "@/components/plasmic-components/TornSection"; // plasmic-import: 8y_E0U1V1ob-/codeComponent
-import { ModelViewer } from "@/components/plasmic-components/ModelViewer"; // plasmic-import: F99Tz_Qd8rVB/codeComponent
+import { CmsRowField } from "@plasmicpkgs/plasmic-cms";
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -72,6 +79,12 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicHomepage.module.css"; // plasmic-import: FuUP13USuDR8/css
+
+import CirclesparkleSvgIcon from "./icons/PlasmicIcon__CirclesparkleSvg"; // plasmic-import: 9fph0KMRmqAr/icon
+import RegistrationMarkTargetSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
+import RegistrationMarkCornerSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkCornerSvg2"; // plasmic-import: S_mhq_tZ6KnU/icon
+import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
+import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -118,12 +131,16 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
   navBanner?: Flex__<typeof NavBanner>;
-  revealOnScroll?: Flex__<typeof RevealOnScroll>;
-  noiseOverlay?: Flex__<typeof NoiseOverlay>;
-  gradientBlob?: Flex__<typeof GradientBlob>;
-  tornSection?: Flex__<typeof TornSection>;
   columns?: Flex__<"div">;
-  _3DModelViewer?: Flex__<typeof ModelViewer>;
+  h4?: Flex__<"h4">;
+  freeBox5?: Flex__<"div">;
+  freeBox6?: Flex__<"div">;
+  scrollMarquee?: Flex__<typeof ScrollMarquee>;
+  section?: Flex__<"section">;
+  cmsDataFetcher?: Flex__<typeof CmsQueryRepeater>;
+  stickerPeel?: Flex__<typeof StickerPeel>;
+  freeBox4?: Flex__<"div">;
+  freeBox3?: Flex__<"div">;
 };
 
 export interface DefaultHomepageProps {}
@@ -167,27 +184,6 @@ function PlasmicHomepage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = _useGlobalVariants();
-
-  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
-    () => [
-      {
-        path: "opacity",
-        type: "private",
-        variableType: "number",
-        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0
-      }
-    ],
-    [$props, $ctx, $refs]
-  );
-  const $state = useDollarState(stateSpecs, {
-    $props,
-    $ctx,
-    $queries: {},
-    $q: {},
-    $refs
-  });
-
   const pageMetadata = generateDynamicMetadata(
     wrapQueriesWithLoadingProxy({}),
     $ctx as PageCtx
@@ -223,71 +219,53 @@ function PlasmicHomepage__RenderFunc(props: {
           <NavBanner
             data-plasmic-name={"navBanner"}
             data-plasmic-override={overrides.navBanner}
+            blurredBg={true}
             bottomTear={true}
             className={classNames("__wab_instance", sty.navBanner)}
             color={"midnight"}
-            effect={
-              <RevealOnScroll
-                data-plasmic-name={"revealOnScroll"}
-                data-plasmic-override={overrides.revealOnScroll}
-                className={classNames("__wab_instance", sty.revealOnScroll)}
-                playOnce={false}
-                scrollMode={"page"}
-                triggerPoint={120}
-              >
-                <NoiseOverlay
-                  data-plasmic-name={"noiseOverlay"}
-                  data-plasmic-override={overrides.noiseOverlay}
-                  animate={"always"}
-                  className={classNames("__wab_instance", sty.noiseOverlay)}
-                  color={true ? "#201B2A" : undefined}
-                />
-
-                <GradientBlob
-                  data-plasmic-name={"gradientBlob"}
-                  data-plasmic-override={overrides.gradientBlob}
-                  className={classNames("__wab_instance", sty.gradientBlob)}
-                  color1={true ? "#00427F" : undefined}
-                  color2={true ? "#FF6A50" : undefined}
-                  color3={true ? "#52A159" : undefined}
-                  color4={true ? "#CEBEE3" : undefined}
-                />
-              </RevealOnScroll>
-            }
             effectVisible={true}
             shadow={true}
           />
 
-          <TornSection
-            data-plasmic-name={"tornSection"}
-            data-plasmic-override={overrides.tornSection}
-            backgroundColor={"midnight"}
-            className={classNames("__wab_instance", sty.tornSection)}
-            tornBottom={true}
-            tornBottomDepth={
-              hasVariant(globalVariants, "screen", "mobile") ? 2 : undefined
-            }
-            tornBottomStepSize={
-              hasVariant(globalVariants, "screen", "mobile") ? 6 : undefined
-            }
+          <div
+            data-plasmic-name={"columns"}
+            data-plasmic-override={overrides.columns}
+            className={classNames(projectcss.all, sty.columns)}
           >
-            <div
-              data-plasmic-name={"columns"}
-              data-plasmic-override={overrides.columns}
-              className={classNames(projectcss.all, sty.columns)}
-            >
-              <div className={classNames(projectcss.all, sty.column___2GzTv)}>
-                <h1
+            <div className={classNames(projectcss.all, sty.column___2GzTv)}>
+              <div className={classNames(projectcss.all, sty.freeBox__rt7Me)}>
+                <CirclesparkleSvgIcon
+                  className={classNames(projectcss.all, sty.svg__aXyVm)}
+                  role={"img"}
+                />
+
+                <h4
+                  data-plasmic-name={"h4"}
+                  data-plasmic-override={overrides.h4}
                   className={classNames(
                     projectcss.all,
-                    projectcss.h1,
-                    projectcss.h1__67C2x,
+                    projectcss.h4,
+                    projectcss.h4__67C2x,
                     projectcss.__wab_text,
-                    sty.h1__g57Iq
+                    sty.h4
                   )}
                 >
-                  {"You won't believe what happens next."}
-                </h1>
+                  {"hello, my name is"}
+                </h4>
+                <CirclesparkleSvgIcon
+                  className={classNames(projectcss.all, sty.svg__ry5WG)}
+                  role={"img"}
+                />
+              </div>
+              <InkBleed
+                bleedColor={true ? "#FFAB7B" : undefined}
+                blendMode={"normal"}
+                className={classNames("__wab_instance", sty.inkBleed__qvXp9)}
+                isolateBlend={true}
+                noiseFrequency={2}
+                softness={10}
+                spread={2}
+              >
                 <h1
                   className={classNames(
                     projectcss.all,
@@ -297,36 +275,651 @@ function PlasmicHomepage__RenderFunc(props: {
                     sty.h1___2PyZv
                   )}
                 >
-                  {"You won't believe what happens next."}
+                  {"steff bradley"}
                 </h1>
-                <h1
+              </InkBleed>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__wlB8S
+                )}
+              >
+                <React.Fragment>
+                  <React.Fragment>{"i'm a "}</React.Fragment>
+                  <span
+                    className={
+                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                    }
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--token-5QKIfNB0tRzE)"
+                    }}
+                  >
+                    {"designer"}
+                  </span>
+                  <React.Fragment>{", "}</React.Fragment>
+                  <span
+                    className={
+                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                    }
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--token-aXuLypa7xfma)"
+                    }}
+                  >
+                    {"artist"}
+                  </span>
+                  <React.Fragment>{", & "}</React.Fragment>
+                  <span
+                    className={
+                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                    }
+                    style={{
+                      fontWeight: 700,
+                      color: "var(--token-B34tJ4Y-Hjpw)"
+                    }}
+                  >
+                    {"web developer"}
+                  </span>
+                  <React.Fragment>
+                    {
+                      "; always experimenting & always learning\ni work with motion, interactivity, design engineering, and systems\ni also make illustrations, 3d renders, and games"
+                    }
+                  </React.Fragment>
+                </React.Fragment>
+              </div>
+              <FloatingElement
+                className={classNames(
+                  "__wab_instance",
+                  sty.floatingElement__phqx3
+                )}
+              >
+                <OffsetShape
                   className={classNames(
-                    projectcss.all,
-                    projectcss.h1,
-                    projectcss.h1__67C2x,
-                    projectcss.__wab_text,
-                    sty.h1___4Baho
+                    "__wab_instance",
+                    sty.offsetShape__vCwh
                   )}
+                  colorA={true ? "#FF6A50" : undefined}
+                  colorB={true ? "#CEBEE3" : undefined}
+                  jitter={8}
+                  offsetX={6}
+                  offsetY={-3}
+                  texture={"halftone"}
+                  textureStep={3}
                 >
-                  {"You won't believe what happens next."}
-                </h1>
-              </div>
-              <div className={classNames(projectcss.all, sty.column___77LZa)}>
-                <ModelViewer
-                  data-plasmic-name={"_3DModelViewer"}
-                  data-plasmic-override={overrides._3DModelViewer}
-                  className={classNames("__wab_instance", sty._3DModelViewer)}
-                  enableZoom={false}
-                  environment={"park"}
-                  fallbackImageUrl={
-                    "/plasmic/toothmonster/images/tooth3DiconGif.gif"
-                  }
-                  minDistance={5}
-                  modelUrl={"/models/tooth.glb"}
-                />
-              </div>
+                  <RegistrationMarkTargetSvg2Icon
+                    className={classNames(projectcss.all, sty.svg__hwk3K)}
+                    role={"img"}
+                  />
+                </OffsetShape>
+              </FloatingElement>
+              <FloatingElement
+                className={classNames(
+                  "__wab_instance",
+                  sty.floatingElement__zri9C
+                )}
+              >
+                <OffsetShape
+                  className={classNames(
+                    "__wab_instance",
+                    sty.offsetShape__kty4F
+                  )}
+                  colorA={true ? "#00427F" : undefined}
+                  colorB={true ? "#DDEA44" : undefined}
+                  texture={"halftone"}
+                  textureStep={3}
+                >
+                  <RegistrationMarkCornerSvg2Icon
+                    className={classNames(projectcss.all, sty.svg__qKs5S)}
+                    role={"img"}
+                  />
+                </OffsetShape>
+              </FloatingElement>
+              <OffsetImage
+                className={classNames("__wab_instance", sty.offsetImage__butHq)}
+                colorA={true ? "#52A159" : undefined}
+                colorB={true ? "#CEBEE3" : undefined}
+                imageContrast={3}
+                jitter={0.3}
+                offsetX={2}
+                offsetY={2}
+                slotA={
+                  <Button
+                    className={classNames("__wab_instance", sty.button__fgFa1)}
+                    color={"blue"}
+                    disabled={false}
+                    effect={
+                      <div
+                        data-plasmic-name={"freeBox5"}
+                        data-plasmic-override={overrides.freeBox5}
+                        className={classNames(projectcss.all, sty.freeBox5)}
+                      />
+                    }
+                    end={
+                      <CirclesparkleSvgIcon
+                        className={classNames(projectcss.all, sty.svg__v3HEj)}
+                        role={"img"}
+                      />
+                    }
+                    iconEnd={true}
+                    label={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__vbMxN
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return "contact me";
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
+                    }
+                  />
+                }
+                slotB={
+                  <div
+                    data-plasmic-name={"freeBox6"}
+                    data-plasmic-override={overrides.freeBox6}
+                    className={classNames(projectcss.all, sty.freeBox6)}
+                  />
+                }
+                texture={"noise"}
+                textureContrast={80}
+                textureHoverEnabled={false}
+                textureStep={1}
+                tintSlots={true}
+              />
             </div>
-          </TornSection>
+            <div className={classNames(projectcss.all, sty.column___77LZa)}>
+              <FloatingElement
+                animationAmplitude={40}
+                className={classNames(
+                  "__wab_instance",
+                  sty.floatingElement__kBxv9
+                )}
+              >
+                <OffsetCMYK
+                  blendMode={"darken"}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.offsetCmyk__sTgZh
+                  )}
+                  colorC={true ? "#CEBEE3" : undefined}
+                  colorK={true ? "#00427F" : undefined}
+                  colorM={true ? "#FF6A50" : undefined}
+                  colorY={true ? "#DDEA44" : undefined}
+                  height={700}
+                  priority={true}
+                  sourceImage={
+                    "/plasmic/toothmonster/images/toothcontactGifGif.gif"
+                  }
+                  texture={"noise"}
+                  textureContrast={70}
+                  textureHoverEnabled={false}
+                  textureStep={1}
+                />
+              </FloatingElement>
+            </div>
+          </div>
+          <ScrollMarquee
+            data-plasmic-name={"scrollMarquee"}
+            data-plasmic-override={overrides.scrollMarquee}
+            className={classNames("__wab_instance", sty.scrollMarquee)}
+            height={"90px"}
+            pauseOnHover={false}
+          >
+            <OffsetCMYK
+              blendMode={"darken"}
+              className={classNames("__wab_instance", sty.offsetCmyk__pmkl0)}
+              colorC={true ? "#CEBEE3" : undefined}
+              colorK={true ? "#00427F" : undefined}
+              colorM={true ? "#FF6A50" : undefined}
+              colorY={true ? "#DDEA44" : undefined}
+              interaction={"inverse"}
+              jitter={0.3}
+              offsetX={1}
+              offsetY={1}
+              sourceImage={"/plasmic/toothmonster/images/marqueeSvg.svg"}
+              texture={"noise"}
+              textureContrast={75}
+              textureHoverEnabled={false}
+              textureStep={1}
+            />
+
+            <OffsetCMYK
+              blendMode={"darken"}
+              className={classNames("__wab_instance", sty.offsetCmyk__u44F)}
+              colorC={true ? "#CEBEE3" : undefined}
+              colorK={true ? "#00427F" : undefined}
+              colorM={true ? "#FF6A50" : undefined}
+              colorY={true ? "#DDEA44" : undefined}
+              interaction={"inverse"}
+              jitter={0.3}
+              offsetX={1}
+              offsetY={1}
+              sourceImage={"/plasmic/toothmonster/images/marqueeSvg.svg"}
+              texture={"noise"}
+              textureContrast={75}
+              textureHoverEnabled={false}
+              textureStep={1}
+            />
+          </ScrollMarquee>
+          <section
+            data-plasmic-name={"section"}
+            data-plasmic-override={overrides.section}
+            className={classNames(projectcss.all, sty.section)}
+          >
+            <InkBleed
+              bleedColor={true ? "#52A159" : undefined}
+              className={classNames("__wab_instance", sty.inkBleed__c3Ucr)}
+              noiseFrequency={2}
+              softness={10}
+              spread={2}
+            >
+              <h1
+                className={classNames(
+                  projectcss.all,
+                  projectcss.h1,
+                  projectcss.h1__67C2x,
+                  projectcss.__wab_text,
+                  sty.h1__v75DS
+                )}
+              >
+                {"ephemera"}
+              </h1>
+            </InkBleed>
+            <div className={classNames(projectcss.all, sty.freeBox__mlmSe)}>
+              <CmsQueryRepeater
+                data-plasmic-name={"cmsDataFetcher"}
+                data-plasmic-override={overrides.cmsDataFetcher}
+                className={classNames("__wab_instance", sty.cmsDataFetcher)}
+                desc={false}
+                emptyMessage={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__oc6Ad
+                        )}
+                      >
+                        {"No matching published entries found."}
+                      </div>
+                    )}
+                  </DataCtxReader__>
+                }
+                forceEmptyState={false}
+                forceLoadingState={false}
+                limit={4}
+                loadingMessage={
+                  <DataCtxReader__>
+                    {$ctx => (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__wpXd
+                        )}
+                      >
+                        {"Loading..."}
+                      </div>
+                    )}
+                  </DataCtxReader__>
+                }
+                mode={"rows"}
+                noAutoRepeat={false}
+                noLayout={false}
+                useDraft={false}
+              >
+                <DataCtxReader__>
+                  {$ctx => (
+                    <InkBleed
+                      bleedColor={true ? "#CEBEE3" : undefined}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.inkBleed___1NyxD
+                      )}
+                      noiseFrequency={1.5}
+                      spread={1}
+                    >
+                      <StickerPeel
+                        data-plasmic-name={"stickerPeel"}
+                        data-plasmic-override={overrides.stickerPeel}
+                        backColor={true ? "#EADBC2" : undefined}
+                        backdropColor={true ? "#00427F00" : undefined}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.stickerPeel
+                        )}
+                        hoverPeelSize={90}
+                        peelSize={75}
+                        perspective={300}
+                        shadowColor={true ? "#00427F80" : undefined}
+                        tilt={4}
+                        trigger={"hover"}
+                      >
+                        <InkBleed
+                          bleedColor={true ? "#52A159" : undefined}
+                          className={classNames(
+                            "__wab_instance",
+                            sty.inkBleed__elc8A
+                          )}
+                          noiseFrequency={2}
+                          softness={7}
+                          spread={2}
+                        >
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              sty.freeBox__o20Od
+                            )}
+                          >
+                            <TornSection
+                              background={
+                                <React.Fragment>
+                                  <NoiseOverlay
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__dfJt
+                                    )}
+                                    color={true ? "#504C57" : undefined}
+                                  />
+
+                                  <div
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.freeBox___5QeFc
+                                    )}
+                                  />
+                                </React.Fragment>
+                              }
+                              className={classNames(
+                                "__wab_instance",
+                                sty.tornSection__xeClH
+                              )}
+                              tornBottom={true}
+                              tornBottomSeed={+1}
+                              tornTop={false}
+                            >
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__u892S
+                                )}
+                              >
+                                <EyeconSvgIcon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__g3NRr
+                                  )}
+                                  role={"img"}
+                                />
+
+                                <CmsRowField
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.cmsEntryField__uQQx
+                                  )}
+                                  field={"caseStudyYear"}
+                                  themeResetClassName={classNames(
+                                    projectcss.root_reset,
+                                    projectcss.root_reset_tags,
+                                    projectcss.plasmic_default_styles,
+                                    projectcss.plasmic_mixins,
+                                    styleTokensClassNames
+                                  )}
+                                />
+                              </div>
+                            </TornSection>
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                sty.freeBox__soZho
+                              )}
+                            >
+                              <OffsetCMYK
+                                blendMode={"darken"}
+                                channelContrast={1.2}
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.offsetCmyk__jr5Hn
+                                )}
+                                colorC={true ? "#CEBEE3" : undefined}
+                                colorK={true ? "#00427F" : undefined}
+                                colorM={true ? "#FF6A50" : undefined}
+                                colorY={true ? "#DDEA44" : undefined}
+                                interaction={"inverse"}
+                                jitter={2}
+                                offsetX={0.3}
+                                offsetY={0.2}
+                                priority={false}
+                                sourceImage={
+                                  $ctx.plasmicCmsCaseStudyTitleItem.data
+                                    .caseStudyCardImg.url
+                                }
+                              />
+
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__gn4Il
+                                )}
+                              />
+                            </div>
+                            <TornSection
+                              background={
+                                <React.Fragment>
+                                  <NoiseOverlay
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__c0Oc
+                                    )}
+                                    color={true ? "#EDE9E3" : undefined}
+                                  />
+
+                                  <div
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.freeBox___71K9A
+                                    )}
+                                  />
+                                </React.Fragment>
+                              }
+                              className={classNames(
+                                "__wab_instance",
+                                sty.tornSection___3PrAn
+                              )}
+                              tornBottom={false}
+                              tornBottomSeed={+1}
+                              tornTop={true}
+                              tornTopSeed={+2}
+                            >
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__feoX5
+                                )}
+                              >
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.freeBox__xFfEu
+                                  )}
+                                >
+                                  <InkBleed
+                                    bleedColor={true ? "#504C57" : undefined}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.inkBleed___28Jzj
+                                    )}
+                                    noiseFrequency={1}
+                                    spread={1}
+                                  >
+                                    <CmsRowField
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.cmsEntryField__pmeDw
+                                      )}
+                                      field={"caseStudyTitle"}
+                                      themeResetClassName={classNames(
+                                        projectcss.root_reset,
+                                        projectcss.root_reset_tags,
+                                        projectcss.plasmic_default_styles,
+                                        projectcss.plasmic_mixins,
+                                        styleTokensClassNames
+                                      )}
+                                    />
+                                  </InkBleed>
+                                  <CmsRowField
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.cmsEntryField__ddsi
+                                    )}
+                                    field={"caseStudyTitle"}
+                                    themeResetClassName={classNames(
+                                      projectcss.root_reset,
+                                      projectcss.root_reset_tags,
+                                      projectcss.plasmic_default_styles,
+                                      projectcss.plasmic_mixins,
+                                      styleTokensClassNames
+                                    )}
+                                  />
+                                </div>
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.freeBox___41QhX
+                                  )}
+                                >
+                                  <OffsetImage
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.offsetImage__c47R
+                                    )}
+                                    colorA={true ? "#FFAB7B" : undefined}
+                                    colorB={true ? "#DDEA44" : undefined}
+                                    imageContrast={2}
+                                    jitter={0.3}
+                                    offsetX={2}
+                                    offsetY={2}
+                                    slotA={
+                                      <Button
+                                        className={classNames(
+                                          "__wab_instance",
+                                          sty.button__dfAjz
+                                        )}
+                                        color={"blue"}
+                                        disabled={false}
+                                        effect={
+                                          <div
+                                            data-plasmic-name={"freeBox4"}
+                                            data-plasmic-override={
+                                              overrides.freeBox4
+                                            }
+                                            className={classNames(
+                                              projectcss.all,
+                                              sty.freeBox4
+                                            )}
+                                          />
+                                        }
+                                        end={
+                                          <CirclesparkleSvgIcon
+                                            className={classNames(
+                                              projectcss.all,
+                                              sty.svg__j0Xov
+                                            )}
+                                            role={"img"}
+                                          />
+                                        }
+                                        iconEnd={true}
+                                        label={
+                                          <div
+                                            className={classNames(
+                                              projectcss.all,
+                                              projectcss.__wab_text,
+                                              sty.text__zmmpr
+                                            )}
+                                          >
+                                            {"case study"}
+                                          </div>
+                                        }
+                                      />
+                                    }
+                                    slotB={
+                                      <div
+                                        data-plasmic-name={"freeBox3"}
+                                        data-plasmic-override={
+                                          overrides.freeBox3
+                                        }
+                                        className={classNames(
+                                          projectcss.all,
+                                          sty.freeBox3
+                                        )}
+                                      />
+                                    }
+                                    texture={"noise"}
+                                    textureContrast={80}
+                                    textureHoverEnabled={false}
+                                    textureStep={1}
+                                    tintSlots={true}
+                                  />
+
+                                  <Button
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.button__wcEqo
+                                    )}
+                                    color={"neutral"}
+                                    end={
+                                      <CirclesparkleSvgIcon
+                                        className={classNames(
+                                          projectcss.all,
+                                          sty.svg__e408V
+                                        )}
+                                        role={"img"}
+                                      />
+                                    }
+                                    iconEnd={true}
+                                    label={
+                                      <div
+                                        className={classNames(
+                                          projectcss.all,
+                                          projectcss.__wab_text,
+                                          sty.text__qDOgf
+                                        )}
+                                      >
+                                        {"live link"}
+                                      </div>
+                                    }
+                                    type={"bordered"}
+                                  />
+                                </div>
+                              </div>
+                            </TornSection>
+                          </div>
+                        </InkBleed>
+                      </StickerPeel>
+                    </InkBleed>
+                  )}
+                </DataCtxReader__>
+              </CmsQueryRepeater>
+            </div>
+          </section>
         </div>
       </div>
     </React.Fragment>
@@ -337,20 +930,28 @@ const PlasmicDescendants = {
   root: [
     "root",
     "navBanner",
-    "revealOnScroll",
-    "noiseOverlay",
-    "gradientBlob",
-    "tornSection",
     "columns",
-    "_3DModelViewer"
+    "h4",
+    "freeBox5",
+    "freeBox6",
+    "scrollMarquee",
+    "section",
+    "cmsDataFetcher",
+    "stickerPeel",
+    "freeBox4",
+    "freeBox3"
   ],
-  navBanner: ["navBanner", "revealOnScroll", "noiseOverlay", "gradientBlob"],
-  revealOnScroll: ["revealOnScroll", "noiseOverlay", "gradientBlob"],
-  noiseOverlay: ["noiseOverlay"],
-  gradientBlob: ["gradientBlob"],
-  tornSection: ["tornSection", "columns", "_3DModelViewer"],
-  columns: ["columns", "_3DModelViewer"],
-  _3DModelViewer: ["_3DModelViewer"]
+  navBanner: ["navBanner"],
+  columns: ["columns", "h4", "freeBox5", "freeBox6"],
+  h4: ["h4"],
+  freeBox5: ["freeBox5"],
+  freeBox6: ["freeBox6"],
+  scrollMarquee: ["scrollMarquee"],
+  section: ["section", "cmsDataFetcher", "stickerPeel", "freeBox4", "freeBox3"],
+  cmsDataFetcher: ["cmsDataFetcher", "stickerPeel", "freeBox4", "freeBox3"],
+  stickerPeel: ["stickerPeel", "freeBox4", "freeBox3"],
+  freeBox4: ["freeBox4"],
+  freeBox3: ["freeBox3"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -358,12 +959,16 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   navBanner: typeof NavBanner;
-  revealOnScroll: typeof RevealOnScroll;
-  noiseOverlay: typeof NoiseOverlay;
-  gradientBlob: typeof GradientBlob;
-  tornSection: typeof TornSection;
   columns: "div";
-  _3DModelViewer: typeof ModelViewer;
+  h4: "h4";
+  freeBox5: "div";
+  freeBox6: "div";
+  scrollMarquee: typeof ScrollMarquee;
+  section: "section";
+  cmsDataFetcher: typeof CmsQueryRepeater;
+  stickerPeel: typeof StickerPeel;
+  freeBox4: "div";
+  freeBox3: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -429,12 +1034,16 @@ export const PlasmicHomepage = Object.assign(
   {
     // Helper components rendering sub-elements
     navBanner: makeNodeComponent("navBanner"),
-    revealOnScroll: makeNodeComponent("revealOnScroll"),
-    noiseOverlay: makeNodeComponent("noiseOverlay"),
-    gradientBlob: makeNodeComponent("gradientBlob"),
-    tornSection: makeNodeComponent("tornSection"),
     columns: makeNodeComponent("columns"),
-    _3DModelViewer: makeNodeComponent("_3DModelViewer"),
+    h4: makeNodeComponent("h4"),
+    freeBox5: makeNodeComponent("freeBox5"),
+    freeBox6: makeNodeComponent("freeBox6"),
+    scrollMarquee: makeNodeComponent("scrollMarquee"),
+    section: makeNodeComponent("section"),
+    cmsDataFetcher: makeNodeComponent("cmsDataFetcher"),
+    stickerPeel: makeNodeComponent("stickerPeel"),
+    freeBox4: makeNodeComponent("freeBox4"),
+    freeBox3: makeNodeComponent("freeBox3"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,

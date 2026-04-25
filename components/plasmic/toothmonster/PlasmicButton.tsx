@@ -305,6 +305,9 @@ function PlasmicButton__RenderFunc(props: {
         sty.root,
         {
           [sty.rootcolor_blue]: hasVariant($state, "color", "blue"),
+          [sty.rootcolor_blue_type_soft]:
+            hasVariant($state, "color", "blue") &&
+            hasVariant($state, "type", "soft"),
           [sty.rootcolor_errorDestructive]: hasVariant(
             $state,
             "color",
@@ -318,6 +321,9 @@ function PlasmicButton__RenderFunc(props: {
             hasVariant($state, "color", "neutral") &&
             hasVariant($state, "type", "soft"),
           [sty.rootcolor_peach]: hasVariant($state, "color", "peach"),
+          [sty.rootcolor_peach_type_soft]:
+            hasVariant($state, "type", "soft") &&
+            hasVariant($state, "color", "peach"),
           [sty.rootcolor_success]: hasVariant($state, "color", "success"),
           [sty.rootcolor_success_type_soft]:
             hasVariant($state, "color", "success") &&
@@ -348,6 +354,9 @@ function PlasmicButton__RenderFunc(props: {
             hasVariant($state, "type", "bordered"),
           [sty.roottype_bordered_color_neutral]:
             hasVariant($state, "color", "neutral") &&
+            hasVariant($state, "type", "bordered"),
+          [sty.roottype_bordered_color_peach]:
+            hasVariant($state, "color", "peach") &&
             hasVariant($state, "type", "bordered"),
           [sty.roottype_bordered_color_success]:
             hasVariant($state, "color", "success") &&
@@ -382,6 +391,12 @@ function PlasmicButton__RenderFunc(props: {
         data-plasmic-name={"hover"}
         data-plasmic-override={overrides.hover}
         className={classNames(projectcss.all, sty.hover, {
+          [sty.hovercolor_blue_type_soft]:
+            hasVariant($state, "color", "blue") &&
+            hasVariant($state, "type", "soft"),
+          [sty.hovercolor_peach_type_soft]:
+            hasVariant($state, "type", "soft") &&
+            hasVariant($state, "color", "peach"),
           [sty.hovertype_bordered]: hasVariant($state, "type", "bordered")
         })}
       />
@@ -417,6 +432,9 @@ function PlasmicButton__RenderFunc(props: {
           data-plasmic-override={overrides.softBackground}
           className={classNames(projectcss.all, sty.softBackground, {
             [sty.softBackgroundcolor_blue]: hasVariant($state, "color", "blue"),
+            [sty.softBackgroundcolor_blue_type_soft]:
+              hasVariant($state, "color", "blue") &&
+              hasVariant($state, "type", "soft"),
             [sty.softBackgroundcolor_errorDestructive]: hasVariant(
               $state,
               "color",
@@ -433,6 +451,9 @@ function PlasmicButton__RenderFunc(props: {
             [sty.softBackgroundcolor_neutral_type_soft]:
               hasVariant($state, "color", "neutral") &&
               hasVariant($state, "type", "soft"),
+            [sty.softBackgroundcolor_peach_type_soft]:
+              hasVariant($state, "type", "soft") &&
+              hasVariant($state, "color", "peach"),
             [sty.softBackgroundcolor_success]: hasVariant(
               $state,
               "color",
@@ -476,6 +497,9 @@ function PlasmicButton__RenderFunc(props: {
               "errorDestructive"
             ),
             [sty.bordercolor_neutral]: hasVariant($state, "color", "neutral"),
+            [sty.bordercolor_peach_type_soft]:
+              hasVariant($state, "type", "soft") &&
+              hasVariant($state, "color", "peach"),
             [sty.bordercolor_success]: hasVariant($state, "color", "success"),
             [sty.bordercolor_warning]: hasVariant($state, "color", "warning"),
             [sty.borderflatSide_bottom]: hasVariant(
@@ -501,6 +525,9 @@ function PlasmicButton__RenderFunc(props: {
               hasVariant($state, "type", "bordered"),
             [sty.bordertype_bordered_color_neutral]:
               hasVariant($state, "color", "neutral") &&
+              hasVariant($state, "type", "bordered"),
+            [sty.bordertype_bordered_color_peach]:
+              hasVariant($state, "color", "peach") &&
               hasVariant($state, "type", "bordered"),
             [sty.bordertype_bordered_color_success]:
               hasVariant($state, "color", "success") &&
@@ -680,6 +707,9 @@ function PlasmicButton__RenderFunc(props: {
               "color",
               "blue"
             ),
+            [sty.slotTargetLabelcolor_blue_type_soft]:
+              hasVariant($state, "color", "blue") &&
+              hasVariant($state, "type", "soft"),
             [sty.slotTargetLabelcolor_errorDestructive]: hasVariant(
               $state,
               "color",
@@ -742,6 +772,9 @@ function PlasmicButton__RenderFunc(props: {
               hasVariant($state, "type", "bordered"),
             [sty.slotTargetLabeltype_bordered_color_neutral]:
               hasVariant($state, "color", "neutral") &&
+              hasVariant($state, "type", "bordered"),
+            [sty.slotTargetLabeltype_bordered_color_peach]:
+              hasVariant($state, "color", "peach") &&
               hasVariant($state, "type", "bordered"),
             [sty.slotTargetLabeltype_bordered_color_success]:
               hasVariant($state, "color", "success") &&

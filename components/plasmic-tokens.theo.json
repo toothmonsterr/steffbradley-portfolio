@@ -743,7 +743,7 @@
     {
       "name": "Solids/Neutrals/color-solid-black",
       "type": "color",
-      "value": "#201B2A",
+      "value": "#000000",
       "category": "color",
       "meta": {
         "projectId": "67C2x4VH9CGyuASG98L3XF",

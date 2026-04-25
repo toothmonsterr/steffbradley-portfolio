@@ -101,17 +101,19 @@ export const PlasmicNavBanner__VariantProps = new Array<VariantPropType>(
   "shadow"
 );
 
-export type PlasmicNavBanner__ArgsType = { effect?: React.ReactNode };
+export type PlasmicNavBanner__ArgsType = {};
 type ArgPropType = keyof PlasmicNavBanner__ArgsType;
-export const PlasmicNavBanner__ArgProps = new Array<ArgPropType>("effect");
+export const PlasmicNavBanner__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicNavBanner__OverridesType = {
   root?: Flex__<typeof TornSection>;
   navigationBar?: Flex__<typeof NavigationBar>;
+  revealOnScroll?: Flex__<typeof RevealOnScroll>;
+  noiseOverlay?: Flex__<typeof NoiseOverlay>;
+  gradientBlob?: Flex__<typeof GradientBlob>;
 };
 
 export interface DefaultNavBannerProps {
-  effect?: React.ReactNode;
   color?: SingleChoiceArg<"midnight" | "navy" | "coral" | "cream">;
   effectVisible?: SingleBooleanChoiceArg<"effectVisible">;
   bottomTear?: SingleBooleanChoiceArg<"bottomTear">;
@@ -213,16 +215,113 @@ function PlasmicNavBanner__RenderFunc(props: {
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      backgroundColor={
-        hasVariant($state, "color", "cream")
-          ? "cream"
-          : hasVariant($state, "color", "coral")
-            ? "coral"
-            : hasVariant($state, "color", "navy")
-              ? "navy"
-              : hasVariant($state, "color", "midnight")
-                ? "midnight"
-                : "transparent"
+      background={
+        <React.Fragment>
+          <RevealOnScroll
+            data-plasmic-name={"revealOnScroll"}
+            data-plasmic-override={overrides.revealOnScroll}
+            className={classNames("__wab_instance", sty.revealOnScroll, {
+              [sty.revealOnScrollcolor_coral]: hasVariant(
+                $state,
+                "color",
+                "coral"
+              ),
+              [sty.revealOnScrollcolor_cream]: hasVariant(
+                $state,
+                "color",
+                "cream"
+              ),
+              [sty.revealOnScrollcolor_midnight]: hasVariant(
+                $state,
+                "color",
+                "midnight"
+              ),
+              [sty.revealOnScrollcolor_navy]: hasVariant(
+                $state,
+                "color",
+                "navy"
+              ),
+              [sty.revealOnScrolleffectVisible]: hasVariant(
+                $state,
+                "effectVisible",
+                "effectVisible"
+              )
+            })}
+            playOnce={true}
+            scrollMode={"page"}
+            triggerPoint={
+              hasVariant($state, "effectVisible", "effectVisible")
+                ? 90
+                : hasVariant($state, "color", "midnight")
+                  ? 90
+                  : 100
+            }
+          >
+            <NoiseOverlay
+              data-plasmic-name={"noiseOverlay"}
+              data-plasmic-override={overrides.noiseOverlay}
+              animate={"always"}
+              className={classNames("__wab_instance", sty.noiseOverlay, {
+                [sty.noiseOverlaycolor_midnight]: hasVariant(
+                  $state,
+                  "color",
+                  "midnight"
+                ),
+                [sty.noiseOverlayeffectVisible]: hasVariant(
+                  $state,
+                  "effectVisible",
+                  "effectVisible"
+                )
+              })}
+              color={true ? "#201B2A" : undefined}
+            />
+
+            <GradientBlob
+              data-plasmic-name={"gradientBlob"}
+              data-plasmic-override={overrides.gradientBlob}
+              className={classNames("__wab_instance", sty.gradientBlob, {
+                [sty.gradientBlobcolor_midnight]: hasVariant(
+                  $state,
+                  "color",
+                  "midnight"
+                ),
+                [sty.gradientBlobeffectVisible]: hasVariant(
+                  $state,
+                  "effectVisible",
+                  "effectVisible"
+                )
+              })}
+              color1={true ? "#00427F" : undefined}
+              color2={true ? "#FF6A50" : undefined}
+              color3={true ? "#52A159" : undefined}
+              color4={true ? "#CEBEE3" : undefined}
+            />
+          </RevealOnScroll>
+          <div
+            className={classNames(projectcss.all, sty.freeBox___8NzTq, {
+              [sty.freeBoxcolor_coral___8NzTqNpzn0]: hasVariant(
+                $state,
+                "color",
+                "coral"
+              ),
+              [sty.freeBoxcolor_cream___8NzTq9ImL]: hasVariant(
+                $state,
+                "color",
+                "cream"
+              ),
+              [sty.freeBoxcolor_midnight___8NzTq93TEr]: hasVariant(
+                $state,
+                "color",
+                "midnight"
+              ),
+              [sty.freeBoxcolor_navy___8NzTq5L1Ya]: hasVariant(
+                $state,
+                "color",
+                "navy"
+              )
+            })}
+          />
+        </React.Fragment>
       }
       className={classNames(
         "__wab_instance",
@@ -247,10 +346,17 @@ function PlasmicNavBanner__RenderFunc(props: {
         }
       )}
       tornBottom={
-        hasVariant($state, "bottomTear", "bottomTear") ? true : undefined
+        hasVariant($state, "bottomTear", "bottomTear")
+          ? true
+          : hasVariant(globalVariants, "screen", "mobile")
+            ? false
+            : undefined
       }
-      tornTopRoughness={
-        hasVariant($state, "bottomTear", "bottomTear") ? 8 : undefined
+      tornBottomDepth={
+        hasVariant(globalVariants, "screen", "mobile") ? 8 : undefined
+      }
+      tornBottomStepSize={
+        hasVariant(globalVariants, "screen", "mobile") ? 12 : undefined
       }
     >
       <NavigationBar
@@ -288,6 +394,11 @@ function PlasmicNavBanner__RenderFunc(props: {
           >
             <LogoLightSvg3Icon
               className={classNames(projectcss.all, sty.svg__yjLqg, {
+                [sty.svgcolor_coral__yjLqgNpzn0]: hasVariant(
+                  $state,
+                  "color",
+                  "coral"
+                ),
                 [sty.svgcolor_cream__yjLqg9ImL]: hasVariant(
                   $state,
                   "color",
@@ -448,65 +559,22 @@ function PlasmicNavBanner__RenderFunc(props: {
           hasVariant(globalVariants, "screen", "mobile") ? 640 : 768
         }
       />
-
-      <div
-        className={classNames(projectcss.all, sty.freeBox__umKkW, {
-          [sty.freeBoxeffectVisible__umKkWyuJl7]: hasVariant(
-            $state,
-            "effectVisible",
-            "effectVisible"
-          )
-        })}
-      >
-        {(hasVariant($state, "effectVisible", "effectVisible") ? true : false)
-          ? renderPlasmicSlot({
-              defaultContents: (
-                <RevealOnScroll
-                  className={classNames(
-                    "__wab_instance",
-                    sty.revealOnScroll__hrZAw
-                  )}
-                  playOnce={true}
-                >
-                  <NoiseOverlay
-                    animate={"always"}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.noiseOverlay__de8Iu
-                    )}
-                    color={true ? "#201B2A" : undefined}
-                  />
-
-                  <GradientBlob
-                    className={classNames(
-                      "__wab_instance",
-                      sty.gradientBlob__bFt4G,
-                      {
-                        [sty.gradientBlobeffectVisible__bFt4GyuJl7]: hasVariant(
-                          $state,
-                          "effectVisible",
-                          "effectVisible"
-                        )
-                      }
-                    )}
-                    color1={true ? "#00427F" : undefined}
-                    color2={true ? "#FF6A50" : undefined}
-                    color3={true ? "#52A159" : undefined}
-                    color4={true ? "#CEBEE3" : undefined}
-                  />
-                </RevealOnScroll>
-              ),
-              value: args.effect
-            })
-          : null}
-      </div>
     </TornSection>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navigationBar"],
-  navigationBar: ["navigationBar"]
+  root: [
+    "root",
+    "navigationBar",
+    "revealOnScroll",
+    "noiseOverlay",
+    "gradientBlob"
+  ],
+  navigationBar: ["navigationBar"],
+  revealOnScroll: ["revealOnScroll", "noiseOverlay", "gradientBlob"],
+  noiseOverlay: ["noiseOverlay"],
+  gradientBlob: ["gradientBlob"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -514,6 +582,9 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: typeof TornSection;
   navigationBar: typeof NavigationBar;
+  revealOnScroll: typeof RevealOnScroll;
+  noiseOverlay: typeof NoiseOverlay;
+  gradientBlob: typeof GradientBlob;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -579,6 +650,9 @@ export const PlasmicNavBanner = Object.assign(
   {
     // Helper components rendering sub-elements
     navigationBar: makeNodeComponent("navigationBar"),
+    revealOnScroll: makeNodeComponent("revealOnScroll"),
+    noiseOverlay: makeNodeComponent("noiseOverlay"),
+    gradientBlob: makeNodeComponent("gradientBlob"),
 
     // Metadata about props expected for PlasmicNavBanner
     internalVariantProps: PlasmicNavBanner__VariantProps,
