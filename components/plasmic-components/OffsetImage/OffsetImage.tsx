@@ -158,6 +158,11 @@ export const OffsetImage = React.memo(function OffsetImage({
           <span className={styles.filterInner}>{slotB}</span>
         </span>
       </motion.span>
+
+      {/* Transparent interaction layer — captures pointer/keyboard events for
+          any buttons, links, or interactive elements placed in slotA. The visual
+          ink layers above are inert decorations; this layer is the real target. */}
+      <span className={styles.interactionLayer}>{slotA}</span>
     </span>
   );
 });

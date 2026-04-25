@@ -56,6 +56,16 @@
   overflow: hidden;
 }
 
+/* Transparent interaction layer — sits on top of the ink layers, invisible but
+   fully interactive. Captures clicks/focus for buttons/links in the slot. */
+.interactionLayer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  pointer-events: auto;
+}
+
 .filterShell {
   display: block;
   width: 100%;

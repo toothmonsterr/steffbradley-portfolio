@@ -139,6 +139,10 @@ export function OffsetShape({
       >
         {layerCopy(filterBId)}
       </motion.span>
+
+      {/* Transparent interaction layer — captures pointer/keyboard events for
+          buttons, links, etc. placed in children. The ink layers are inert. */}
+      <span className={styles.interactionLayer}>{children}</span>
     </span>
   );
 }

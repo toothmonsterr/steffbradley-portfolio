@@ -28,6 +28,16 @@
   will-change: transform;
 }
 
+/* Transparent interaction layer — sits on top of the ink layers, invisible but
+   fully interactive. Captures clicks/focus for buttons/links in children. */
+.interactionLayer {
+  position: absolute;
+  inset: 0;
+  display: inline-block;
+  opacity: 0;
+  pointer-events: auto;
+}
+
 /* filterShell sizes to its content so SourceAlpha matches the child exactly.
    display: inline-flex prevents it from stretching to the layer width. */
 .filterShell {
