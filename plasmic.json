@@ -26227,6 +26227,20 @@
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/playground"
+        },
+        {
+          "id": "KPdaUzZPxR9h",
+          "name": "Portfolio",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/toothmonster/PlasmicPortfolio.tsx",
+          "importSpec": {
+            "modulePath": "../pages/portfolio/[slug].tsx"
+          },
+          "cssFilePath": "plasmic/toothmonster/PlasmicPortfolio.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/portfolio/[slug]"
         }
       ],
       "icons": [
@@ -26910,6 +26924,68 @@
         }
       ],
       "customFunctions": []
+    },
+    {
+      "projectId": "84wxoth5npGrp6RRXPL88z",
+      "projectApiToken": "hOzXksPB8gkTrKnfJeV9VDS8m8dnIXQn1xxDQZ5MHxv9orQY6JNgwmk6aDMZPLkocV2KtD9gNJXv5JwIbbzIQ",
+      "projectName": "react-scroll-parallax-global",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/react_scroll_parallax_global/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "plasmic/react_scroll_parallax_global/PlasmicGlobalContextsProvider.tsx",
+      "splitsProviderFilePath": "",
+      "styleTokensProviderFilePath": "plasmic/react_scroll_parallax_global/PlasmicStyleTokensProvider.tsx",
+      "dataTokensFilePath": "",
+      "projectModuleFilePath": "plasmic/react_scroll_parallax_global/plasmic.tsx",
+      "codeComponents": [
+        {
+          "id": "bozP4lLlAZ",
+          "name": "ParallaxWrapper",
+          "displayName": "hostless-scroll-parallax",
+          "componentImportPath": "@plasmicpkgs/react-scroll-parallax"
+        },
+        {
+          "id": "L6MfauX2Cw",
+          "name": "ParallaxProviderWrapper",
+          "displayName": "global-parallax-provider",
+          "componentImportPath": "@plasmicpkgs/react-scroll-parallax"
+        }
+      ],
+      "customFunctions": []
+    },
+    {
+      "projectId": "axVArpcqgHCPMKB2yUGsW3",
+      "projectApiToken": "d8UPLYphoxWJyIkfjww0UtNZijnhGYEzblzwwvbZ4inmZVmHBcolZVTPYtNkh6wsPfnQSAoYq5zuj13NQdUA",
+      "projectName": "[PlasmicKit] Animations",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/plasmic_kit_animations/plasmic.module.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "styleTokensProviderFilePath": "plasmic/plasmic_kit_animations/PlasmicStyleTokensProvider.tsx",
+      "dataTokensFilePath": "",
+      "projectModuleFilePath": "plasmic/plasmic_kit_animations/plasmic.tsx",
+      "codeComponents": [
+        {
+          "id": "QG4_OGucsyMZ",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "GKuemYaPBvo9",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        }
+      ],
+      "customFunctions": []
     }
   ],
   "globalVariants": {
@@ -26925,6 +27001,12 @@
         "name": "Screen",
         "projectId": "67C2x4VH9CGyuASG98L3XF",
         "contextFilePath": "plasmic/toothmonster/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "aTL61Gk1GKw5",
+        "name": "Screen",
+        "projectId": "axVArpcqgHCPMKB2yUGsW3",
+        "contextFilePath": "plasmic/plasmic_kit_animations/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
