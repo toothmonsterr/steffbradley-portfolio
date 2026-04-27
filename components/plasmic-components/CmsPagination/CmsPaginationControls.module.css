@@ -1,0 +1,33 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.button {
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+  background: transparent;
+  font: inherit;
+  line-height: 1;
+  border-radius: 2px;
+}
+
+.button[aria-current="page"] {
+  font-weight: bold;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.button:not(:disabled):hover {
+  opacity: 0.7;
+}
+
+.ellipsis {
+  padding: 0 4px;
+  user-select: none;
+}
