@@ -9,18 +9,26 @@ import * as React from "react";
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { CmsCredentialsProvider } from "@plasmicpkgs/plasmic-cms";
+import { ParallaxProviderWrapper } from "@plasmicpkgs/react-scroll-parallax";
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   cmsCredentialsProviderProps?: Partial<
     Omit<React.ComponentProps<typeof CmsCredentialsProvider>, "children">
   >;
+  parallaxProviderWrapperProps?: Partial<
+    Omit<React.ComponentProps<typeof ParallaxProviderWrapper>, "children">
+  >;
 }
 
 export default function GlobalContextsProvider(
   props: GlobalContextsProviderProps
 ) {
-  const { children, cmsCredentialsProviderProps } = props;
+  const {
+    children,
+    cmsCredentialsProviderProps,
+    parallaxProviderWrapperProps
+  } = props;
 
   return (
     <CmsCredentialsProvider
@@ -48,7 +56,17 @@ export default function GlobalContextsProvider(
           : "Default"
       }
     >
-      {children}
+      <ParallaxProviderWrapper
+        {...parallaxProviderWrapperProps}
+        scrollAxis={
+          parallaxProviderWrapperProps &&
+          "scrollAxis" in parallaxProviderWrapperProps
+            ? parallaxProviderWrapperProps.scrollAxis!
+            : undefined
+        }
+      >
+        {children}
+      </ParallaxProviderWrapper>
     </CmsCredentialsProvider>
   );
 }
