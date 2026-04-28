@@ -6,16 +6,9 @@ export const OffsetCMYKMeta = {
   name: 'OffsetCMYK',
   displayName: 'Offset CMYK',
   description:
-    'Four-plate CMYK-style print separation. Upload one source image and the component auto-extracts its Cyan / Magenta / Yellow / Key channels, paints each with an ink color, and offsets them in a diamond pattern for classic print misregistration. Respects source alpha — transparent areas stay transparent on every plate.',
+    'Wraps any children — text, images, composed elements — and renders four offset ink plates (C/M/Y/K) of them. Drop a NextImage inside the slot for image-based separations. Note: separation is RGB-driven, so plain dark or monochrome content tends to land mostly on the K plate; works best with rich color content.',
   props: {
-    sourceImage: {
-      type: 'imageUrl',
-      description: 'Source image to separate into CMYK channels',
-    },
-    width:    { type: 'number', defaultValueHint: 800, description: 'Intrinsic image width (px) — improves Next.js optimization and layout stability' },
-    height:   { type: 'number', defaultValueHint: 600, description: 'Intrinsic image height (px) — improves Next.js optimization and layout stability' },
-    priority: { type: 'boolean', defaultValueHint: false, description: 'Mark as high-priority (above-the-fold) to disable lazy loading' },
-    quality:  { type: 'number', description: 'Image quality 1–100 (default 75)' },
+    children: { type: 'slot', description: 'Content to separate into CMYK plates' },
 
     colorC: { type: 'color', defaultValueHint: '#00AEEF', description: 'Cyan ink color' },
     colorM: { type: 'color', defaultValueHint: '#EC008C', description: 'Magenta ink color' },
@@ -31,11 +24,7 @@ export const OffsetCMYKMeta = {
       defaultValueHint: 'multiply',
     },
 
-    channelContrast: {
-      type: 'number',
-      defaultValueHint: 1.4,
-      description: 'Channel contrast. Higher = richer inks, deeper shadows.',
-    },
+    channelContrast: { type: 'number', defaultValueHint: 1.4, description: 'Channel contrast. Higher = richer inks.' },
 
     interaction: {
       type: 'choice',
@@ -48,14 +37,13 @@ export const OffsetCMYKMeta = {
       type: 'choice',
       options: ['none', 'halftone', 'noise'],
       defaultValueHint: 'none',
-      description: 'Ink texture: none = solid channel fill, halftone = dot screen at standard screen angles (15°/30°/45°/60°), noise = grain',
     },
-    textureStep:    { type: 'number', defaultValueHint: 4,  description: 'Halftone cell size in px' },
-    textureContrast: { type: 'number', defaultValueHint: 60, description: 'Texture contrast (0–100+): larger halftone dots / denser noise. Values above 100 let dots overlap for a heavy ink look.' },
-    textureHoverContrast: { type: 'number', description: 'Halftone only. When set, dot size grows toward this value (%) as the cursor approaches. Leave blank to disable proximity effect.' },
-    textureHoverEnabled: { type: 'boolean', defaultValueHint: true, description: 'Toggle the halftone hover proximity effect on or off.' },
-    textureProximityRadius: { type: 'number', defaultValueHint: 150, description: 'Halftone hover: radius in px over which the dot-size effect ramps. Cursor inside this distance from the element edge triggers growth.' },
-    textureHoverFeather: { type: 'number', defaultValueHint: 0.5, description: 'Halftone hover falloff curve. 0.5 = wide soft halo, 1 = linear, 2+ = tight concentrated spot at cursor.' },
+    textureStep:    { type: 'number', defaultValueHint: 4 },
+    textureContrast: { type: 'number', defaultValueHint: 60 },
+    textureHoverContrast: { type: 'number' },
+    textureHoverEnabled: { type: 'boolean', defaultValueHint: true },
+    textureProximityRadius: { type: 'number', defaultValueHint: 150 },
+    textureHoverFeather: { type: 'number', defaultValueHint: 0.5 },
   },
   importPath: '@/components/plasmic-components/OffsetCMYK',
 };

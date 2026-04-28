@@ -6,17 +6,13 @@ export const HalftoneMaskMeta = {
   name: 'HalftoneMask',
   displayName: 'Halftone Mask',
   description:
-    'Renders children through a halftone dot screen SVG filter. The dots are clipped to the child\'s alpha so transparent areas stay transparent. Use as a standalone ink-texture effect on any content.',
+    'Wraps any content (text, images, composed elements) in a halftone dot screen filter. Drop a NextImage inside the slot for image-based halftones, or any other content for typographic effects.',
   props: {
-    src:           { type: 'imageUrl',                        description: 'Source image — dark areas receive more ink' },
-    width:         { type: 'number', defaultValueHint: 800,   description: 'Intrinsic image width (px) — improves Next.js optimization and layout stability' },
-    height:        { type: 'number', defaultValueHint: 600,   description: 'Intrinsic image height (px) — improves Next.js optimization and layout stability' },
-    priority:      { type: 'boolean', defaultValueHint: false, description: 'Mark as high-priority (above-the-fold) to disable lazy loading' },
-    quality:       { type: 'number', description: 'Image quality 1–100 (default 75)' },
+    children:      { type: 'slot', description: 'Content to halftone — text, images, etc.' },
     color:         { type: 'color',  defaultValueHint: '#000000', description: 'Ink color' },
-    step:          { type: 'number', defaultValueHint: 4,     description: 'Cell size in px — smaller = finer dot screen' },
-    contrast:      { type: 'number', defaultValueHint: 60,    description: 'Dot size as % of cell (0–100)' },
-    imageContrast: { type: 'number', defaultValueHint: 1.3,   description: 'Luminance contrast — higher = richer ink in dark areas. Negative values invert: light areas receive ink instead (use for light subjects on dark backgrounds).' },
+    step:          { type: 'number', defaultValueHint: 4,   description: 'Cell size in px — smaller = finer dot screen' },
+    contrast:      { type: 'number', defaultValueHint: 60,  description: 'Dot size as % of cell (0–100)' },
+    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Luminance contrast — higher = richer ink in dark areas. Negative inverts.' },
     angleIndex: {
       type: 'choice',
       options: [
@@ -28,18 +24,17 @@ export const HalftoneMaskMeta = {
       defaultValueHint: 0,
       description: 'Screen angle — standard print angles 15/30/45/60°',
     },
-    hoverContrast: { type: 'number', description: 'Dot size (%) to animate toward on hover. Leave blank to disable hover animation.' },
+    hoverContrast: { type: 'number', description: 'Dot size (%) to animate toward on hover. Leave blank to disable.' },
     easeDuration:  { type: 'number', defaultValueHint: 0.4, description: 'Ease duration in seconds for the hover dot-size transition' },
     blendMode: {
       type: 'choice',
       options: ['normal', 'multiply', 'darken', 'screen', 'overlay', 'soft-light'],
       defaultValueHint: 'normal',
-      description: 'CSS mix-blend-mode applied to the filtered layer',
     },
     isolateBlend: {
       type: 'boolean',
       defaultValueHint: false,
-      description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off (default), the halftone blends with whatever is behind on the page.',
+      description: 'Reset blend context: when on, blend mode only affects content inside this component.',
     },
   },
   importPath: '@/components/plasmic-components/HalftoneMask',

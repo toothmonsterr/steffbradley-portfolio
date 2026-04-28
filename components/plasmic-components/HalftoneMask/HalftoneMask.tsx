@@ -1,7 +1,6 @@
 import React, { useId, useEffect, useRef } from 'react';
 import styles from './HalftoneMask.module.css';
 import { buildHalftoneSVG, invTable } from '../OffsetShape/shared';
-import { NextImage } from '../NextImage/NextImage';
 
 const SCREEN_ANGLES = [15, 30, 45, 60];
 const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
@@ -9,15 +8,8 @@ const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
 function smoothstep(x: number) { return x * x * (3 - 2 * x); }
 
 export interface HalftoneMaskProps {
-  src?: string;
-  /** Intrinsic image width in px for Next.js optimization (default 800) */
-  width?: number;
-  /** Intrinsic image height in px for Next.js optimization (default 600) */
-  height?: number;
-  /** Mark as high-priority to disable lazy loading (above-the-fold) */
-  priority?: boolean;
-  /** Image quality 1–100 (default 75) */
-  quality?: number;
+  /** Slot — text, image, anything. Filter applies to the rendered alpha+luminance. */
+  children?: React.ReactNode;
   color?: string;
   step?: number;
   contrast?: number;
@@ -36,11 +28,7 @@ export interface HalftoneMaskProps {
 }
 
 export function HalftoneMask({
-  src,
-  width = 800,
-  height = 600,
-  priority = false,
-  quality,
+  children,
   color = '#000000',
   step = 4,
   contrast = 60,
@@ -78,7 +66,6 @@ export function HalftoneMask({
 
   const updateScreenRef = useRef<() => void>(() => undefined);
 
-  // Static screen — populate on mount and resize
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
@@ -105,12 +92,10 @@ export function HalftoneMask({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-render when step, contrast, or angle change
   useEffect(() => {
     updateScreenRef.current();
   }, [step, contrast, angle]);
 
-  // Hover animation
   useEffect(() => {
     if (hoverContrast == null) return;
     const wrapper = wrapperRef.current;
@@ -172,7 +157,6 @@ export function HalftoneMask({
               <feFuncA type="table" tableValues={invTable(imageContrast)} />
             </feComponentTransfer>
             <feComposite in="lumaMasked" in2="SourceAlpha" operator="in" result="imageMask" />
-            {/* href set imperatively after mount via ResizeObserver */}
             <feImage href="" x="0" y="0" width="1" height="1" result="screen" preserveAspectRatio="none" />
             <feComposite in="screen" in2="imageMask" operator="in" result="dots" />
             <feFlood floodColor={color} result="ink" />
@@ -187,21 +171,9 @@ export function HalftoneMask({
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
           position: 'relative',
           display: 'inline-block',
-          width,
-          maxWidth: '100%',
-          aspectRatio: `${width} / ${height}`,
         }}
       >
-        {src && (
-          <NextImage
-            src={src}
-            fill
-            objectFit="contain"
-            priority={priority}
-            quality={quality}
-            className={styles.image}
-          />
-        )}
+        {children}
       </span>
     </span>
   );

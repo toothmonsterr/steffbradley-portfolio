@@ -75,3 +75,14 @@
   height: 100%;
   object-fit: contain;
 }
+
+/* Transparent interaction layer (slot variant) — sits on top of the four
+   ink plates, invisible but fully interactive. Captures clicks/focus for
+   buttons/links inside children. */
+.interactionLayer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  pointer-events: auto;
+}

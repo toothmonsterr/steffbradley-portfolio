@@ -1,6 +1,5 @@
 import React, { useId } from 'react';
 import styles from './NoiseMask.module.css';
-import { NextImage } from '../NextImage/NextImage';
 
 function noiseTableValues(contrast: number): string {
   const n = 10;
@@ -23,16 +22,8 @@ function invTable(contrast: number): string {
 }
 
 export interface NoiseMaskProps {
-  /** Image URL to apply the noise mask to */
-  src?: string;
-  /** Intrinsic image width in px for Next.js optimization (default 800) */
-  width?: number;
-  /** Intrinsic image height in px for Next.js optimization (default 600) */
-  height?: number;
-  /** Mark as high-priority to disable lazy loading (above-the-fold) */
-  priority?: boolean;
-  /** Image quality 1–100 (default 75) */
-  quality?: number;
+  /** Slot — text, image, anything. The grain mask is clipped to the rendered alpha. */
+  children?: React.ReactNode;
   /** Ink color */
   color?: string;
   /** Grain coarseness — larger = chunkier grain */
@@ -55,11 +46,7 @@ export interface NoiseMaskProps {
 }
 
 export function NoiseMask({
-  src,
-  width = 800,
-  height = 600,
-  priority = false,
-  quality,
+  children,
   color = '#000000',
   step = 4,
   contrast = 60,
@@ -82,13 +69,11 @@ export function NoiseMask({
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-            {/* Luminance separation: dark image areas = more ink */}
             <feColorMatrix type="matrix" values={LUMA_MATRIX} result="luma" />
             <feComponentTransfer in="luma" result="lumaMasked">
               <feFuncA type="table" tableValues={invTable(imageContrast)} />
             </feComponentTransfer>
             <feComposite in="lumaMasked" in2="SourceAlpha" operator="in" result="imageMask" />
-            {/* Noise grain clipped by luminance mask */}
             <feTurbulence
               type="fractalNoise"
               baseFrequency={freq}
@@ -117,21 +102,9 @@ export function NoiseMask({
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
           position: 'relative',
           display: 'inline-block',
-          width,
-          maxWidth: '100%',
-          aspectRatio: `${width} / ${height}`,
         }}
       >
-        {src && (
-          <NextImage
-            src={src}
-            fill
-            objectFit="contain"
-            priority={priority}
-            quality={quality}
-            className={styles.image}
-          />
-        )}
+        {children}
       </span>
     </span>
   );

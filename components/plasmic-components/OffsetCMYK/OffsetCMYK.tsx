@@ -11,27 +11,21 @@ import {
   type Interaction,
   type TextureMode,
 } from '../OffsetShape/shared';
-import { NextImage } from '../NextImage/NextImage';
+import { channelFilter } from './channelFilter';
 
 export interface OffsetCMYKProps {
-  /** Source image to auto-separate into C / M / Y / K plates. */
-  sourceImage?: string;
-  /** Intrinsic image width in px for Next.js optimization (default 800) */
-  width?: number;
-  /** Intrinsic image height in px for Next.js optimization (default 600) */
-  height?: number;
-  /** Mark as high-priority to disable lazy loading (above-the-fold) */
-  priority?: boolean;
-  /** Image quality 1–100 (default 75) */
-  quality?: number;
+  /** Slot — text, images, anything. Each plate (C/M/Y/K) renders a copy of the
+   * children separated into its channel. Best with rich color content; plain
+   * text or pure-black content will mostly produce K only. */
+  children?: React.ReactNode;
 
   /** Cyan ink color (default: process cyan) */
   colorC?: string;
-  /** Magenta ink color (default: process magenta) */
+  /** Magenta ink color */
   colorM?: string;
-  /** Yellow ink color (default: process yellow) */
+  /** Yellow ink color */
   colorY?: string;
-  /** Key (black) ink color (default: pure black) */
+  /** Key (black) ink color */
   colorK?: string;
 
   /** Misregistration distance per plate (px). Plates form a diamond at this radius. */
@@ -41,154 +35,32 @@ export interface OffsetCMYKProps {
   /** CSS mix-blend-mode between the ink plates */
   blendMode?: 'multiply' | 'darken' | 'screen' | 'overlay';
 
-  /** Channel contrast — higher = richer inks, deeper shadows */
+  /** Channel contrast — higher = richer inks */
   channelContrast?: number;
 
-  /**
-   * 'hover'   — misregistered at rest; eases into alignment on hover.
-   * 'always'  — permanent misregistration.
-   * 'inverse' — aligned at rest; eases apart on hover.
-   */
   interaction?: Interaction;
   jitter?: number;
   easeDuration?: number;
   texture?: TextureMode;
   textureStep?: number;
   textureContrast?: number;
-  /** When set, dots grow to this size (%) as cursor approaches the element */
   textureHoverContrast?: number;
-  /** Enables or disables the halftone hover proximity effect (default true) */
   textureHoverEnabled?: boolean;
-  /** px radius over which the hover dot-size effect ramps (default 150) */
   textureProximityRadius?: number;
-  /** Falloff curve: 0.5 = wide soft halo, 1 = linear, 2+ = tight spot (default 0.5) */
   textureHoverFeather?: number;
   className?: string;
 }
 
-// ---------------------------------------------------------------------------
-// Per-channel CMYK separation filters
-//
-// For each channel we:
-//   1. Compute channel density (how much ink that channel contributes) via
-//      an feColorMatrix that puts the density in the alpha channel.
-//   2. Multiply by the SOURCE ALPHA — critical so transparent areas of the
-//      source image don't ink up to full density. Without this, a transparent
-//      PNG background prints as black/cyan/etc on every channel.
-//   3. Run the alpha through a contrast curve (higher = darker inks).
-//   4. Flood the resulting alpha with the ink color.
-//
-// Channel density formulas (for standard RGB → CMY):
-//   Cyan    = 1 - R
-//   Magenta = 1 - G
-//   Yellow  = 1 - B
-//   Key     ≈ 1 - (R + G + B) / 3   (approximates min(1-R, 1-G, 1-B))
-// ---------------------------------------------------------------------------
-
-type Channel = 'C' | 'M' | 'Y' | 'K';
-
-const MATRIX_FOR: Record<Channel, string> = {
-  // A' = 1 - R  (others zeroed)
-  C: '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   -1 0 0 0 1',
-  // A' = 1 - G
-  M: '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0    0 -1 0 0 1',
-  // A' = 1 - B
-  Y: '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0    0 0 -1 0 1',
-  // A' = 1 - (R+G+B)/3
-  K: `0 0 0 0 0   0 0 0 0 0   0 0 0 0 0    ${-1/3} ${-1/3} ${-1/3} 0 1`,
-};
-
-function contrastTable(k: number): string {
-  const n = 9;
-  const power = Math.max(0.1, k);
-  const values: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const t = i / (n - 1);
-    values.push(Math.pow(t, 1 / power));
-  }
-  return values.map((v) => v.toFixed(3)).join(' ');
-}
-
-const SCREEN_ANGLES = [15, 30, 45, 60];
-
-function channelFilter(
-  id: string, channel: Channel, color: string, contrast: number,
-  texture: TextureMode, layerIndex: number, step: number, dotSize: number,
-) {
-  const densityChain = (
-    <>
-      <feColorMatrix type="matrix" values={MATRIX_FOR[channel]} result="density" />
-      <feComposite in="density" in2="SourceAlpha" operator="in" result="maskedDensity" />
-      <feComponentTransfer in="maskedDensity" result="curved">
-        <feFuncA type="table" tableValues={contrastTable(contrast)} />
-      </feComponentTransfer>
-    </>
-  );
-
-  if (texture === 'halftone') {
-    return (
-      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-        {densityChain}
-        {/* href populated imperatively by useHalftoneScreen after mount */}
-        <feImage href="" x="0" y="0" width="100%" height="100%" result="screen" preserveAspectRatio="none" />
-        <feComposite in="screen" in2="curved" operator="in" result="dots" />
-        <feFlood floodColor={color} result="ink" />
-        <feComposite in="ink" in2="dots" operator="in" />
-      </filter>
-    );
-  }
-
-  if (texture === 'noise') {
-    const freq = (0.4 / Math.max(1, step)).toFixed(4);
-    const n = 10;
-    const ones = Math.round(Math.max(1, Math.min(n - 1, (dotSize / 100) * n)));
-    const tv = Array.from({ length: n }, (_, i) => (i >= n - ones ? 1 : 0)).join(' ');
-    return (
-      <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-        {densityChain}
-        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2"
-                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
-        <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
-        <feComponentTransfer in="grey" result="grain">
-          <feFuncR type="discrete" tableValues={tv} />
-          <feFuncG type="discrete" tableValues={tv} />
-          <feFuncB type="discrete" tableValues={tv} />
-          <feFuncA type="discrete" tableValues={tv} />
-        </feComponentTransfer>
-        <feComposite in="grain" in2="curved" operator="in" result="maskedGrain" />
-        <feFlood floodColor={color} result="ink" />
-        <feComposite in="ink" in2="maskedGrain" operator="in" />
-      </filter>
-    );
-  }
-
-  // none
-  return (
-    <filter id={id} colorInterpolationFilters="sRGB">
-      {densityChain}
-      <feFlood floodColor={color} result="ink" />
-      <feComposite in="ink" in2="curved" operator="in" />
-    </filter>
-  );
-}
-
 export function OffsetCMYK({
-  sourceImage,
-  width  = 800,
-  height = 600,
-  priority = false,
-  quality,
-
-  colorC       = '#00AEEF',  // process cyan
-  colorM       = '#EC008C',  // process magenta
-  colorY       = '#FFF200',  // process yellow
-  colorK       = '#000000',  // key / black
-
+  children,
+  colorC       = '#00AEEF',
+  colorM       = '#EC008C',
+  colorY       = '#FFF200',
+  colorK       = '#000000',
   offsetX      = 4,
   offsetY      = 3,
   blendMode    = 'multiply',
   channelContrast = 1.4,
-
   interaction    = 'hover',
   jitter         = 1.2,
   easeDuration   = 0.6,
@@ -201,8 +73,8 @@ export function OffsetCMYK({
   textureHoverFeather,
   className,
 }: OffsetCMYKProps) {
-  const uid  = useId().replace(/:/g, '');
-  const ids  = {
+  const uid = useId().replace(/:/g, '');
+  const ids = {
     C: `cmyk-c-${uid}`,
     M: `cmyk-m-${uid}`,
     Y: `cmyk-y-${uid}`,
@@ -210,7 +82,6 @@ export function OffsetCMYK({
   };
   const prefersReduced = usePrefersReducedMotion();
 
-  // Diamond offsets: C → NW, M → NE, Y → SW, K → SE
   const wobbleC = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleM = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
   const wobbleY = useMemo(() => buildWobble(uid.charCodeAt(0) + 3, jitter), [uid, jitter]);
@@ -225,12 +96,7 @@ export function OffsetCMYK({
   const layers = [layerC, layerM, layerY, layerK];
 
   useOffsetActivity(hostRef, {
-    interaction,
-    offsetX,
-    offsetY,
-    easeDuration,
-    prefersReduced,
-    layers,
+    interaction, offsetX, offsetY, easeDuration, prefersReduced, layers,
   });
 
   const halftoneIds = useMemo(
@@ -256,18 +122,7 @@ export function OffsetCMYK({
 
   const renderLayer = (filterId: string) => (
     <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>
-      <span className={styles.filterInner}>
-        {sourceImage ? (
-          <NextImage
-            src={sourceImage}
-            fill
-            objectFit="contain"
-            priority={priority}
-            quality={quality}
-            className={styles.sourceImage}
-          />
-        ) : null}
-      </span>
+      <span className={styles.filterInner}>{children}</span>
     </span>
   );
 
@@ -285,19 +140,8 @@ export function OffsetCMYK({
         </defs>
       </svg>
 
-      {/* Sizer — reserves wrapper dimensions deterministically from the
-          width/height props. Uses aspect-ratio so the wrapper stays
-          responsive within its parent (scales down with max-width: 100%)
-          while preserving the declared ratio. */}
-      <span
-        className={styles.sizer}
-        aria-hidden="true"
-        style={{
-          width,
-          maxWidth: '100%',
-          aspectRatio: `${width} / ${height}`,
-        }}
-      />
+      {/* Sizer — establishes wrapper dimensions from the children's natural size. */}
+      <span className={styles.sizer} aria-hidden="true">{children}</span>
 
       <motion.span
         className={styles.layer}
@@ -346,6 +190,10 @@ export function OffsetCMYK({
       >
         {renderLayer(ids.K)}
       </motion.span>
+
+      {/* Transparent interaction layer — captures pointer/keyboard events for
+          buttons, links, etc. placed in children. The ink layers are inert. */}
+      <span className={styles.interactionLayer}>{children}</span>
     </span>
   );
 }
