@@ -26175,20 +26175,6 @@
           "path": "/"
         },
         {
-          "id": "KestoklH4saO",
-          "name": "StyleGuide",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicStyleGuide.tsx",
-          "importSpec": {
-            "modulePath": "../pages/style-guide.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicStyleGuide.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/style-guide"
-        },
-        {
           "id": "wLGJ71B22wJH",
           "name": "Button",
           "type": "managed",
@@ -26215,20 +26201,6 @@
           "componentType": "component"
         },
         {
-          "id": "G-n2iEXN2EPf",
-          "name": "Playground",
-          "type": "managed",
-          "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicPlayground.tsx",
-          "importSpec": {
-            "modulePath": "../pages/playground.tsx"
-          },
-          "cssFilePath": "plasmic/toothmonster/PlasmicPlayground.module.css",
-          "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/playground"
-        },
-        {
           "id": "KPdaUzZPxR9h",
           "name": "Portfolio",
           "type": "managed",
@@ -26241,6 +26213,33 @@
           "scheme": "blackbox",
           "componentType": "page",
           "path": "/portfolio/[slug]"
+        },
+        {
+          "id": "6RLcIVBSHW0n",
+          "name": "PageButton",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/toothmonster/PlasmicPageButton.tsx",
+          "importSpec": {
+            "modulePath": "PageButton.tsx"
+          },
+          "cssFilePath": "plasmic/toothmonster/PlasmicPageButton.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "DpQInUs0VBYI",
+          "name": "Artwork",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/toothmonster/PlasmicArtwork.tsx",
+          "importSpec": {
+            "modulePath": "../pages/artwork/[slug].tsx"
+          },
+          "cssFilePath": "plasmic/toothmonster/PlasmicArtwork.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/artwork/[slug]"
         }
       ],
       "icons": [
@@ -26308,6 +26307,16 @@
           "id": "S_mhq_tZ6KnU",
           "name": "RegistrationMarkCornerSvg2Icon",
           "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__RegistrationMarkCornerSvg2.tsx"
+        },
+        {
+          "id": "1pIw_X8xb4RU",
+          "name": "ArrowLeftSvgIcon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__ArrowLeftSvg.tsx"
+        },
+        {
+          "id": "0vNaQ1KvdrHQ",
+          "name": "ArrowRightSvgIcon",
+          "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__ArrowRightSvg.tsx"
         }
       ],
       "images": [
@@ -26574,6 +26583,30 @@
           "name": "StickerPeel",
           "displayName": "StickerPeel",
           "componentImportPath": "@/components/plasmic-components/StickerPeel"
+        },
+        {
+          "id": "XQkM4MEcOLl0",
+          "name": "CmsPaginationContext",
+          "displayName": "CmsPaginationContext",
+          "componentImportPath": "@/components/plasmic-components/CmsPagination"
+        },
+        {
+          "id": "Nj2KT56kVjVw",
+          "name": "CmsPaginationControls",
+          "displayName": "CmsPaginationControls",
+          "componentImportPath": "@/components/plasmic-components/CmsPagination"
+        },
+        {
+          "id": "VZghBDqwvaCo",
+          "name": "CmsPaginationButton",
+          "displayName": "CmsPaginationButton",
+          "componentImportPath": "@/components/plasmic-components/CmsPagination"
+        },
+        {
+          "id": "dBSvAg8mx3HD",
+          "name": "Shimmer",
+          "displayName": "Shimmer",
+          "componentImportPath": "@/components/plasmic-components/Shimmer"
         }
       ],
       "customFunctions": []
@@ -27015,6 +27048,6 @@
   "nextjsConfig": {
     "pagesDir": "../pages"
   },
-  "cliVersion": "0.1.359",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.359/dist/plasmic.schema.json"
+  "cliVersion": "0.1.360",
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.360/dist/plasmic.schema.json"
 }

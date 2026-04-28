@@ -53,7 +53,7 @@ export default function GlobalContextsProvider(
       locale={
         cmsCredentialsProviderProps && "locale" in cmsCredentialsProviderProps
           ? cmsCredentialsProviderProps.locale!
-          : "Default"
+          : undefined
       }
     >
       <ParallaxProviderWrapper

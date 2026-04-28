@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: var(--token-jWov7Jl9cj7m);
+  height: var(--token-jWov7Jl9cj7m);
+  max-width: 100%;
+  justify-self: flex-start;
+  flex-shrink: 0;
+  border-radius: var(--token-f5tAU2MiM7kI);
+  border: 1px solid var(--token-jzhsLE_kjFV6);
+}
+.rootisActive {
+  border-color: var(--token-8s3154oIZd3I);
+}
+.root:hover:hover {
+  background: var(--token-HvtSPSdy-1oc);
+  border-color: var(--token-8s3154oIZd3I);
+}
+.root:active:active {
+  background: var(--token-WYpfNa69vqXU);
+  border-color: var(--token-8s3154oIZd3I);
+}
+.cmsPaginationButton:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  color: var(--token-Xz3Y2ivpCIFG);
+}
+.cmsPaginationButtonisActive:global(.__wab_instance) {
+  color: var(--token-MLzkLWMwWZkA);
+}
+.root:hover .cmsPaginationButton:global(.__wab_instance) {
+  color: var(--token-MLzkLWMwWZkA);
+}
+.root:active .cmsPaginationButton:global(.__wab_instance) {
+  color: var(--token-MLzkLWMwWZkA);
+}

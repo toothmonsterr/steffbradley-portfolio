@@ -12,7 +12,7 @@
     "@fontsource-variable/syne": "^5.2.7",
     "@fontsource-variable/urbanist": "^5.2.7",
     "@gsap/react": "^2.1.2",
-    "@plasmicapp/cli": "^0.1.359",
+    "@plasmicapp/cli": "^0.1.360",
     "@plasmicapp/loader-nextjs": "^2.0.1",
     "@plasmicapp/react-web": "^1.0.1",
     "@plasmicpkgs/plasmic-cms": "^0.0.312",

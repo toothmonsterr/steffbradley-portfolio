@@ -222,7 +222,7 @@ function PlasmicPortfolio__RenderFunc(props: {
                 )}
               </DataCtxReader__>
             }
-            filterField={"caseStudyUrl"}
+            filterField={"caseStudySlug"}
             filterValue={(() => {
               try {
                 return $ctx.params.slug;
