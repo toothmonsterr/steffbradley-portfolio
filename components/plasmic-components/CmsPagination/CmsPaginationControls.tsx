@@ -17,10 +17,14 @@ export interface CmsPaginationControlsProps {
   maxPageButtons?: number;
   /** Slot: a single CmsPaginationButton template — cloned once per page with fresh pageNumber and isActive props */
   pageButton?: React.ReactNode;
-  /** Slot: custom previous button */
+  /** Slot: previous button shown when there is a previous page */
   prevButton?: React.ReactNode;
-  /** Slot: custom next button */
+  /** Slot: previous button shown when on page 1 (falls back to prevButton with reduced opacity) */
+  prevButtonInactive?: React.ReactNode;
+  /** Slot: next button shown when there is a next page */
   nextButton?: React.ReactNode;
+  /** Slot: next button shown when on the last page (falls back to nextButton with reduced opacity) */
+  nextButtonInactive?: React.ReactNode;
   /** Fallback label when no prevButton slot is provided */
   prevLabel?: string;
   /** Fallback label when no nextButton slot is provided */
@@ -63,7 +67,9 @@ export function CmsPaginationControls({
   maxPageButtons  = 5,
   pageButton,
   prevButton,
+  prevButtonInactive,
   nextButton,
+  nextButtonInactive,
   prevLabel       = '←',
   nextLabel       = '→',
   className,
@@ -86,6 +92,13 @@ export function CmsPaginationControls({
   const pages = showPageNumbers ? buildPageList(currentPage, totalPages, maxPageButtons) : [];
 
   const renderPrev = () => {
+    // Disabled state: if user provided an inactive design, render it as-is (no dimming).
+    if (!hasPrev && React.isValidElement(prevButtonInactive)) {
+      return React.cloneElement(
+        prevButtonInactive as React.ReactElement<React.HTMLAttributes<HTMLElement>>,
+        { 'aria-label': 'Previous page', 'aria-disabled': true },
+      );
+    }
     if (prevButton) return cloneClickable(prevButton, () => go(currentPage - 1), !hasPrev, { 'aria-label': 'Previous page' });
     return (
       <button className={styles.button} onClick={() => go(currentPage - 1)} disabled={!hasPrev} aria-label="Previous page">
@@ -95,6 +108,12 @@ export function CmsPaginationControls({
   };
 
   const renderNext = () => {
+    if (!hasNext && React.isValidElement(nextButtonInactive)) {
+      return React.cloneElement(
+        nextButtonInactive as React.ReactElement<React.HTMLAttributes<HTMLElement>>,
+        { 'aria-label': 'Next page', 'aria-disabled': true },
+      );
+    }
     if (nextButton) return cloneClickable(nextButton, () => go(currentPage + 1), !hasNext, { 'aria-label': 'Next page' });
     return (
       <button className={styles.button} onClick={() => go(currentPage + 1)} disabled={!hasNext} aria-label="Next page">

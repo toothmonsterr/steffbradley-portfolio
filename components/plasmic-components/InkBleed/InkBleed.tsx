@@ -1,5 +1,7 @@
-import React, { useId } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import styles from './InkBleed.module.css';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { findHoverHost } from '@/hooks/findHoverHost';
 
 export interface InkBleedProps {
   children?: React.ReactNode;
@@ -24,6 +26,15 @@ export interface InkBleedProps {
    * whatever is behind the component on the page.
    */
   isolateBlend?: boolean;
+  /**
+   * When the bleed's paper fiber animates:
+   *   never  — static fiber (cheapest)
+   *   hover  — fiber shifts only while the hosting element is hovered
+   *   always — fiber shifts continuously
+   */
+  animate?: 'never' | 'hover' | 'always';
+  /** Fixed seed for the paper fiber pattern. Change to shift it. */
+  seed?: number;
   className?: string;
 }
 
@@ -36,10 +47,15 @@ export function InkBleed({
   noiseThreshold = 0.5,
   blendMode,
   isolateBlend   = true,
+  animate        = 'never',
+  seed           = 0,
   className,
 }: InkBleedProps) {
   const uid      = useId().replace(/:/g, '');
   const filterId = `inkbleed-${uid}`;
+  const wrapperRef = useRef<HTMLSpanElement>(null);
+  const turbRef    = useRef<SVGFETurbulenceElement>(null);
+  const prefersReduced = usePrefersReducedMotion();
 
   // Build a discrete tableValues string for feFuncA.
   // noiseThreshold=0 → dense fiber (many ones), 1 → sparse (few ones).
@@ -47,8 +63,60 @@ export function InkBleed({
   const ones = Math.max(1, Math.min(N - 1, Math.round((1 - noiseThreshold) * N)));
   const tv   = Array.from({ length: N }, (_, i) => (i >= N - ones ? 1 : 0)).join(' ');
 
+  useEffect(() => {
+    if (animate === 'never' || prefersReduced) return;
+    const el = turbRef.current;
+    if (!el) return;
+
+    let raf = 0;
+    let last = 0;
+    let s = seed;
+    let visible = true;
+    const tick = (t: number) => {
+      if (visible && t - last > 83) {
+        s = (s + 1) % 1000;
+        el.setAttribute('seed', String(s));
+        last = t;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    const start = () => {
+      cancelAnimationFrame(raf);
+      last = 0;
+      raf = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      el.setAttribute('seed', String(seed));
+      s = seed;
+    };
+
+    if (animate === 'always') {
+      const io = new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+      }, { threshold: 0 });
+      if (wrapperRef.current) io.observe(wrapperRef.current);
+      start();
+      return () => { stop(); io.disconnect(); };
+    }
+
+    // animate === 'hover' — attach listeners to the hover host
+    const host = findHoverHost(wrapperRef.current);
+    if (!host) return;
+    const onEnter = () => start();
+    const onLeave = () => stop();
+    host.addEventListener('mouseenter', onEnter);
+    host.addEventListener('mouseleave', onLeave);
+    return () => {
+      host.removeEventListener('mouseenter', onEnter);
+      host.removeEventListener('mouseleave', onLeave);
+      stop();
+    };
+  }, [animate, seed, prefersReduced]);
+
   return (
     <span
+      ref={wrapperRef}
       className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
       style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
     >
@@ -71,9 +139,11 @@ export function InkBleed({
 
             {/* 3. Paper-fiber noise mask */}
             <feTurbulence
+              ref={turbRef}
               type="fractalNoise"
               baseFrequency={noiseFrequency.toFixed(4)}
               numOctaves="3"
+              seed={seed}
               stitchTiles="stitch"
               result="noise"
             />

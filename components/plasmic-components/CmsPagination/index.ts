@@ -53,9 +53,11 @@ export const CmsPaginationControlsMeta = {
     maxPageButtons:  { type: 'number', defaultValueHint: 5, description: 'Max page buttons before collapsing with ellipsis' },
     prevLabel:       { type: 'string', defaultValueHint: '←', description: 'Fallback label when no prevButton slot is used' },
     nextLabel:       { type: 'string', defaultValueHint: '→', description: 'Fallback label when no nextButton slot is used' },
-    prevButton:      { type: 'slot', description: 'Custom previous button — styled freely in Studio' },
-    nextButton:      { type: 'slot', description: 'Custom next button — styled freely in Studio' },
-    pageButton:      {
+    prevButton:         { type: 'slot', description: 'Previous button shown when there is a previous page' },
+    prevButtonInactive: { type: 'slot', description: 'Previous button shown on page 1 — design your "disabled" look here' },
+    nextButton:         { type: 'slot', description: 'Next button shown when there is a next page' },
+    nextButtonInactive: { type: 'slot', description: 'Next button shown on the last page — design your "disabled" look here' },
+    pageButton:         {
       type: 'slot',
       description: 'Drop a CmsPaginationButton here and style it. It is cloned once per page — pageNumber and isActive are injected automatically.',
     },

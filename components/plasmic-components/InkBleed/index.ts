@@ -25,6 +25,13 @@ export const InkBleedMeta = {
       defaultValueHint: true,
       description: 'Reset blend context: when on, the blend mode only affects content inside this component. When off, the bleed blends with whatever is behind on the page.',
     },
+    animate: {
+      type: 'choice',
+      options: ['never', 'hover', 'always'],
+      defaultValueHint: 'never',
+      description: 'When the paper fiber animates. never: static. hover: only while the host is hovered. always: continuous.',
+    },
+    seed: { type: 'number', defaultValueHint: 0, description: 'Fixed seed for the paper fiber. Change to shift pattern.' },
   },
   importPath: '@/components/plasmic-components/InkBleed',
 };

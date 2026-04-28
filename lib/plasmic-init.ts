@@ -87,6 +87,7 @@ import { NoiseMask, NoiseMaskMeta }             from '@/components/plasmic-compo
 import { RevealOnScroll, RevealOnScrollMeta }   from '@/components/plasmic-components/RevealOnScroll';
 import { NextImage, NextImageMeta }             from '@/components/plasmic-components/NextImage';
 import { StickerPeel, StickerPeelMeta }         from '@/components/plasmic-components/StickerPeel';
+import { Shimmer, ShimmerMeta }                 from '@/components/plasmic-components/Shimmer';
 import {
   CmsPaginationContext, CmsPaginationContextMeta,
   CmsPaginationControls, CmsPaginationControlsMeta,
@@ -112,6 +113,7 @@ PLASMIC.registerComponent(NoiseMask,    NoiseMaskMeta     as any);
 PLASMIC.registerComponent(RevealOnScroll, RevealOnScrollMeta as any);
 PLASMIC.registerComponent(NextImage,           NextImageMeta           as any);
 PLASMIC.registerComponent(StickerPeel,         StickerPeelMeta         as any);
+PLASMIC.registerComponent(Shimmer,             ShimmerMeta             as any);
 PLASMIC.registerComponent(CmsPaginationContext,  CmsPaginationContextMeta  as any);
 PLASMIC.registerComponent(CmsPaginationControls, CmsPaginationControlsMeta as any);
 PLASMIC.registerComponent(CmsPaginationButton,   CmsPaginationButtonMeta   as any);
