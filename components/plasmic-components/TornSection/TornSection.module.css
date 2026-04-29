@@ -1,6 +1,13 @@
 .section {
   position: relative;
   width: 100%;
+  /* Flex column so children participate in flex sizing — required for any
+     child using height: stretch / 100% to resolve. */
+  display: flex;
+  flex-direction: column;
+  /* Ensure the section itself can be sized by its parent (e.g. height: 100vh
+     on a page-level wrapper) and propagate that down to .content. */
+  min-height: 0;
 }
 
 /* Background fill — absolutely covers the full section so it always fills the
@@ -15,7 +22,12 @@
   flex-direction: column;
 }
 
-/* Children in normal flow, above the background */
+/* Children in normal flow, above the background. Flex column + flex:1 so a
+   child set to height: stretch / 100% has a defined parent to stretch into. */
 .content {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }

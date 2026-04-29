@@ -1,8 +1,19 @@
 import React, { useId, useMemo } from 'react';
 import { mulberry32 } from '../OffsetShape/shared';
 
+// Hash a string to a 32-bit integer (FNV-1a). Used to derive a deterministic
+// seed from React's useId so each instance gets its own tear shape without
+// hydration mismatches.
+function hashId(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
 export interface TornEdgeProps {
-  seed?: number;
   roughness?: number;
   stepSize?: number;
   height?: number;
@@ -33,7 +44,6 @@ export interface TornEdgeProps {
 const VWIDTH = 1000;
 
 export function TornEdge({
-  seed           = 1,
   roughness      = 20,
   stepSize       = 12,
   height         = 60,
@@ -49,6 +59,9 @@ export function TornEdge({
 }: TornEdgeProps) {
   const uid      = useId().replace(/:/g, '');
   const filterId = `torn-shadow-${uid}`;
+  // Per-instance deterministic seed derived from useId, so each TornEdge gets
+  // its own shape and SSR/CSR stay in sync.
+  const seed     = useMemo(() => hashId(uid), [uid]);
 
   const pathD = useMemo(() => {
     const rand  = mulberry32(seed);

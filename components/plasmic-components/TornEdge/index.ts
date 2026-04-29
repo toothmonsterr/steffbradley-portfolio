@@ -9,7 +9,6 @@ export const TornEdgeMeta = {
     'Full-width SVG section divider with a procedurally torn paper edge. ' +
     'Set color to match the section above, backgroundColor to match the section below.',
   props: {
-    seed:      { type: 'number', defaultValueHint: 1,  description: 'Seed — different integers give different tear shapes' },
     roughness: { type: 'number', defaultValueHint: 20, description: 'Max vertical variation of the tear in px' },
     stepSize:  { type: 'number', defaultValueHint: 12, description: 'Horizontal distance between tear points — smaller = finer, more jagged' },
     height:    { type: 'number', defaultValueHint: 60, description: 'Total component height in px' },

@@ -1,6 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import { mulberry32 } from '../OffsetShape/shared';
 import styles from './TornSection.module.css';
+
+// Hash a string to a 32-bit integer (FNV-1a). Used to derive deterministic
+// seeds from React's useId so each instance gets its own tear shape without
+// hydration mismatches.
+function hashId(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
 
 
 // Number of virtual x-steps; higher = finer profile resolution.
@@ -75,7 +87,6 @@ export interface TornSectionProps {
 
   // Top tear
   tornTop?: boolean;
-  tornTopSeed?: number;
   tornTopRoughness?: number;
   tornTopStepSize?: number;
   /** How deep the top tear cuts into the section as % of section height */
@@ -83,7 +94,6 @@ export interface TornSectionProps {
 
   // Bottom tear
   tornBottom?: boolean;
-  tornBottomSeed?: number;
   tornBottomRoughness?: number;
   tornBottomStepSize?: number;
   /** How deep the bottom tear cuts into the section as % of section height */
@@ -96,17 +106,20 @@ export function TornSection({
   children,
   background,
   tornTop = false,
-  tornTopSeed = 1,
   tornTopRoughness = 5,
   tornTopStepSize = 4,
   tornTopDepth = 4,
   tornBottom = false,
-  tornBottomSeed = 2,
   tornBottomRoughness = 5,
   tornBottomStepSize = 4,
   tornBottomDepth = 4,
   className,
 }: TornSectionProps) {
+  // Two distinct per-instance seeds (top vs bottom) derived from useId so each
+  // TornSection has its own shapes without hydration mismatch.
+  const uid = useId().replace(/:/g, '');
+  const tornTopSeed    = useMemo(() => hashId(uid + ':t'), [uid]);
+  const tornBottomSeed = useMemo(() => hashId(uid + ':b'), [uid]);
 
   const topProfile = useMemo(
     () => tornTop ? buildTornProfile(tornTopSeed, tornTopRoughness, tornTopStepSize) : null,
