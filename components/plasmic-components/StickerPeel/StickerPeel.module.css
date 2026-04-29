@@ -2,10 +2,20 @@
   position: relative;
   display: inline-block;
   --peel-size: var(--peel-size-base);
+  /* Rest values — flap lays flat, soft small shadow */
+  --tilt: 0deg;
+  --shadow-blur: calc(var(--shadow-blur-target) * 0.3);
+  --shadow-offset: 1px;
+  --shadow-opacity: 0.5;
 }
 
 .hoverTrigger:hover {
   --peel-size: var(--peel-size-hover);
+  /* Hover values — flap lifts off, shadow softens and offsets */
+  --tilt: var(--tilt-target);
+  --shadow-blur: var(--shadow-blur-target);
+  --shadow-offset: 6px;
+  --shadow-opacity: 1;
 }
 
 .content {
@@ -19,8 +29,25 @@
   pointer-events: none;
   transform-style: preserve-3d;
   backface-visibility: hidden;
+  /* Rotation axis is per-corner — set via inline style. The angle itself
+     comes from --tilt so it animates between rest (0°) and hover. */
+  transform: rotate3d(
+    var(--tilt-axis-x),
+    var(--tilt-axis-y),
+    var(--tilt-axis-z),
+    var(--tilt)
+  );
+  transform-origin: 50% 50%;
+  /* Shadow blur, offset and opacity all interpolate via the wrapper vars. */
+  filter: drop-shadow(
+    0
+    var(--shadow-offset)
+    var(--shadow-blur)
+    rgba(var(--shadow-rgb), var(--shadow-opacity))
+  );
   transition:
     width var(--ease-duration) ease,
     height var(--ease-duration) ease,
-    transform var(--ease-duration) ease;
+    transform var(--ease-duration) cubic-bezier(0.34, 1.32, 0.64, 1),
+    filter var(--ease-duration) ease;
 }

@@ -1,6 +1,24 @@
 import React from 'react';
 import styles from './StickerPeel.module.css';
 
+// Parse a CSS color into "R, G, B" so we can re-compose with a separate
+// opacity (so shadow opacity can animate independently). Falls back to black.
+function parseRgbTriple(str: string): string {
+  const trimmed = str.trim();
+  // #rgb / #rrggbb
+  let m = trimmed.match(/^#([0-9a-f]{3})$/i);
+  if (m) {
+    const [r, g, b] = m[1].split('').map(c => parseInt(c + c, 16));
+    return `${r}, ${g}, ${b}`;
+  }
+  m = trimmed.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (m) return `${parseInt(m[1], 16)}, ${parseInt(m[2], 16)}, ${parseInt(m[3], 16)}`;
+  // rgb() / rgba()
+  m = trimmed.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+  if (m) return `${m[1]}, ${m[2]}, ${m[3]}`;
+  return '0, 0, 0';
+}
+
 type Corner = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 type Trigger = 'hover' | 'always' | 'none';
 
@@ -86,11 +104,31 @@ export function StickerPeel({
   const cfg = CORNER_CFG[corner];
   const baseSize = trigger === 'always' ? hoverPeelSize : peelSize;
   const [ax, ay, az] = cfg.tiltAxis;
+  const shadowRgb = parseRgbTriple(shadowColor);
+
+  // For trigger='always', the rest state already shows the peel fully — so
+  // skip the rest-vs-hover distinction and lock everything at the hover values.
+  const isAlwaysOn = trigger === 'always';
 
   const wrapperStyle = {
     '--peel-size-base': `${baseSize}px`,
     '--peel-size-hover': `${hoverPeelSize}px`,
     '--ease-duration': `${easeDuration}s`,
+    '--tilt-axis-x': ax,
+    '--tilt-axis-y': ay,
+    '--tilt-axis-z': az,
+    '--tilt-target': `${tilt}deg`,
+    '--shadow-blur-target': `${shadowBlur}px`,
+    '--shadow-rgb': shadowRgb,
+    // Always-on: pin tilt and shadow to the hover values so they don't sit at rest.
+    ...(isAlwaysOn
+      ? {
+          '--tilt': `${tilt}deg`,
+          '--shadow-blur': `${shadowBlur}px`,
+          '--shadow-offset': '6px',
+          '--shadow-opacity': '1',
+        }
+      : null),
     backgroundColor: backdropColor,
     perspective: `${perspective}px`,
   } as React.CSSProperties;
@@ -117,9 +155,8 @@ export function StickerPeel({
           ...cfg.peelPos,
           clipPath: cfg.peelClip,
           background: `linear-gradient(${cfg.gradient}, rgba(0,0,0,0.3) 0%, ${backColor} 60%)`,
-          filter: `drop-shadow(0 2px ${shadowBlur}px ${shadowColor})`,
-          transform: `rotate3d(${ax}, ${ay}, ${az}, ${tilt}deg)`,
-          transformOrigin: '50% 50%',
+          // transform + filter come from the CSS module — they read CSS vars
+          // that swap between rest and hover states.
         }}
       />
     </div>
