@@ -22,7 +22,7 @@ export const TornSectionMeta = {
     },
     tornTopRoughness: { type: 'number', defaultValueHint: 5,  description: 'Top tear vertical variation (higher = more jagged)' },
     tornTopStepSize:  { type: 'number', defaultValueHint: 4,  description: 'Top tear horizontal step (smaller = finer tear)' },
-    tornTopDepth:     { type: 'number', defaultValueHint: 4,  description: 'How deep the top tear cuts in as % of section height' },
+    tornTopDepthPx:   { type: 'number', defaultValueHint: 24, description: 'How deep the top tear cuts in, in px (constant regardless of section size)' },
 
     // Bottom tear
     tornBottom: {
@@ -32,7 +32,7 @@ export const TornSectionMeta = {
     },
     tornBottomRoughness: { type: 'number', defaultValueHint: 5,  description: 'Bottom tear vertical variation' },
     tornBottomStepSize:  { type: 'number', defaultValueHint: 4,  description: 'Bottom tear horizontal step' },
-    tornBottomDepth:     { type: 'number', defaultValueHint: 4,  description: 'How deep the bottom tear cuts in as % of section height' },
+    tornBottomDepthPx:   { type: 'number', defaultValueHint: 24, description: 'How deep the bottom tear cuts in, in px (constant regardless of section size)' },
   },
   importPath: '@/components/plasmic-components/TornSection',
 };

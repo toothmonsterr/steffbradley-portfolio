@@ -1,4 +1,4 @@
-import React, { useId, useMemo } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { mulberry32 } from '../OffsetShape/shared';
 import styles from './TornSection.module.css';
 
@@ -87,17 +87,18 @@ export interface TornSectionProps {
 
   // Top tear
   tornTop?: boolean;
+  /** Vertical jitter of the top tear in px (constant regardless of section size) */
   tornTopRoughness?: number;
   tornTopStepSize?: number;
-  /** How deep the top tear cuts into the section as % of section height */
-  tornTopDepth?: number;
+  /** How deep the top tear cuts into the section in px (constant regardless of section size) */
+  tornTopDepthPx?: number;
 
   // Bottom tear
   tornBottom?: boolean;
   tornBottomRoughness?: number;
   tornBottomStepSize?: number;
-  /** How deep the bottom tear cuts into the section as % of section height */
-  tornBottomDepth?: number;
+  /** How deep the bottom tear cuts into the section in px */
+  tornBottomDepthPx?: number;
 
   className?: string;
 }
@@ -108,11 +109,11 @@ export function TornSection({
   tornTop = false,
   tornTopRoughness = 5,
   tornTopStepSize = 4,
-  tornTopDepth = 4,
+  tornTopDepthPx = 24,
   tornBottom = false,
   tornBottomRoughness = 5,
   tornBottomStepSize = 4,
-  tornBottomDepth = 4,
+  tornBottomDepthPx = 24,
   className,
 }: TornSectionProps) {
   // Two distinct per-instance seeds (top vs bottom) derived from useId so each
@@ -131,13 +132,34 @@ export function TornSection({
     [tornBottom, tornBottomSeed, tornBottomRoughness, tornBottomStepSize],
   );
 
-  const clipPath = useMemo(
-    () => buildClipPath(topProfile, tornTopDepth, bottomProfile, tornBottomDepth),
-    [topProfile, tornTopDepth, bottomProfile, tornBottomDepth],
-  );
+  // Measure the section height so we can convert a px-based tear depth into
+  // the % values clip-path requires. This keeps the tear a constant size
+  // regardless of how tall the section grows.
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [measuredHeight, setMeasuredHeight] = useState(0);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(entries => {
+      const h = entries[0]?.contentRect.height ?? 0;
+      if (h > 0) setMeasuredHeight(h);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const clipPath = useMemo(() => {
+    // Pre-mount we don't yet have a measured height — render with no clip
+    // (clip-path "none") so the background fills until the first measurement
+    // arrives a frame later.
+    if (measuredHeight <= 0) return undefined;
+    const topPct    = Math.min(100, (tornTopDepthPx    / measuredHeight) * 100);
+    const bottomPct = Math.min(100, (tornBottomDepthPx / measuredHeight) * 100);
+    return buildClipPath(topProfile, topPct, bottomProfile, bottomPct);
+  }, [topProfile, bottomProfile, tornTopDepthPx, tornBottomDepthPx, measuredHeight]);
 
   return (
-    <div className={[styles.section, className ?? ''].filter(Boolean).join(' ')}>
+    <div ref={sectionRef} className={[styles.section, className ?? ''].filter(Boolean).join(' ')}>
       {/* Absolutely-positioned background — clipped to the torn shape.
           clip-path lives here (not on root) so drop-shadow on root is not clipped. */}
       <div className={styles.bg} style={{ clipPath }}>
