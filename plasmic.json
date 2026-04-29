@@ -26607,6 +26607,12 @@
           "name": "Shimmer",
           "displayName": "Shimmer",
           "componentImportPath": "@/components/plasmic-components/Shimmer"
+        },
+        {
+          "id": "TbfB48S8CS8c",
+          "name": "ScotchTape",
+          "displayName": "ScotchTape",
+          "componentImportPath": "@/components/plasmic-components/ScotchTape"
         }
       ],
       "customFunctions": []

@@ -352,9 +352,7 @@ function PlasmicNavBanner__RenderFunc(props: {
             ? false
             : undefined
       }
-      tornBottomDepth={
-        hasVariant(globalVariants, "screen", "mobile") ? 8 : undefined
-      }
+      tornBottomDepthPx={8}
       tornBottomStepSize={
         hasVariant(globalVariants, "screen", "mobile") ? 12 : undefined
       }
