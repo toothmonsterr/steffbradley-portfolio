@@ -1,0 +1,26 @@
+/* Outer rotation container — separate from .wrapper so our rotation transform
+   doesn't collide with anything Studio writes onto the styled wrapper. */
+.rotator {
+  display: inline-block;
+  position: relative;
+}
+
+.wrapper {
+  /* No default fill — set background-color/background-image in Studio's
+     Design tab. clip-path is set inline (computed per-instance) and traces
+     whatever fill/border/shadow you add.
+
+     Sized by Studio (the user's className lands here). */
+  display: inline-block;
+  position: relative;
+}
+
+/* Slot content — stays above the sheen, sits "under" the tape visually
+   because the tape body is translucent. */
+.content {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* nothing animated currently — placeholder if we add hover later */
+}
