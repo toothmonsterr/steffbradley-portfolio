@@ -77,7 +77,6 @@ import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // 
 import { Shimmer } from "@/components/plasmic-components/Shimmer"; // plasmic-import: dBSvAg8mx3HD/codeComponent
 import { CmsPaginationControls } from "@/components/plasmic-components/CmsPagination"; // plasmic-import: Nj2KT56kVjVw/codeComponent
 import PageButton from "../../PageButton"; // plasmic-import: 6RLcIVBSHW0n/component
-import { ParallaxWrapper } from "@plasmicpkgs/react-scroll-parallax";
 import { HalftoneMask } from "@/components/plasmic-components/HalftoneMask"; // plasmic-import: tq6byP_N1Ydj/codeComponent
 import { ScotchTape } from "@/components/plasmic-components/ScotchTape"; // plasmic-import: TbfB48S8CS8c/codeComponent
 import { DotOverlay } from "@/components/plasmic-components/DotOverlay"; // plasmic-import: 8p09mZd-cKv0/codeComponent
@@ -1104,94 +1103,73 @@ function PlasmicHomepage__RenderFunc(props: {
                 </DataCtxReader__>
               </CmsPaginationContext>
             </div>
-            <ParallaxWrapper
-              className={classNames(
-                "__wab_instance",
-                sty.scrollParallax___9Xy4
-              )}
-              previewInEditor={false}
-              speed={6}
-            >
-              <div className={classNames(projectcss.all, sty.freeBox__awWL)}>
-                <HalftoneMask
-                  className={classNames(
-                    "__wab_instance",
-                    sty.halftoneMask__qkJjM
-                  )}
-                  color={true ? "#DDEA44" : undefined}
-                  contrast={80}
-                  imageContrast={-0.3}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image__jTA3)}
-                    src={"/plasmic/toothmonster/images/sunraysGif.gif"}
-                    width={250}
-                  />
-                </HalftoneMask>
-                <HalftoneMask
-                  angleIndex={1}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.halftoneMask__tpFRq
-                  )}
-                  color={true ? "#FF6A50" : undefined}
-                  contrast={80}
-                  imageContrast={0.4}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image__zpiN2)}
-                    src={"/plasmic/toothmonster/images/sunraysGif.gif"}
-                    width={250}
-                  />
-                </HalftoneMask>
-              </div>
-            </ParallaxWrapper>
-            <ParallaxWrapper
-              className={classNames(
-                "__wab_instance",
-                sty.scrollParallax__koAjO
-              )}
-              previewInEditor={false}
-              speed={-6}
-            >
-              <div className={classNames(projectcss.all, sty.freeBox___4ElwX)}>
-                <HalftoneMask
-                  className={classNames(
-                    "__wab_instance",
-                    sty.halftoneMask__mLp1
-                  )}
-                  color={true ? "#CEBEE3" : undefined}
-                  contrast={80}
-                  imageContrast={-0.3}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image___2FQh)}
-                    src={"/plasmic/toothmonster/images/flowerGif.gif"}
-                    width={250}
-                  />
-                </HalftoneMask>
-                <HalftoneMask
-                  angleIndex={1}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.halftoneMask__o9CWe
-                  )}
-                  color={true ? "#00427F" : undefined}
-                  contrast={80}
-                  imageContrast={0.4}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image__gdzFk)}
-                    src={"/plasmic/toothmonster/images/flowerGif.gif"}
-                    width={250}
-                  />
-                </HalftoneMask>
-              </div>
-            </ParallaxWrapper>
+            <div className={classNames(projectcss.all, sty.freeBox__awWL)}>
+              <HalftoneMask
+                className={classNames(
+                  "__wab_instance",
+                  sty.halftoneMask__qkJjM
+                )}
+                color={true ? "#DDEA44" : undefined}
+                contrast={80}
+                imageContrast={-0.3}
+              >
+                <NextImage
+                  alt={""}
+                  className={classNames("__wab_instance", sty.image__jTA3)}
+                  src={"/plasmic/toothmonster/images/sunraysGif.gif"}
+                  width={250}
+                />
+              </HalftoneMask>
+              <HalftoneMask
+                angleIndex={1}
+                className={classNames(
+                  "__wab_instance",
+                  sty.halftoneMask__tpFRq
+                )}
+                color={true ? "#FF6A50" : undefined}
+                contrast={80}
+                imageContrast={0.4}
+              >
+                <NextImage
+                  alt={""}
+                  className={classNames("__wab_instance", sty.image__zpiN2)}
+                  src={"/plasmic/toothmonster/images/sunraysGif.gif"}
+                  width={250}
+                />
+              </HalftoneMask>
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox___4ElwX)}>
+              <HalftoneMask
+                className={classNames("__wab_instance", sty.halftoneMask__mLp1)}
+                color={true ? "#CEBEE3" : undefined}
+                contrast={80}
+                imageContrast={-0.3}
+              >
+                <NextImage
+                  alt={""}
+                  className={classNames("__wab_instance", sty.image___2FQh)}
+                  src={"/plasmic/toothmonster/images/flowerGif.gif"}
+                  width={250}
+                />
+              </HalftoneMask>
+              <HalftoneMask
+                angleIndex={1}
+                className={classNames(
+                  "__wab_instance",
+                  sty.halftoneMask__o9CWe
+                )}
+                color={true ? "#00427F" : undefined}
+                contrast={80}
+                imageContrast={0.4}
+              >
+                <NextImage
+                  alt={""}
+                  className={classNames("__wab_instance", sty.image__gdzFk)}
+                  src={"/plasmic/toothmonster/images/flowerGif.gif"}
+                  width={250}
+                />
+              </HalftoneMask>
+            </div>
           </section>
           <TornSection
             background={

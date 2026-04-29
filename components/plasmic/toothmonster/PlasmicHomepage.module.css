@@ -842,25 +842,17 @@
   opacity: 0.4;
   min-height: 0;
 }
-.scrollParallax___9Xy4:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  position: absolute;
-  left: auto;
-  top: 22px;
-  right: 109px;
-}
 .freeBox__awWL {
   display: block;
-  position: relative;
+  position: absolute;
   width: 250px;
   height: 250px;
   max-width: 100%;
   justify-self: flex-start;
   left: auto;
-  top: auto;
-  z-index: 1;
-  right: auto;
+  top: 35px;
+  z-index: 0;
+  right: 119px;
 }
 .halftoneMask__qkJjM:global(.__wab_instance) {
   max-width: 100%;
@@ -904,25 +896,18 @@
   object-fit: cover;
   height: auto;
 }
-.scrollParallax__koAjO:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  position: absolute;
-  left: -322px;
-  top: auto;
-  bottom: 0;
-}
 .freeBox___4ElwX {
   display: block;
-  position: relative;
+  position: absolute;
   width: 250px;
   height: 250px;
   max-width: 100%;
   justify-self: flex-start;
-  left: auto;
+  left: -300px;
   top: auto;
-  z-index: 1;
-  bottom: auto;
+  z-index: 0;
+  bottom: 36px;
+  right: auto;
 }
 @media (max-width: 640px) {
   .freeBox___4ElwX {
