@@ -3,6 +3,7 @@ import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment, OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 type EnvironmentPreset =
   | 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby'
@@ -105,22 +106,33 @@ export function ModelViewerScene({
   const containerRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const isTransparent = !background || background === 'transparent';
+  const prefersReduced = usePrefersReducedMotion();
+
+  // Auto-rotate and cursor-tilt both animate on their own (no user action
+  // required) — disabled under reduced motion. Drag stays available: the
+  // user is driving it directly, not the page.
+  const showTiltScene = interactionMode === 'cursor-tilt' && !prefersReduced;
+  const autoRotateEnabled = interactionMode === 'auto-rotate' && !prefersReduced;
+  // Only the continuously-animating modes need a per-frame render loop.
+  // Everything else (static model, or drag which drei's OrbitControls
+  // invalidates on interaction) can render on demand.
+  const frameloop = showTiltScene || autoRotateEnabled ? 'always' : 'demand';
 
   const stableOnLoaded = useCallback(() => { onLoaded?.(); }, [onLoaded]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (interactionMode !== 'cursor-tilt' || !containerRef.current) return;
+    if (!showTiltScene || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     cursorRef.current = {
       x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
       y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
     };
-  }, [interactionMode]);
+  }, [showTiltScene]);
 
   const handleMouseLeave = useCallback(() => {
-    if (interactionMode !== 'cursor-tilt') return;
+    if (!showTiltScene) return;
     cursorRef.current = { x: 0, y: 0 };
-  }, [interactionMode]);
+  }, [showTiltScene]);
 
   return (
     <div
@@ -132,6 +144,7 @@ export function ModelViewerScene({
       <Canvas
         camera={{ position: [cameraX, cameraY, cameraDistance], fov: 45 }}
         gl={{ alpha: true, antialias: true }}
+        frameloop={frameloop}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, isTransparent ? 0 : 1);
         }}
@@ -141,7 +154,7 @@ export function ModelViewerScene({
         <CameraOffset x={cameraX} y={cameraY} />
         <ambientLight intensity={0.5} />
         <Suspense fallback={null}>
-          {interactionMode === 'cursor-tilt' ? (
+          {showTiltScene ? (
             <TiltScene
               url={modelUrl}
               onLoaded={stableOnLoaded}
@@ -155,7 +168,7 @@ export function ModelViewerScene({
               <Environment preset={environment} background={false} />
               <OrbitControls
                 ref={controlsRef}
-                autoRotate={interactionMode === 'auto-rotate'}
+                autoRotate={autoRotateEnabled}
                 autoRotateSpeed={1.5}
                 enableZoom={enableZoom}
                 enablePan={false}

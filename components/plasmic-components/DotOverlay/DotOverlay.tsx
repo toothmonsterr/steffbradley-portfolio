@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './DotOverlay.module.css';
 import { findHoverHost } from '@/hooks/findHoverHost';
 import { colorOrDefault } from '@/hooks/colorDefault';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 export interface DotOverlayProps {
   /** First dot color (at cursor) */
@@ -81,6 +82,7 @@ export const DotOverlay = React.memo(function DotOverlay({
   // Linear activity ramp 0..1 (time-based). 1 = fully hovered, 0 = at rest.
   const activityRef = useRef(0);
   const hoveringRef = useRef(false);
+  const prefersReduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -208,6 +210,26 @@ export const DotOverlay = React.memo(function DotOverlay({
       rafRef.current = requestAnimationFrame(tick);
     };
 
+    // Under reduced motion, skip the cursor-follow spotlight entirely — dots
+    // stay at their static base (min) size, with only a plain show/hide of
+    // the canvas on hover (no proximity animation, no mousemove tracking).
+    if (prefersReduced) {
+      if (trigger === 'hover') {
+        const onEnterStatic = () => canvas.classList.add(styles.active);
+        const onLeaveStatic = () => canvas.classList.remove(styles.active);
+        host.addEventListener('mouseenter', onEnterStatic);
+        host.addEventListener('mouseleave', onLeaveStatic);
+        return () => {
+          ro.disconnect();
+          host.removeEventListener('mouseenter', onEnterStatic);
+          host.removeEventListener('mouseleave', onLeaveStatic);
+        };
+      }
+      canvas.classList.add(styles.active);
+      render();
+      return () => ro.disconnect();
+    }
+
     const onMove = (e: MouseEvent) => {
       const rect = host.getBoundingClientRect();
       targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
@@ -255,7 +277,7 @@ export const DotOverlay = React.memo(function DotOverlay({
     };
   }, [
     resolvedColorA, resolvedColorB, effectiveStep, dotEdgeMin, dotEdgeMax,
-    effectiveFalloff, trigger, easeDuration,
+    effectiveFalloff, trigger, easeDuration, prefersReduced,
   ]);
 
   if (trigger === 'never') return null;

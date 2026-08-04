@@ -301,7 +301,6 @@ export function useOffsetActivity(
   const activityRef = useRef(0);
   const rafRef = useRef(0);
   const lastTsRef = useRef(0);
-  const startTsRef = useRef(0);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -309,16 +308,16 @@ export function useOffsetActivity(
 
     const { interaction } = optsRef.current;
     activityRef.current = interaction === 'inverse' ? 1 : 0;
-    startTsRef.current = performance.now();
     // click mode: hoveringRef acts as a toggle — true = active, false = rest
     const clickedRef = { current: false };
+    // Virtual playback time for the breathing wobble — only advances while
+    // in viewport, so pausing off-screen doesn't cause a phase jump on return.
+    let elapsed = 0;
+    let inViewport = true;
 
-    const writeTransforms = (now: number) => {
+    const writeTransforms = (tSec: number) => {
       const { offsetX, offsetY, prefersReduced, sizerX, sizerY, sizerRotate, sizerWobble } = optsRef.current;
       const layers = layersRef.current;
-      // Clamp to >= 0 — can go negative under React Strict Mode double-invoke
-      // when startTsRef is reset by the second mount after the first RAF fired.
-      const tSec = Math.max(0, (now - startTsRef.current) / 1000);
       const a = smoothstep(Math.max(0, Math.min(1, activityRef.current)));
 
       for (const layer of layers) {
@@ -361,9 +360,10 @@ export function useOffsetActivity(
         activityRef.current = Math.max(target, cur - delta);
       }
 
-      writeTransforms(now);
+      if (!prefersReduced) elapsed += dt;
+      writeTransforms(elapsed);
 
-      if (!prefersReduced) {
+      if (!prefersReduced && inViewport) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = 0;
@@ -371,13 +371,26 @@ export function useOffsetActivity(
     };
 
     const startLoop = () => {
-      if (rafRef.current) return;
+      if (rafRef.current || !inViewport) return;
       lastTsRef.current = 0;
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    writeTransforms(startTsRef.current);
+    writeTransforms(elapsed);
     startLoop();
+
+    // Pause the RAF loop entirely while scrolled out of view — the last
+    // written transforms persist, so there's nothing jarring on return.
+    const io = new IntersectionObserver((entries) => {
+      inViewport = entries[0].isIntersecting;
+      if (inViewport) {
+        startLoop();
+      } else {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+      }
+    }, { threshold: 0 });
+    io.observe(host);
 
     const onEnter = () => { hoveringRef.current = true; };
     const onLeave = () => { hoveringRef.current = false; };
@@ -396,6 +409,7 @@ export function useOffsetActivity(
       host.removeEventListener('mouseleave', onLeave);
       host.removeEventListener('click', onClick);
       host.removeEventListener('touchend', onClick);
+      io.disconnect();
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
       lastTsRef.current = 0;
@@ -488,6 +502,9 @@ export function useHalftoneProximity(
     if (!filterIds.length) return;
     // No cursor on touch-only devices — skip entirely so mobile pays nothing.
     if (typeof window !== 'undefined' && !window.matchMedia('(pointer: fine)').matches) return;
+    // Reduced motion — skip the mousemove listener and RAF loop entirely
+    // rather than running them forever with the cursor parked off-canvas.
+    if (opts.prefersReduced) return;
 
     const onMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
@@ -496,7 +513,7 @@ export function useHalftoneProximity(
 
     const tick = () => {
       const host = hostRef.current;
-      const { step, baseDotSize, hoverDotSize, proximityRadius = 150, feather = 0.5, prefersReduced } = optsRef.current;
+      const { step, baseDotSize, hoverDotSize, proximityRadius = 150, feather = 0.5 } = optsRef.current;
       const ids = filterIdsRef.current;
 
       // Don't burn a full SVG build before the mouse has been seen at all.
@@ -514,8 +531,8 @@ export function useHalftoneProximity(
         const w = Math.ceil(rect.width);
         const h = Math.ceil(rect.height);
         // Cursor in element-local coordinates.
-        const localX = prefersReduced ? -9999 : curRef.current.x - rect.left;
-        const localY = prefersReduced ? -9999 : curRef.current.y - rect.top;
+        const localX = curRef.current.x - rect.left;
+        const localY = curRef.current.y - rect.top;
 
         const prev = prevRef.current;
         const moved = Math.abs(localX - prev.x) > 0.3 || Math.abs(localY - prev.y) > 0.3;
@@ -547,7 +564,7 @@ export function useHalftoneProximity(
     };
   // Re-mount only when enabled/disabled state changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hostRef, filterIds.length]);
+  }, [hostRef, filterIds.length, opts.prefersReduced]);
 }
 
 /**

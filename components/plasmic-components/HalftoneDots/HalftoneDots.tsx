@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './HalftoneDots.module.css';
 import { findHoverHost } from '@/hooks/findHoverHost';
 import { colorOrDefault } from '@/hooks/colorDefault';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 export interface HalftoneDotsProps {
   /** First ink color */
@@ -92,6 +93,7 @@ export function HalftoneDots({
   // Cursor activity ramp (0 = idle, 1 = fully hovered). Used for shift/pulse.
   const activityRef = useRef(0);
   const hoveringRef = useRef(false);
+  const prefersReduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -235,7 +237,9 @@ export function HalftoneDots({
     const showCanvas = () => canvas.classList.add(styles.active);
     const hideCanvas = () => canvas.classList.remove(styles.active);
 
-    const isAnimated = cursor === 'shift' || cursor === 'pulse';
+    // Under reduced motion, cursor-driven shift/pulse ramps are disabled —
+    // dots stay in their static base layout regardless of hover.
+    const isAnimated = !prefersReduced && (cursor === 'shift' || cursor === 'pulse');
 
     const onEnter = () => {
       hoveringRef.current = true;
@@ -275,7 +279,7 @@ export function HalftoneDots({
     };
   }, [
     resolvedColorA, resolvedColorB, layerAAngle, layerBAngle,
-    step, dotSize, cursor, trigger, easeDuration,
+    step, dotSize, cursor, trigger, easeDuration, prefersReduced,
   ]);
 
   // ── Cursor-following mask ────────────────────────────────────────────
