@@ -11,6 +11,7 @@ export const tokens = {
     'brand-chartreuse': colorPrimitive.chartreuse,
     'brand-green':      colorPrimitive.green,
     'brand-navy':       colorPrimitive.navy,
+    'brand-slate':      colorPrimitive.slate,
     'brand-brick':      colorPrimitive.brick,
     'brand-sienna':     colorPrimitive.sienna,
     'brand-olive':      colorPrimitive.olive,

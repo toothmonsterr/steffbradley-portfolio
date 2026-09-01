@@ -6,6 +6,7 @@ export const colorPrimitive = {
   chartreuse:  '#DDEA44',
   green:       '#52A159',
   navy:        '#00427F',
+  slate:       '#93AECB',
   brick:       '#802E28',
   sienna:      '#80553E',
   olive:       '#607522',
