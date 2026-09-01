@@ -37,6 +37,26 @@ export const RichTextMeta = {
       description:
         'Link and blockquote accent colour. Bind to the row\'s caseStudyColor so each case study\'s prose matches its own brand colour.',
     },
+    captionStyle: {
+      type: 'choice',
+      options: ['plain', 'tape'],
+      defaultValueHint: 'plain',
+      description:
+        'How image captions in the CMS content are styled. plain — muted text under the image. tape — a torn strip of scotch tape, matching the gallery.',
+    },
+    tapeColor: {
+      type: 'color',
+      defaultValueHint: 'rgba(221, 234, 68, 0.75)',
+      description: 'Tape tint. Keep some alpha — real tape is translucent.',
+      hidden: (props: { captionStyle?: string }) => props.captionStyle !== 'tape',
+    },
+    tapeRotation: {
+      type: 'number',
+      defaultValueHint: 3,
+      description:
+        'Tilt in degrees for taped captions. Consecutive strips alternate direction so they do not all lean the same way. 0 lays them straight.',
+      hidden: (props: { captionStyle?: string }) => props.captionStyle !== 'tape',
+    },
   },
   importPath: '@/components/plasmic-components/RichText',
 };
