@@ -7,6 +7,23 @@
  * renders as an undifferentiated wall of text.
  */
 
+/*
+ * `display: block` is deliberate and defended with !important.
+ *
+ * Plasmic applies `display: flex` to component instances, and CMS HTML has a
+ * newline between every block tag — 27 of them in a typical case study. In a
+ * block container those collapse to nothing; as a flex or grid container each
+ * one becomes a layout item with its own line box, adding ~172px of dead
+ * space and breaking the caption's `display: table` (flex items are
+ * blockified, so the tape strip stops hugging its text).
+ *
+ * The prose block lays out its own children; it must not become a flex parent.
+ */
+.prose,
+.prose.prose.prose {
+  display: block !important;
+}
+
 .prose {
   font-family: var(--font-body);
   color: var(--color-midnight);
