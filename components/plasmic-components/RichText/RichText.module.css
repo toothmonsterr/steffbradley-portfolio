@@ -130,7 +130,16 @@
    ScotchTape measures itself to compute per-tooth jitter, which is impossible
    for arbitrary inline HTML, but a repeating zigzag clip-path gives the same
    silhouette at any width without measurement. */
+/*
+ * The tape is drawn by a rotated ::before layer rather than by rotating the
+ * caption itself. A rotated element still occupies its ROTATED bounding box
+ * in layout, and that box grows with the element's width — a full-width
+ * caption tilted 3deg measured 64px tall for 32px of content, pushing
+ * everything beneath it down by the difference. Rotating only the background
+ * keeps the tilt visual and the layout box its true height.
+ */
 .tapeCaptions figcaption {
+  position: relative;
   display: table;
   margin-left: auto;
   margin-right: auto;
@@ -141,6 +150,15 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-midnight);
+  /* Fill lives on ::before, so the text box itself stays transparent. */
+  background: none;
+}
+
+.tapeCaptions figcaption::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-color: var(--rt-tape, rgba(221, 234, 68, 0.75));
   transform: rotate(var(--rt-tape-tilt, 3deg));
   /* Zigzag on the left and right edges, flat top and bottom — the same
@@ -162,11 +180,11 @@
 /* Alternate the tilt so consecutive strips do not all lean the same way.
    A CSS-only stand-in for the seeded per-caption randomisation the gallery
    does in JS, which is unavailable for HTML rendered as a string. */
-.tapeCaptions figure:nth-of-type(even) figcaption {
+.tapeCaptions figure:nth-of-type(even) figcaption::before {
   transform: rotate(calc(var(--rt-tape-tilt, 3deg) * -0.8));
 }
 
-.tapeCaptions figure:nth-of-type(3n) figcaption {
+.tapeCaptions figure:nth-of-type(3n) figcaption::before {
   transform: rotate(calc(var(--rt-tape-tilt, 3deg) * 0.5));
 }
 
