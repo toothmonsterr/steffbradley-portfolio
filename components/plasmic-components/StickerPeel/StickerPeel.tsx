@@ -1,5 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate, useMotionValue, useMotionValueEvent } from 'motion/react';
 import styles from './StickerPeel.module.css';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 // useLayoutEffect warns during SSR; fall back to useEffect on the server.
 const useIsomorphicLayoutEffect =
@@ -180,9 +182,13 @@ export function StickerPeel({
   // The SVG path needs pixel dimensions, so the box has to be measured.
   const rootRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState<{ w: number; h: number } | null>(null);
-  // Hover is tracked in state (not just CSS) because the path is regenerated
-  // per peel size rather than interpolated by a CSS variable.
-  const [hovered, setHovered] = useState(false);
+  // The peel size is animated as a number and the path regenerated from it each
+  // frame. CSS `transition: d` only works in Chrome, so relying on it made the
+  // notch snap in Safari and Firefox.
+  const prefersReduced = usePrefersReducedMotion();
+  const peelMv = useMotionValue(baseSize);
+  const [animatedSize, setAnimatedSize] = useState(baseSize);
+  useMotionValueEvent(peelMv, 'change', v => setAnimatedSize(v));
 
   useIsomorphicLayoutEffect(() => {
     const el = rootRef.current;
@@ -197,7 +203,22 @@ export function StickerPeel({
     return () => ro.disconnect();
   }, []);
 
-  const activeSize = trigger === 'hover' && hovered ? hoverPeelSize : baseSize;
+  // Drive the motion value toward whichever size the current state calls for.
+  const setPeelTarget = (target: number) => {
+    if (prefersReduced) {
+      peelMv.set(target);
+      return;
+    }
+    animate(peelMv, target, { duration: easeDuration, ease: 'easeOut' });
+  };
+
+  // Keep in sync when the size props themselves change (e.g. edited in Studio).
+  useIsomorphicLayoutEffect(() => {
+    peelMv.set(baseSize);
+    setAnimatedSize(baseSize);
+  }, [baseSize, peelMv]);
+
+  const activeSize = animatedSize;
 
   const wrapperStyle = {
     '--peel-size-base': `${baseSize}px`,
@@ -237,7 +258,10 @@ export function StickerPeel({
       ].filter(Boolean).join(' ')}
       style={wrapperStyle}
       {...(trigger === 'hover'
-        ? { onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false) }
+        ? {
+            onMouseEnter: () => setPeelTarget(hoverPeelSize),
+            onMouseLeave: () => setPeelTarget(baseSize),
+          }
         : null)}
     >
       {/* Sticker body. Painted behind the content and sized to the wrapper, so

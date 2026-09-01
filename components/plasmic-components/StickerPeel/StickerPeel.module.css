@@ -29,11 +29,9 @@
   overflow: visible;
 }
 
-/* `d` is an animatable property in modern browsers, so the notch grows
-   smoothly on hover. Where it is unsupported the shape simply snaps. */
-.fillPath {
-  transition: d var(--ease-duration) ease;
-}
+/* No transition here: `transition: d` is Chrome-only, so the notch snapped in
+   Safari and Firefox. The peel size is animated as a number in JS instead and
+   the path regenerated per frame. */
 
 .content {
   position: relative;
@@ -72,9 +70,7 @@
 @media (prefers-reduced-motion: reduce) {
   /* The hover lift is a 3D rotate3d + perspective tilt — a vestibular-motion
      trigger. Snap straight to the hover end state instead of animating it. */
-  .fillPath {
-    transition: none;
-  }
+  /* The peel-size animation is skipped in JS via usePrefersReducedMotion. */
   .peel {
     transition: none;
   }
