@@ -62,14 +62,14 @@
 /* Bullets are short fragments, not paragraphs — they read as one list when
    set tight, and as disconnected lines when given paragraph-sized spacing. */
 .prose li + li {
-  margin-top: 0.25em;
+  margin-top: 0.15em;
 }
 
 /* Pull the list closer to the sentence introducing it, which is almost always
    what a list follows ("Other insights included:"). */
 .prose > ul,
 .prose > ol {
-  margin-top: 0.6em;
+  margin-top: 0.4em;
 }
 
 .prose li > p {
@@ -96,22 +96,28 @@
 .prose img {
   width: 100%;
   height: auto;
-  margin: 2em 0;
+  /* Only the bottom — the `> * + *` rule already spaces this from what
+     precedes it, and setting both doubled the gap. */
+  margin: 0 0 1.25em;
 }
 
 /* Figures wrap a CMS image with its caption. The figure owns the vertical
    rhythm here, so the nested image drops its own margin — otherwise the
-   caption is pushed away from the image it describes. */
+   caption is pushed away from the image it describes.
+   The `> * + *` rule already supplies the gap above, so only the bottom is
+   set here; declaring both stacked a full extra line onto every figure. */
 .prose figure {
-  margin: 2em 0;
+  margin: 0 0 1.25em;
 }
 
 .prose figure img {
   margin: 0;
 }
 
+/* A caption belongs to the image directly above it — it should read as
+   attached to the picture, not float midway between the two blocks. */
 .prose figcaption {
-  margin-top: 0.75em;
+  margin-top: 0.5em;
   font-size: 0.875rem;
   line-height: 1.4;
   opacity: 0.7;
