@@ -3,6 +3,35 @@
   width: 100%;
 }
 
+/* globals.css zeroes margins, so figure needs no reset of its own. */
+.figure {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.caption,
+.slideCaption {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-neutral-75);
+  margin-top: 10px;
+}
+
+/* Carousel captions sit inside the clipped viewport, so they overlay the
+   image rather than adding height the aspect-ratio box has not allowed for. */
+.slideCaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 28px 16px 14px;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+}
+
 /* NextImage in fill mode needs a positioned parent with a defined size —
    aspect-ratio supplies the height. */
 .cell {

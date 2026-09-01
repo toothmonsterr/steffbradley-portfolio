@@ -49,7 +49,22 @@ export const CaseStudyGalleryMeta = {
       description: 'cover crops to fill the frame; contain fits the whole image inside it',
     },
     rounded: { type: 'number', defaultValueHint: 0, description: 'Corner radius in px' },
-    alt: { type: 'string', defaultValue: '', description: 'Alt text applied to every image' },
+    alt: {
+      type: 'string',
+      defaultValue: '',
+      description:
+        'Fallback alt text, used only for images that have no caption. A caption doubles as that image\'s alt text.',
+    },
+    showCaptions: {
+      type: 'boolean',
+      defaultValueHint: true,
+      description:
+        'Show captions from the CMS caption slots. Add text sub-fields named carouselCap1, carouselCap2, … alongside carouselImg1, carouselImg2, … and each caption pairs with the image of the same number.',
+    },
+    captionColor: {
+      type: 'color',
+      description: 'Caption text colour. Defaults to a muted neutral in grid, white over a scrim in carousel.',
+    },
     priority: {
       type: 'boolean',
       defaultValueHint: false,

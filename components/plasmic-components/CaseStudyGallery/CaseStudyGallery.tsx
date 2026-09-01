@@ -22,6 +22,9 @@ export interface CaseStudyGalleryProps {
   /** Corner radius in px */
   rounded?: number;
   alt?: string;
+  /** Show captions read from the CMS caption slots (carouselCap1, etc). */
+  showCaptions?: boolean;
+  captionColor?: string;
   /** Disable lazy loading on the first tile — use only above the fold */
   priority?: boolean;
 
@@ -75,6 +78,8 @@ export function CaseStudyGallery({
   objectFit = 'cover',
   rounded = 0,
   alt = '',
+  showCaptions = true,
+  captionColor,
   priority = false,
   visibleSlides = 1,
   slideGap = 16,
@@ -89,14 +94,40 @@ export function CaseStudyGallery({
   activeDotColor = '#201B2A',
   className,
 }: CaseStudyGalleryProps) {
-  const srcs =
-    images && typeof images === 'object'
-      ? Object.keys(images)
-          // Numeric collation so featureImg2 sorts before featureImg10.
-          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-          .map(key => toSrc(images[key]))
-          .filter((src): src is string => !!src)
-      : [];
+  // Images are paired with their captions by slot NUMBER, not by position, so
+  // a blank slot in the middle cannot shift captions onto the wrong image.
+  const slides = React.useMemo(() => {
+    if (!images || typeof images !== 'object') return [];
+
+    const bySlot = new Map<number, { src?: string; caption?: string }>();
+    let unnumbered = 0;
+
+    for (const key of Object.keys(images)) {
+      const value = images[key];
+      const digits = key.match(/(\d+)\s*$/);
+      // Keys with no trailing number (a plain `image`) still get a stable slot.
+      const slot = digits ? parseInt(digits[1], 10) : ++unnumbered * 1000;
+      const entry = bySlot.get(slot) ?? {};
+
+      // A caption slot is any text value whose key is not an image key —
+      // matched on the key stem so cap/caption/label/title all work.
+      if (typeof value === 'string' && /cap|caption|label|title|text/i.test(key)) {
+        entry.caption = value;
+      } else {
+        const src = toSrc(value);
+        if (src) entry.src = src;
+      }
+      bySlot.set(slot, entry);
+    }
+
+    return [...bySlot.entries()]
+      .sort((a, b) => a[0] - b[0])
+      // A caption with no image has nothing to caption.
+      .filter(([, v]) => !!v.src)
+      .map(([, v]) => ({ src: v.src as string, caption: v.caption?.trim() || undefined }));
+  }, [images]);
+
+  const srcs = slides.map(s => s.src);
 
   const [index, setIndex] = useState(0);
   const groupId = useId().replace(/:/g, '');
@@ -140,20 +171,28 @@ export function CaseStudyGallery({
           gap,
         }}
       >
-        {srcs.map((src, i) => (
-          <div
-            key={`${src}-${i}`}
-            className={styles.cell}
-            style={{ aspectRatio, borderRadius: rounded || undefined }}
-          >
-            <NextImage
-              src={src}
-              alt={alt}
-              fill
-              objectFit={objectFit}
-              priority={priority && i === 0}
-            />
-          </div>
+        {slides.map((slide, i) => (
+          <figure key={`${slide.src}-${i}`} className={styles.figure}>
+            <div
+              className={styles.cell}
+              style={{ aspectRatio, borderRadius: rounded || undefined }}
+            >
+              <NextImage
+                src={slide.src}
+                // A caption describes the image, so it doubles as alt text —
+                // better than one shared `alt` repeated across every image.
+                alt={slide.caption || alt}
+                fill
+                objectFit={objectFit}
+                priority={priority && i === 0}
+              />
+            </div>
+            {showCaptions && slide.caption && (
+              <figcaption className={styles.caption} style={{ color: captionColor }}>
+                {slide.caption}
+              </figcaption>
+            )}
+          </figure>
         ))}
       </div>
     );
@@ -201,9 +240,9 @@ export function CaseStudyGallery({
             )}px))`,
           }}
         >
-          {srcs.map((src, i) => (
+          {slides.map((slide, i) => (
             <div
-              key={`${src}-${i}`}
+              key={`${slide.src}-${i}`}
               className={styles.slide}
               role="group"
               aria-roledescription="slide"
@@ -220,12 +259,17 @@ export function CaseStudyGallery({
               inert={i < index || i >= index + visible}
             >
               <NextImage
-                src={src}
-                alt={alt}
+                src={slide.src}
+                alt={slide.caption || alt}
                 fill
                 objectFit={objectFit}
                 priority={priority && i === 0}
               />
+              {showCaptions && slide.caption && (
+                <div className={styles.slideCaption} style={{ color: captionColor }}>
+                  {slide.caption}
+                </div>
+              )}
             </div>
           ))}
         </div>
