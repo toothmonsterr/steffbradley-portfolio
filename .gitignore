@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Webflow CSV exports (source data for the one-off CMS import)
+src/
