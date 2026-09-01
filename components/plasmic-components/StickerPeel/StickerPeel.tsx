@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './StickerPeel.module.css';
+
+// useLayoutEffect warns during SSR; fall back to useEffect on the server.
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 // Parse a CSS color into "R, G, B" so we can re-compose with a separate
 // opacity (so shadow opacity can animate independently). Falls back to black.
@@ -27,8 +31,16 @@ export interface StickerPeelProps {
   corner?: Corner;
   peelSize?: number;
   hoverPeelSize?: number;
+  /** Color of the peel-back face — the underside revealed by the lifted flap. */
   backColor?: string;
-  backdropColor?: string;
+  /**
+   * Fill of the sticker body, painted by an SVG layer behind the content.
+   * The peeled corner is a real hole in this shape, so whatever sits behind
+   * the sticker shows through it.
+   */
+  fillColor?: string;
+  /** Corner radius in px, applied to the three un-peeled corners. */
+  borderRadius?: number;
   shadowColor?: string;
   shadowBlur?: number;
   /**
@@ -44,7 +56,6 @@ export interface StickerPeelProps {
 }
 
 interface CornerCfg {
-  contentClip: string;
   peelPos: React.CSSProperties;
   peelClip: string;
   gradient: string;
@@ -53,32 +64,26 @@ interface CornerCfg {
   tiltAxis: [number, number, number];
 }
 
-const S = 'var(--peel-size)';
-
 const CORNER_CFG: Record<Corner, CornerCfg> = {
   'top-right': {
-    contentClip: `polygon(0 0, calc(100% - ${S}) 0, 100% ${S}, 100% 100%, 0 100%)`,
     peelPos: { top: 0, right: 0 },
     peelClip: 'polygon(0 0, 100% 100%, 0 100%)',
     gradient: 'to bottom left',
     tiltAxis: [1, 1, 0],
   },
   'top-left': {
-    contentClip: `polygon(${S} 0, 100% 0, 100% 100%, 0 100%, 0 ${S})`,
     peelPos: { top: 0, left: 0 },
     peelClip: 'polygon(100% 0, 100% 100%, 0 100%)',
     gradient: 'to bottom right',
     tiltAxis: [1, -1, 0],
   },
   'bottom-right': {
-    contentClip: `polygon(0 0, 100% 0, 100% calc(100% - ${S}), calc(100% - ${S}) 100%, 0 100%)`,
     peelPos: { bottom: 0, right: 0 },
     peelClip: 'polygon(0 0, 100% 0, 0 100%)',
     gradient: 'to top left',
     tiltAxis: [-1, 1, 0],
   },
   'bottom-left': {
-    contentClip: `polygon(0 0, 100% 0, 100% 100%, ${S} 100%, 0 calc(100% - ${S}))`,
     peelPos: { bottom: 0, left: 0 },
     peelClip: 'polygon(0 0, 100% 0, 100% 100%)',
     gradient: 'to top right',
@@ -86,13 +91,75 @@ const CORNER_CFG: Record<Corner, CornerCfg> = {
   },
 };
 
+/**
+ * Sticker body as an SVG path: a rounded rectangle whose peeled corner is
+ * replaced by a straight diagonal cut. The peeled corner is genuinely absent
+ * from the path, so it renders as a hole rather than a matching-colored patch.
+ *
+ * This lives in an SVG rather than a CSS clip-path because a clip-path on a
+ * wrapper is defeated by any ancestor border-radius or overflow:hidden (which
+ * Plasmic applies to component instances) — the SVG owns its own fill, so
+ * nothing upstream can square the notch back off.
+ */
+function buildStickerPath(corner: Corner, w: number, h: number, peel: number, radius: number): string {
+  // Never let the radius or peel exceed what the box can accommodate.
+  const r = Math.max(0, Math.min(radius, w / 2, h / 2));
+  const s = Math.max(0, Math.min(peel, w, h));
+  const p = (x: number, y: number) => `${x.toFixed(2)} ${y.toFixed(2)}`;
+  const arc = (x: number, y: number) => `A ${r} ${r} 0 0 1 ${p(x, y)}`;
+
+  switch (corner) {
+    case 'top-right':
+      return [
+        `M ${p(r, 0)}`,
+        `L ${p(w - s, 0)}`,
+        `L ${p(w, s)}`,
+        `L ${p(w, h - r)}`, arc(w - r, h),
+        `L ${p(r, h)}`,     arc(0, h - r),
+        `L ${p(0, r)}`,     arc(r, 0),
+        'Z',
+      ].join(' ');
+    case 'top-left':
+      return [
+        `M ${p(s, 0)}`,
+        `L ${p(w - r, 0)}`, arc(w, r),
+        `L ${p(w, h - r)}`, arc(w - r, h),
+        `L ${p(r, h)}`,     arc(0, h - r),
+        `L ${p(0, s)}`,
+        `L ${p(s, 0)}`,
+        'Z',
+      ].join(' ');
+    case 'bottom-right':
+      return [
+        `M ${p(r, 0)}`,
+        `L ${p(w - r, 0)}`, arc(w, r),
+        `L ${p(w, h - s)}`,
+        `L ${p(w - s, h)}`,
+        `L ${p(r, h)}`,     arc(0, h - r),
+        `L ${p(0, r)}`,     arc(r, 0),
+        'Z',
+      ].join(' ');
+    case 'bottom-left':
+      return [
+        `M ${p(r, 0)}`,
+        `L ${p(w - r, 0)}`, arc(w, r),
+        `L ${p(w, h - r)}`, arc(w - r, h),
+        `L ${p(s, h)}`,
+        `L ${p(0, h - s)}`,
+        `L ${p(0, r)}`,     arc(r, 0),
+        'Z',
+      ].join(' ');
+  }
+}
+
 export function StickerPeel({
   children,
   corner = 'top-right',
   peelSize = 40,
   hoverPeelSize = 80,
   backColor = '#ffffff',
-  backdropColor = 'transparent',
+  fillColor = '#ffffff',
+  borderRadius = 0,
   shadowColor = 'rgba(0,0,0,0.25)',
   shadowBlur = 10,
   tilt = 25,
@@ -109,6 +176,28 @@ export function StickerPeel({
   // For trigger='always', the rest state already shows the peel fully — so
   // skip the rest-vs-hover distinction and lock everything at the hover values.
   const isAlwaysOn = trigger === 'always';
+
+  // The SVG path needs pixel dimensions, so the box has to be measured.
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState<{ w: number; h: number } | null>(null);
+  // Hover is tracked in state (not just CSS) because the path is regenerated
+  // per peel size rather than interpolated by a CSS variable.
+  const [hovered, setHovered] = useState(false);
+
+  useIsomorphicLayoutEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setBox(prev =>
+        prev && prev.w === width && prev.h === height ? prev : { w: width, h: height }
+      );
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const activeSize = trigger === 'hover' && hovered ? hoverPeelSize : baseSize;
 
   const wrapperStyle = {
     '--peel-size-base': `${baseSize}px`,
@@ -129,25 +218,56 @@ export function StickerPeel({
           '--shadow-opacity': '1',
         }
       : null),
-    backgroundColor: backdropColor,
+    // Before measurement the SVG cannot be drawn, so the wrapper carries the
+    // fill itself for that first frame — square-cornered, but never blank.
+    // Once the SVG paints, it takes over and this is dropped so the notch
+    // stays a genuine hole.
+    backgroundColor: box ? undefined : fillColor,
+    borderRadius: box ? undefined : borderRadius || undefined,
     perspective: `${perspective}px`,
   } as React.CSSProperties;
 
   return (
     <div
+      ref={rootRef}
       className={[
         styles.wrapper,
         trigger === 'hover' ? styles.hoverTrigger : '',
         className ?? '',
       ].filter(Boolean).join(' ')}
       style={wrapperStyle}
+      {...(trigger === 'hover'
+        ? { onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false) }
+        : null)}
     >
-      <div
-        className={styles.content}
-        style={{ clipPath: cfg.contentClip }}
-      >
-        {children}
-      </div>
+      {/* Sticker body. Painted behind the content and sized to the wrapper, so
+          the notch is a real hole regardless of any ancestor clipping.
+
+          Rendered only once measured: the path mixes absolute units (radius,
+          peel size) with the box dimensions, so it cannot be expressed in a
+          scalable viewBox without distorting the radius and the fold angle.
+          The wrapper carries fillColor as a plain background until then, which
+          keeps the sticker filled on first paint — square-cornered for one
+          frame, rather than invisible. */}
+      {box && box.w > 0 && box.h > 0 && (
+        <svg
+          className={styles.fill}
+          width={box.w}
+          height={box.h}
+          viewBox={`0 0 ${box.w} ${box.h}`}
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            className={styles.fillPath}
+            d={buildStickerPath(corner, box.w, box.h, activeSize, borderRadius)}
+            fill={fillColor}
+          />
+        </svg>
+      )}
+
+      <div className={styles.content}>{children}</div>
+
       <div
         className={styles.peel}
         aria-hidden="true"

@@ -18,8 +18,25 @@
   --shadow-opacity: 1;
 }
 
+/* Sticker body, painted behind the content. Absolutely positioned so it fills
+   the wrapper without affecting layout, and so the notch stays a real hole. */
+.fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* `d` is an animatable property in modern browsers, so the notch grows
+   smoothly on hover. Where it is unsupported the shape simply snaps. */
+.fillPath {
+  transition: d var(--ease-duration) ease;
+}
+
 .content {
-  transition: clip-path var(--ease-duration) ease;
+  position: relative;
 }
 
 .peel {
@@ -55,7 +72,7 @@
 @media (prefers-reduced-motion: reduce) {
   /* The hover lift is a 3D rotate3d + perspective tilt — a vestibular-motion
      trigger. Snap straight to the hover end state instead of animating it. */
-  .content {
+  .fillPath {
     transition: none;
   }
   .peel {
