@@ -11,25 +11,53 @@
 }
 
 .caption,
-.slideCaption {
+.slideCaptionRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.plainCaption {
   font-family: var(--font-body);
   font-size: 0.875rem;
   line-height: 1.4;
   color: var(--color-neutral-75);
-  margin-top: 10px;
 }
 
-/* Carousel captions sit inside the clipped viewport, so they overlay the
-   image rather than adding height the aspect-ratio box has not allowed for. */
-.slideCaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 28px 16px 14px;
-  color: #fff;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+/* ScotchTape paints no fill of its own — it expects Studio's Design tab,
+   which is unavailable when nested inside another code component. So the
+   tint is supplied here, from the tapeColor prop via --gallery-tape. */
+.tape {
+  background-color: var(--gallery-tape, rgba(221, 234, 68, 0.75));
+  /* Tape is translucent adhesive, not paint. */
+  box-shadow: 0 1px 2px rgba(32, 27, 42, 0.18);
+}
+
+.tapeLabel {
+  display: block;
+  padding: 7px 20px;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--color-midnight);
+}
+
+/* Carousel slides stack image over caption, so the caption is not clipped by
+   the viewport and does not cover the artwork. */
+.slideCaptionRow {
+  flex: 0 0 auto;
+}
+
+/* aspect-ratio is set inline, so the image keeps its shape and the caption
+   strip adds height below it. */
+.slideImage {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* NextImage in fill mode needs a positioned parent with a defined size —
@@ -72,8 +100,13 @@
 
 /* flex-basis is set inline from visibleSlides; this is the single-slide
    default for when that is absent. */
+/* flex-basis is set inline from visibleSlides; this is the single-slide
+   default for when that is absent. Column direction so an image and its
+   caption strip stack rather than the caption overlaying the artwork. */
 .slide {
   position: relative;
+  display: flex;
+  flex-direction: column;
   flex: 0 0 100%;
   height: 100%;
   min-width: 0;

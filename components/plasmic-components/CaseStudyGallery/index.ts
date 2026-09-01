@@ -61,9 +61,32 @@ export const CaseStudyGalleryMeta = {
       description:
         'Show captions from the CMS caption slots. Add text sub-fields named carouselCap1, carouselCap2, … alongside carouselImg1, carouselImg2, … and each caption pairs with the image of the same number.',
     },
+    captionStyle: {
+      type: 'choice',
+      options: ['plain', 'tape'],
+      defaultValueHint: 'plain',
+      description: 'plain — text under the image. tape — text on a torn strip of scotch tape.',
+      hidden: (props: { showCaptions?: boolean }) => props.showCaptions === false,
+    },
     captionColor: {
       type: 'color',
-      description: 'Caption text colour. Defaults to a muted neutral in grid, white over a scrim in carousel.',
+      description: 'Caption text colour.',
+      hidden: (props: { showCaptions?: boolean }) => props.showCaptions === false,
+    },
+    tapeColor: {
+      type: 'color',
+      defaultValueHint: 'rgba(221, 234, 68, 0.75)',
+      description:
+        'Tape tint. Keep some alpha — real tape is translucent and reads better when the background shows through.',
+      hidden: (props: { showCaptions?: boolean; captionStyle?: string }) =>
+        props.showCaptions === false || props.captionStyle !== 'tape',
+    },
+    tapeRotation: {
+      type: 'number',
+      defaultValueHint: -2,
+      description: 'Tape tilt in degrees. 0 is perfectly straight; a degree or two reads as hand-applied.',
+      hidden: (props: { showCaptions?: boolean; captionStyle?: string }) =>
+        props.showCaptions === false || props.captionStyle !== 'tape',
     },
     priority: {
       type: 'boolean',

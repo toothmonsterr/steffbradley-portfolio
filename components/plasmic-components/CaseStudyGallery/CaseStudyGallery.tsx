@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useState } from 'react';
 import { NextImage } from '../NextImage';
+import { ScotchTape } from '../ScotchTape';
 import styles from './CaseStudyGallery.module.css';
 
 /** Plasmic CMS image sub-fields arrive as objects, not bare URL strings. */
@@ -24,7 +25,13 @@ export interface CaseStudyGalleryProps {
   alt?: string;
   /** Show captions read from the CMS caption slots (carouselCap1, etc). */
   showCaptions?: boolean;
+  /** plain — text under the image. tape — text on a strip of scotch tape. */
+  captionStyle?: 'plain' | 'tape';
   captionColor?: string;
+  /** Tape tint. Real tape is translucent, so keep some alpha. */
+  tapeColor?: string;
+  /** Tape tilt in degrees — real tape is rarely applied straight. */
+  tapeRotation?: number;
   /** Disable lazy loading on the first tile — use only above the fold */
   priority?: boolean;
 
@@ -79,7 +86,10 @@ export function CaseStudyGallery({
   rounded = 0,
   alt = '',
   showCaptions = true,
+  captionStyle = 'plain',
   captionColor,
+  tapeColor = 'rgba(221, 234, 68, 0.75)',
+  tapeRotation = -2,
   priority = false,
   visibleSlides = 1,
   slideGap = 16,
@@ -167,6 +177,7 @@ export function CaseStudyGallery({
       <div
         className={[styles.grid, className ?? ''].filter(Boolean).join(' ')}
         style={{
+          ['--gallery-tape' as string]: tapeColor,
           gridTemplateColumns: `repeat(${Math.max(1, columns)}, minmax(0, 1fr))`,
           gap,
         }}
@@ -188,8 +199,23 @@ export function CaseStudyGallery({
               />
             </div>
             {showCaptions && slide.caption && (
-              <figcaption className={styles.caption} style={{ color: captionColor }}>
-                {slide.caption}
+              <figcaption className={styles.caption}>
+                {captionStyle === 'tape' ? (
+                  <ScotchTape
+                    className={styles.tape}
+                    rotation={tapeRotation}
+                    toothSize={6}
+                    toothJitter={0.25}
+                  >
+                    <span className={styles.tapeLabel} style={{ color: captionColor }}>
+                      {slide.caption}
+                    </span>
+                  </ScotchTape>
+                ) : (
+                  <span className={styles.plainCaption} style={{ color: captionColor }}>
+                    {slide.caption}
+                  </span>
+                )}
               </figcaption>
             )}
           </figure>
@@ -223,10 +249,13 @@ export function CaseStudyGallery({
   return (
     <div
       className={[styles.carousel, className ?? ''].filter(Boolean).join(' ')}
+      style={{ ['--gallery-tape' as string]: tapeColor } as React.CSSProperties}
       role="group"
       aria-roledescription="carousel"
     >
-      <div id={groupId} className={styles.viewport} style={{ aspectRatio, borderRadius: rounded || undefined }}>
+      {/* The aspect ratio governs the IMAGE, not the viewport — a caption
+          strip adds height below it rather than eating into the artwork. */}
+      <div id={groupId} className={styles.viewport}>
         <div
           className={styles.track}
           style={{
@@ -258,16 +287,38 @@ export function CaseStudyGallery({
               aria-hidden={i < index || i >= index + visible}
               inert={i < index || i >= index + visible}
             >
-              <NextImage
-                src={slide.src}
-                alt={slide.caption || alt}
-                fill
-                objectFit={objectFit}
-                priority={priority && i === 0}
-              />
+              {/* The image fills whatever the caption strip leaves behind, so
+                  the two stack instead of the caption overlaying the art. */}
+              <div
+                className={styles.slideImage}
+                style={{ aspectRatio, borderRadius: rounded || undefined }}
+              >
+                <NextImage
+                  src={slide.src}
+                  alt={slide.caption || alt}
+                  fill
+                  objectFit={objectFit}
+                  priority={priority && i === 0}
+                />
+              </div>
               {showCaptions && slide.caption && (
-                <div className={styles.slideCaption} style={{ color: captionColor }}>
-                  {slide.caption}
+                <div className={styles.slideCaptionRow}>
+                  {captionStyle === 'tape' ? (
+                    <ScotchTape
+                      className={styles.tape}
+                      rotation={tapeRotation}
+                      toothSize={6}
+                      toothJitter={0.25}
+                    >
+                      <span className={styles.tapeLabel} style={{ color: captionColor }}>
+                        {slide.caption}
+                      </span>
+                    </ScotchTape>
+                  ) : (
+                    <span className={styles.plainCaption} style={{ color: captionColor }}>
+                      {slide.caption}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
