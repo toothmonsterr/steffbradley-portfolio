@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useState } from 'react';
 import { NextImage } from '../NextImage';
 import { ScotchTape } from '../ScotchTape';
+import { mulberry32 } from '../OffsetShape/shared';
 import styles from './CaseStudyGallery.module.css';
 
 /** Plasmic CMS image sub-fields arrive as objects, not bare URL strings. */
@@ -30,8 +31,14 @@ export interface CaseStudyGalleryProps {
   captionColor?: string;
   /** Tape tint. Real tape is translucent, so keep some alpha. */
   tapeColor?: string;
-  /** Tape tilt in degrees — real tape is rarely applied straight. */
+  /**
+   * Max tilt in degrees. Each caption gets its own angle randomly picked
+   * within ± this value, so no two pieces of tape lean identically.
+   * 0 lays every strip perfectly straight.
+   */
   tapeRotation?: number;
+  /** Space between the image and its caption, in px. */
+  captionGap?: number;
   /** Disable lazy loading on the first tile — use only above the fold */
   priority?: boolean;
 
@@ -69,6 +76,35 @@ function round(n: number): number {
   return Math.round(n * 10000) / 10000;
 }
 
+/** FNV-1a — same hash ScotchTape uses to derive its own per-instance jitter. */
+function hashString(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/**
+ * Per-caption tilt, seeded from the caption text and its slot so every piece
+ * of tape sits at its own angle instead of all leaning identically.
+ *
+ * Seeded rather than Math.random because the value is rendered into inline
+ * styles: a fresh random number on the client would not match the server's
+ * and React would fail hydration. The same caption always gets the same
+ * angle, which also keeps it stable across re-renders.
+ */
+function tiltFor(caption: string, slot: number, spread: number): number {
+  if (spread <= 0) return 0;
+  const rand = mulberry32(hashString(`${caption}#${slot}`));
+  // Discard the first draw: seeded straight from a hash, mulberry32's opening
+  // value barely varies, which bunched every angle into the middle of the
+  // range. The second is properly spread across it.
+  rand();
+  return round((rand() * 2 - 1) * spread);
+}
+
 function toSrc(value: CmsImage): string | undefined {
   if (!value) return undefined;
   if (typeof value === 'string') return value || undefined;
@@ -89,7 +125,8 @@ export function CaseStudyGallery({
   captionStyle = 'plain',
   captionColor,
   tapeColor = 'rgba(221, 234, 68, 0.75)',
-  tapeRotation = -2,
+  tapeRotation = 4,
+  captionGap = 12,
   priority = false,
   visibleSlides = 1,
   slideGap = 16,
@@ -134,7 +171,11 @@ export function CaseStudyGallery({
       .sort((a, b) => a[0] - b[0])
       // A caption with no image has nothing to caption.
       .filter(([, v]) => !!v.src)
-      .map(([, v]) => ({ src: v.src as string, caption: v.caption?.trim() || undefined }));
+      .map(([slot, v]) => ({
+        src: v.src as string,
+        caption: v.caption?.trim() || undefined,
+        slot,
+      }));
   }, [images]);
 
   const srcs = slides.map(s => s.src);
@@ -178,6 +219,7 @@ export function CaseStudyGallery({
         className={[styles.grid, className ?? ''].filter(Boolean).join(' ')}
         style={{
           ['--gallery-tape' as string]: tapeColor,
+          ['--gallery-caption-gap' as string]: captionGap + 'px',
           gridTemplateColumns: `repeat(${Math.max(1, columns)}, minmax(0, 1fr))`,
           gap,
         }}
@@ -203,7 +245,7 @@ export function CaseStudyGallery({
                 {captionStyle === 'tape' ? (
                   <ScotchTape
                     className={styles.tape}
-                    rotation={tapeRotation}
+                    rotation={tiltFor(slide.caption, slide.slot, tapeRotation)}
                     toothSize={6}
                     toothJitter={0.25}
                   >
@@ -249,7 +291,10 @@ export function CaseStudyGallery({
   return (
     <div
       className={[styles.carousel, className ?? ''].filter(Boolean).join(' ')}
-      style={{ ['--gallery-tape' as string]: tapeColor } as React.CSSProperties}
+      style={{
+        ['--gallery-tape' as string]: tapeColor,
+        ['--gallery-caption-gap' as string]: captionGap + 'px',
+      } as React.CSSProperties}
       role="group"
       aria-roledescription="carousel"
     >
@@ -306,7 +351,7 @@ export function CaseStudyGallery({
                   {captionStyle === 'tape' ? (
                     <ScotchTape
                       className={styles.tape}
-                      rotation={tapeRotation}
+                      rotation={tiltFor(slide.caption, slide.slot, tapeRotation)}
                       toothSize={6}
                       toothJitter={0.25}
                     >

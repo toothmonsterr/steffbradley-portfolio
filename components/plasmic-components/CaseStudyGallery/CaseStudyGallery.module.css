@@ -14,7 +14,7 @@
 .slideCaptionRow {
   display: flex;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: var(--gallery-caption-gap, 12px);
 }
 
 .plainCaption {
@@ -68,6 +68,22 @@
   width: 100%;
 }
 
+/* The radius has to reach the <img> itself, not just its box. An
+   absolutely-positioned child is not reliably clipped by an ancestor's
+   overflow once a transform is involved (the carousel track has one), so the
+   image paints straight over the rounded corners. Inheriting the radius makes
+   the image round itself, which holds in every case.
+   `isolation` forces a stacking context so the clip applies before compositing. */
+.cell,
+.slideImage {
+  isolation: isolate;
+}
+
+.cell > :global(img),
+.slideImage > :global(img) {
+  border-radius: inherit;
+}
+
 /* !important is required: grid-template-columns is set via inline style
    from the `columns` prop, which would otherwise win. */
 @media (max-width: 720px) {
@@ -85,9 +101,14 @@
 }
 
 /* The frame itself does clip — slides must not spill out of it. */
+/* Clips horizontally so off-screen slides stay hidden, but must NOT clip
+   vertically: caption tape is rotated and serrated, so its teeth and corners
+   extend past the slide box and would be sheared off by overflow:hidden.
+   clip on the x-axis only keeps the track masked while letting tape spill. */
 .viewport {
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   width: 100%;
 }
 

@@ -73,6 +73,13 @@ export const CaseStudyGalleryMeta = {
       description: 'Caption text colour.',
       hidden: (props: { showCaptions?: boolean }) => props.showCaptions === false,
     },
+    captionGap: {
+      type: 'number',
+      defaultValueHint: 12,
+      description:
+        'Space between the image and its caption, in px. Use a small or negative value to have tape overlap the image edge.',
+      hidden: (props: { showCaptions?: boolean }) => props.showCaptions === false,
+    },
     tapeColor: {
       type: 'color',
       defaultValueHint: 'rgba(221, 234, 68, 0.75)',
@@ -83,8 +90,9 @@ export const CaseStudyGalleryMeta = {
     },
     tapeRotation: {
       type: 'number',
-      defaultValueHint: -2,
-      description: 'Tape tilt in degrees. 0 is perfectly straight; a degree or two reads as hand-applied.',
+      defaultValueHint: 4,
+      description:
+        'Max tilt in degrees. Each caption gets its own angle randomly picked within ± this value, so no two strips lean identically. Set 0 to lay every strip perfectly straight.',
       hidden: (props: { showCaptions?: boolean; captionStyle?: string }) =>
         props.showCaptions === false || props.captionStyle !== 'tape',
     },
