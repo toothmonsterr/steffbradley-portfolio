@@ -140,6 +140,9 @@
  */
 .tapeCaptions figcaption {
   position: relative;
+  /* Own stacking context, so the tape's z-index stays local to this element
+     and cannot be pushed behind an ancestor's background. */
+  isolation: isolate;
   /* `table` shrink-wraps the strip to its text. `fit-content` achieves the
      same and survives being blockified as a flex item, so the tape still
      hugs its label if a parent turns out to be a flex container. */
@@ -159,6 +162,16 @@
   background: none;
 }
 
+
+/*
+ * z-index -1 puts the tape behind the caption's own text, which is a bare
+ * text node and so cannot be lifted with a z-index of its own. Normally that
+ * would also push the tape behind any ancestor's background and make it
+ * disappear — which is exactly what happened on a Plasmic instance. The
+ * `isolation: isolate` on the caption above prevents that: it makes the
+ * caption its own stacking context, so -1 is bounded by this element and
+ * reaches no further.
+ */
 .tapeCaptions figcaption::before {
   content: '';
   position: absolute;
