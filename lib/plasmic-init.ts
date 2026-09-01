@@ -89,6 +89,9 @@ import { NextImage, NextImageMeta }             from '@/components/plasmic-compo
 import { StickerPeel, StickerPeelMeta }         from '@/components/plasmic-components/StickerPeel';
 import { ScotchTape, ScotchTapeMeta }           from '@/components/plasmic-components/ScotchTape';
 import { Shimmer, ShimmerMeta }                 from '@/components/plasmic-components/Shimmer';
+import { RichText, RichTextMeta }                 from '@/components/plasmic-components/RichText';
+import { CaseStudyMeta, CaseStudyMetaMeta }       from '@/components/plasmic-components/CaseStudyMeta';
+import { CaseStudyGallery, CaseStudyGalleryMeta } from '@/components/plasmic-components/CaseStudyGallery';
 import {
   CmsPaginationContext, CmsPaginationContextMeta,
   CmsPaginationControls, CmsPaginationControlsMeta,
@@ -116,6 +119,9 @@ PLASMIC.registerComponent(NextImage,           NextImageMeta           as any);
 PLASMIC.registerComponent(StickerPeel,         StickerPeelMeta         as any);
 PLASMIC.registerComponent(ScotchTape,          ScotchTapeMeta          as any);
 PLASMIC.registerComponent(Shimmer,             ShimmerMeta             as any);
+PLASMIC.registerComponent(RichText,         RichTextMeta         as any);
+PLASMIC.registerComponent(CaseStudyMeta,    CaseStudyMetaMeta    as any);
+PLASMIC.registerComponent(CaseStudyGallery, CaseStudyGalleryMeta as any);
 PLASMIC.registerComponent(CmsPaginationContext,  CmsPaginationContextMeta  as any);
 PLASMIC.registerComponent(CmsPaginationControls, CmsPaginationControlsMeta as any);
 PLASMIC.registerComponent(CmsPaginationButton,   CmsPaginationButtonMeta   as any);

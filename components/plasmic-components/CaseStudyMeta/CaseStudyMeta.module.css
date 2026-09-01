@@ -1,0 +1,59 @@
+/* Label/value metadata rows — Platforms / Launched / Roles.
+   globals.css zeroes margins, so dl/dd spacing is set explicitly here. */
+
+.meta {
+  display: flex;
+  gap: 32px;
+  font-family: var(--font-body);
+}
+
+.row {
+  display: flex;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-neutral-50);
+  white-space: nowrap;
+}
+
+.value {
+  font-size: 1rem;
+  color: var(--color-midnight);
+  margin: 0;
+}
+
+/* stacked — label sits above its value; rows sit side by side. */
+.stacked {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.stacked .row {
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* inline — label and value share a line; rows stack vertically. */
+.inline {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inline .row {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .stacked {
+    flex-direction: column;
+    gap: 18px;
+  }
+}

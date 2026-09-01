@@ -1,0 +1,123 @@
+/*
+ * Prose styling for CMS rich-text HTML.
+ *
+ * globals.css applies an aggressive reset — all margins zeroed, `a` set to
+ * `color: inherit; text-decoration: none`, `img` set to `display: block`.
+ * Everything below therefore has to be restated explicitly, or CMS content
+ * renders as an undifferentiated wall of text.
+ */
+
+.prose {
+  font-family: var(--font-body);
+  color: var(--color-midnight);
+  line-height: 1.6;
+  --rt-accent: var(--color-coral);
+}
+
+/* Vertical rhythm — spacing between blocks, with no leading margin on the first. */
+.prose > * + * {
+  margin-top: 1em;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.prose h2 {
+  font-size: 2rem;
+  margin-top: 1.75em;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  margin-top: 1.5em;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+  margin-top: 1.5em;
+}
+
+.prose p {
+  font-size: 1.125rem;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.5em;
+}
+
+.prose a {
+  color: var(--rt-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.prose a:hover {
+  opacity: 0.75;
+}
+
+/* Images embedded in CMS content — full width, never overflowing. */
+.prose img {
+  width: 100%;
+  height: auto;
+  margin: 2em 0;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--rt-accent);
+  padding-left: 1em;
+  font-style: italic;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-neutral-25);
+  margin: 2.5em 0;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--color-neutral-0);
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+}
+
+/* Long URLs and unbroken strings must not blow out the layout. */
+.prose {
+  overflow-wrap: break-word;
+}
+
+/* Size variants — scale the paragraph size; headings keep their own scale. */
+.small p {
+  font-size: 0.9375rem;
+}
+
+.large p {
+  font-size: 1.25rem;
+}
