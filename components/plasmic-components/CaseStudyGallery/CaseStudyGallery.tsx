@@ -26,6 +26,14 @@ export interface CaseStudyGalleryProps {
   priority?: boolean;
 
   // ── Carousel-only ────────────────────────────────────────────────────────
+  /**
+   * How many images are visible in the frame at once. 1 is a classic
+   * one-at-a-time carousel; 2+ shows several side by side and advances by one.
+   * Falls back to a single slide below 720px.
+   */
+  visibleSlides?: number;
+  /** Gap between slides in px when more than one is visible. */
+  slideGap?: number;
   /** Wrap from the last image back to the first (and vice versa) */
   loop?: boolean;
   showArrows?: boolean;
@@ -46,6 +54,11 @@ export interface CaseStudyGalleryProps {
   className?: string;
 }
 
+/** Trim float noise (33.333333333333336 → 33.3333) out of inline styles. */
+function round(n: number): number {
+  return Math.round(n * 10000) / 10000;
+}
+
 function toSrc(value: CmsImage): string | undefined {
   if (!value) return undefined;
   if (typeof value === 'string') return value || undefined;
@@ -63,6 +76,8 @@ export function CaseStudyGallery({
   rounded = 0,
   alt = '',
   priority = false,
+  visibleSlides = 1,
+  slideGap = 16,
   loop = true,
   showArrows = true,
   showDots = true,
@@ -86,10 +101,30 @@ export function CaseStudyGallery({
   const [index, setIndex] = useState(0);
   const groupId = useId().replace(/:/g, '');
 
-  // Slots can change when the CMS row does; keep the index in range.
+  // Below 720px two side-by-side images are too small to read, so the carousel
+  // collapses to one at a time. This has to be tracked in JS rather than a
+  // media query: slide width and the track translate are computed from the
+  // same number, and a CSS-only override would desync them.
+  const [isNarrow, setIsNarrow] = useState(false);
   useEffect(() => {
-    setIndex(i => (srcs.length === 0 ? 0 : Math.min(i, srcs.length - 1)));
-  }, [srcs.length]);
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(max-width: 720px)');
+    const sync = () => setIsNarrow(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  // Slots and the visible count can both change (CMS row edits, Studio prop
+  // edits); keep the index within the range those allow.
+  const clampMax = Math.max(
+    0,
+    srcs.length -
+      (isNarrow ? 1 : Math.max(1, Math.min(Math.floor(visibleSlides), srcs.length || 1)))
+  );
+  useEffect(() => {
+    setIndex(i => Math.min(i, clampMax));
+  }, [clampMax]);
 
   // Unfilled slots render nothing at all — no empty grid, no broken tiles.
   if (srcs.length === 0) {
@@ -126,16 +161,23 @@ export function CaseStudyGallery({
 
   // ── Carousel ──────────────────────────────────────────────────────────────
   const count = srcs.length;
-  const atStart = index === 0;
-  const atEnd = index === count - 1;
-  const canPrev = loop || !atStart;
-  const canNext = loop || !atEnd;
+  // Never show more slides than exist, or the track leaves a trailing gap.
+  const visible = isNarrow ? 1 : Math.max(1, Math.min(Math.floor(visibleSlides), count));
+  // With several slides visible the track stops once the last one is flush
+  // against the right edge, so the final index is count - visible.
+  const maxIndex = Math.max(0, count - visible);
+  const gapPx = visible > 1 ? slideGap : 0;
+
+  const canPrev = loop || index > 0;
+  const canNext = loop || index < maxIndex;
+  // Arrows and dots are pointless when everything is already on screen.
+  const hasPaging = count > visible;
 
   const go = (delta: number) =>
     setIndex(i => {
       const next = i + delta;
-      if (next < 0) return loop ? count - 1 : 0;
-      if (next >= count) return loop ? 0 : count - 1;
+      if (next < 0) return loop ? maxIndex : 0;
+      if (next > maxIndex) return loop ? 0 : maxIndex;
       return next;
     });
 
@@ -148,7 +190,16 @@ export function CaseStudyGallery({
       <div id={groupId} className={styles.viewport} style={{ aspectRatio, borderRadius: rounded || undefined }}>
         <div
           className={styles.track}
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          style={{
+            gap: gapPx || undefined,
+            // One step advances by a full slide plus a gap. A slide is
+            // (viewport - gaps)/visible, so slide + gap works out to
+            // 100/visible percent PLUS gap/visible px — the percentage is of
+            // the viewport, which still includes the gaps.
+            transform: `translateX(calc(${round(-index * (100 / visible))}% - ${round(
+              (index * gapPx) / visible
+            )}px))`,
+          }}
         >
           {srcs.map((src, i) => (
             <div
@@ -159,8 +210,14 @@ export function CaseStudyGallery({
               aria-label={`${i + 1} of ${count}`}
               // Off-screen slides are hidden from assistive tech and taken out
               // of the tab order, so keyboard focus cannot land on them.
-              aria-hidden={i !== index}
-              inert={i !== index}
+              style={{
+                // Slides share the viewport minus the gaps between them.
+                flex: `0 0 calc(${round(100 / visible)}% - ${round(
+                  (gapPx * (visible - 1)) / visible
+                )}px)`,
+              }}
+              aria-hidden={i < index || i >= index + visible}
+              inert={i < index || i >= index + visible}
             >
               <NextImage
                 src={src}
@@ -174,7 +231,7 @@ export function CaseStudyGallery({
         </div>
       </div>
 
-      {showArrows && count > 1 && (
+      {showArrows && hasPaging && (
         <>
           <button
             type="button"
@@ -232,16 +289,18 @@ export function CaseStudyGallery({
         </>
       )}
 
-      {showDots && count > 1 && (
+      {showDots && hasPaging && (
         <div className={styles.dots}>
-          {srcs.map((src, i) => (
+          {/* One dot per scroll position, which is maxIndex + 1 — not one per
+              image, since several images share a position when visible > 1. */}
+          {Array.from({ length: maxIndex + 1 }, (_, i) => (
             <button
-              key={`dot-${src}-${i}`}
+              key={`dot-${i}`}
               type="button"
               className={styles.dot}
               style={{ background: i === index ? activeDotColor : dotColor }}
               onClick={() => setIndex(i)}
-              aria-label={`Go to image ${i + 1}`}
+              aria-label={`Go to position ${i + 1} of ${maxIndex + 1}`}
               aria-current={i === index}
             />
           ))}

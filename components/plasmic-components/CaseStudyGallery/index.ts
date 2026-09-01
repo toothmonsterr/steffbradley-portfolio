@@ -57,6 +57,19 @@ export const CaseStudyGalleryMeta = {
     },
 
     // Carousel only
+    visibleSlides: {
+      type: 'number',
+      defaultValueHint: 1,
+      description:
+        'Carousel only. How many images are visible at once. 1 is a classic one-at-a-time carousel; 2+ shows several side by side and advances by one. Always falls back to 1 below 720px.',
+      hidden: (props: { layout?: string }) => props.layout !== 'carousel',
+    },
+    slideGap: {
+      type: 'number',
+      defaultValueHint: 16,
+      description: 'Carousel only. Gap between slides in px. Only applies when more than one is visible.',
+      hidden: (props: { layout?: string }) => props.layout !== 'carousel',
+    },
     loop: {
       type: 'boolean',
       defaultValueHint: true,
