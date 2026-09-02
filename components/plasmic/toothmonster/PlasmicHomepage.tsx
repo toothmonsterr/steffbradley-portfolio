@@ -1113,20 +1113,25 @@ function PlasmicHomepage__RenderFunc(props: {
                                               {"case study"}
                                             </div>
                                           }
-                                          linkTo={`/portfolio/${(() => {
+                                          linkTo={(() => {
                                             try {
-                                              return `"/portfolio/" + $ctx.plasmicCmsCaseStudyTitleItem.data.caseStudySlug`;
+                                              return (
+                                                "/portfolio/" +
+                                                $ctx
+                                                  .plasmicCmsCaseStudyTitleItem
+                                                  .data.caseStudySlug
+                                              );
                                             } catch (e) {
                                               if (
                                                 e instanceof TypeError ||
                                                 e?.plasmicType ===
                                                   "PlasmicUndefinedDataError"
                                               ) {
-                                                return undefined;
+                                                return `/portfolio/${undefined}`;
                                               }
                                               throw e;
                                             }
-                                          })()}`}
+                                          })()}
                                         />
                                       }
                                       slotB={
