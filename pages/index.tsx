@@ -2,6 +2,7 @@
 // This file is owned by you, feel free to edit as you see fit.
 import * as React from "react";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
+import GlobalContextsProvider from "../components/plasmic/toothmonster/PlasmicGlobalContextsProvider";
 
 import { PlasmicHomepage } from "../components/plasmic/toothmonster/PlasmicHomepage";
 import { useRouter } from "next/router";
@@ -20,16 +21,25 @@ function Homepage() {
   // 3. Overrides for any named node in the component to attach behavior and data,
   // 4. Props to set on the root node.
 
+  // GlobalContextsProvider supplies CmsCredentialsProvider. Without it the
+  // CmsQueryRepeater on this page has no credentials and renders its empty
+  // state, so the homepage shows no CMS content at all. Plasmic adds this
+  // wrapper only to the page files it generates; this one was generated
+  // without it, and since the file is ours a later sync will not add it.
+  // It belongs here rather than in _app.tsx: the [slug].tsx pages already
+  // wrap themselves, and nesting the provider crashes the production build.
   return (
-    <PlasmicQueryDataProvider>
-      <PageParamsProvider__
-        route={useRouter()?.pathname}
-        params={useRouter()?.query}
-        query={useRouter()?.query}
-      >
-        <PlasmicHomepage />
-      </PageParamsProvider__>
-    </PlasmicQueryDataProvider>
+    <GlobalContextsProvider>
+      <PlasmicQueryDataProvider>
+        <PageParamsProvider__
+          route={useRouter()?.pathname}
+          params={useRouter()?.query}
+          query={useRouter()?.query}
+        >
+          <PlasmicHomepage />
+        </PageParamsProvider__>
+      </PlasmicQueryDataProvider>
+    </GlobalContextsProvider>
   );
 }
 
