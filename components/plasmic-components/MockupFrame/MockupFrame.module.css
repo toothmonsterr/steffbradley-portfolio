@@ -1,0 +1,352 @@
+/* Bezels are drawn entirely in CSS — no device artwork is shipped, so the
+   frames stay crisp at any width and every part is restyleable from Studio.
+
+   Two sizing models live in this file:
+     .phone / .laptop  aspect-driven — the designer sets a width and the frame
+                       computes its own height from the device ratio.
+     .browser          content-driven — the bar stretches across the top and
+                       the slot content sets the height.
+   They coexist because `aspect-ratio` is declared ONLY under .phone > .body
+   and .laptop > .lid. It never appears on .root, so .browser inherits no
+   height contract from anywhere. */
+
+/* Studio's className lands here. .root paints nothing and must NOT clip:
+   phone side buttons and the `lifted` shadow deliberately extend past the
+   device body. Clipping happens on .screen and .window only. */
+.root {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* ── Screen (phone + laptop) ────────────────────────────────────────────── */
+
+/* Absolutely positioned and inset by the bezel thickness. Because .body/.lid
+   resolve a height from aspect-ratio, this box has a resolved size too — which
+   is what NextImage's fill mode requires of its parent. */
+.screen {
+  position: absolute;
+  inset: var(--mf-bezel);
+  overflow: hidden;
+  border-radius: var(--mf-screen-radius);
+  background: var(--color-neutral-100);
+  /* A real bezel has a faint bright edge where glass meets frame, and the glass
+     itself is not perfectly matte. Both are inset shadows on this box, so
+     neither needs an extra element. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* The radius has to reach the <img> itself, not just its box. An absolutely-
+   positioned child is not reliably clipped by an ancestor's overflow once a
+   transform is involved (the notch translates, and Studio can add a transform
+   to .root at any time), so the image paints straight over the rounded screen
+   corners. Inheriting the radius makes the image round itself, which holds in
+   every case. `isolation` forces a stacking context so the clip applies before
+   compositing.
+   Descendant combinator, not `>`: this content arrives through a Plasmic slot
+   and Studio may wrap it in a div, so the img is not reliably a direct child. */
+.screen,
+.viewport {
+  isolation: isolate;
+}
+
+.screen :global(img),
+.viewport :global(img) {
+  border-radius: inherit;
+}
+
+/* Empty-slot affordance, mirroring NextImage's grey "No image" box. The
+   min-height matters most in the browser variant, where it supplies a height
+   the window would otherwise lack — without it a fresh drop is invisible and
+   undraggable in Studio. */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  background: var(--color-neutral-25);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-neutral-75);
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+
+.phone > .body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--mf-aspect);
+  background: var(--mf-bezel-color);
+  border-radius: var(--mf-body-radius);
+  box-shadow: var(--mf-shadow);
+  /* No overflow:hidden — the side buttons below overhang this box on purpose. */
+}
+
+/* Thin slivers hanging off the body edges. They are what makes a rounded
+   rectangle read as a phone rather than a card, so they must sit outside the
+   silhouette rather than flush with it. */
+.sideBtn {
+  position: absolute;
+  width: 2.5px;
+  background: var(--mf-bezel-color);
+  /* Darkened against the body so the button reads as a separate part. */
+  filter: brightness(0.82);
+}
+
+.sideBtnLeftTop {
+  left: -2.5px;
+  top: 17%;
+  height: 5%;
+  border-radius: 2px 0 0 2px;
+}
+
+.sideBtnLeftMid {
+  left: -2.5px;
+  top: 25%;
+  height: 9%;
+  border-radius: 2px 0 0 2px;
+}
+
+.sideBtnRight {
+  right: -2.5px;
+  top: 23%;
+  height: 12%;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Sits above the screen. Width is a percentage of the device width and the
+   height derives from it via aspect-ratio, so the cut-out scales with the
+   frame instead of drifting out of proportion. */
+.notch {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--mf-notch-w);
+  aspect-ratio: var(--mf-notch-ratio);
+  background: var(--mf-bezel-color);
+  z-index: 2;
+}
+
+.notchIsland {
+  top: calc(var(--mf-bezel) + var(--mf-notch-inset));
+  border-radius: var(--radius-full);
+}
+
+/* The older wide cut-out hangs down off the top bezel rather than floating,
+   so it sits flush at the bezel edge and only its bottom corners round. */
+.notchWide {
+  top: var(--mf-bezel);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.homeIndicator {
+  position: absolute;
+  bottom: calc(var(--mf-bezel) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: rgba(237, 233, 227, 0.75);
+  z-index: 2;
+}
+
+/* ── Laptop ─────────────────────────────────────────────────────────────── */
+
+.laptop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The aspect ratio governs the LID, not the whole device — the base adds
+   height below it rather than eating into the screen. Putting the ratio on
+   .root instead would silently squash the screen by the base's height. */
+.laptop > .lid {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--mf-aspect);
+  background: var(--mf-bezel-color);
+  border-radius: var(--mf-body-radius) var(--mf-body-radius) 2px 2px;
+  box-shadow: var(--mf-shadow);
+}
+
+/* Wider than the lid and tapered, like a laptop deck seen from the front.
+   clip-path rather than a border trick because a border trapezoid cannot also
+   carry the gradient that gives the deck its top highlight. */
+.base {
+  position: relative;
+  width: 112%;
+  height: 14px;
+  flex: 0 0 auto;
+  clip-path: polygon(0 0, 100% 0, 97.5% 100%, 2.5% 100%);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--mf-base-color) 88%, white),
+    var(--mf-base-color)
+  );
+}
+
+/* The thumb notch on the front edge of the deck. */
+.hinge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14%;
+  height: 4px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--mf-bezel-color);
+  opacity: 0.55;
+}
+
+/* ── Browser ────────────────────────────────────────────────────────────── */
+
+.browser > .window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--mf-chrome-radius);
+  box-shadow: var(--mf-shadow);
+  /* No aspect-ratio and no height: the bar is a fixed-height flex item and the
+     viewport is flex: 0 0 auto, so total height is bar + whatever the slot
+     content measures. This is what makes `browser` content-sized while
+     phone/laptop are aspect-sized.
+     Deliberately NO align-items: a column flex container defaults to `stretch`,
+     which is what makes the bar span the full width. Setting `center` here
+     (e.g. by copying .laptop) would shrink-wrap the bar. */
+}
+
+.chromeStack {
+  flex: 0 0 auto;
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--mf-chrome-h);
+  padding: 0 12px;
+}
+
+.lights {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+/* Named .dot, not .light — .light is the theme class on .window, and reusing
+   the name would make `.light .light` ambiguous. */
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: var(--radius-full);
+}
+
+/* flex:1 with min-width:0 so the pill takes the remaining space and its text
+   can truncate instead of forcing the bar wider than the frame. */
+.urlBar {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabStrip {
+  display: flex;
+  align-items: flex-end;
+  height: 30px;
+  padding: 0 12px;
+}
+
+.tab {
+  max-width: 220px;
+  padding: 5px 16px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* flex: 0 0 auto, NOT 1 1 auto: flex:1 would make the viewport try to fill a
+   height the window does not have, and would stretch unpredictably the moment
+   someone sets a height in Studio's Design tab. An explicit auto basis keeps
+   "content drives height" true either way.
+   The min-height is a floor so a collapsed viewport shows a hairline rather
+   than vanishing — an Image in fill mode has no height to resolve against
+   here, and a visible hairline makes that mistake obvious instead of baffling. */
+.browser > .window > .viewport {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 2px;
+  /* Explicit bottom radius so the image inherits it. Without this the image
+     squares off the window's bottom corners even though .window clips — same
+     transform/compositing reason documented on .screen above. */
+  border-radius: 0 0 var(--mf-chrome-radius) var(--mf-chrome-radius);
+}
+
+/* A non-fill next/image emits inline width/height attributes; without this it
+   overflows the window instead of scaling with it. */
+.viewport :global(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Chrome themes. Both are opaque — deliberately not frosted, because
+   backdrop-filter is mangled by Turbopack (see next.config.ts).
+   The hairline goes on .chrome only: it is the last chrome row, so a border on
+   .tabStrip too would draw a line through the middle of the chrome stack. */
+.light .chrome {
+  background: #E8E6E4;
+  border-bottom: 1px solid rgba(32, 27, 42, 0.1);
+}
+
+.light .tabStrip {
+  background: #E8E6E4;
+}
+
+.light .tab,
+.light .urlBar {
+  background: #F7F6F5;
+  color: var(--color-neutral-75);
+}
+
+.dark .chrome {
+  background: #2B2635;
+  border-bottom: 1px solid rgba(237, 233, 227, 0.1);
+}
+
+.dark .tabStrip {
+  background: #2B2635;
+}
+
+.dark .tab,
+.dark .urlBar {
+  background: #3A3446;
+  color: var(--color-neutral-25);
+}
+
+/* Traffic lights are the same hues in both themes — they are a macOS
+   affordance, not a themed surface. */
+.dot:nth-child(1) { background: #ED6A5E; }
+.dot:nth-child(2) { background: #F4BF4F; }
+.dot:nth-child(3) { background: #61C554; }

@@ -92,6 +92,7 @@ import { Shimmer, ShimmerMeta }                 from '@/components/plasmic-compo
 import { RichText, RichTextMeta }                 from '@/components/plasmic-components/RichText';
 import { CaseStudyMeta, CaseStudyMetaMeta }       from '@/components/plasmic-components/CaseStudyMeta';
 import { CaseStudyGallery, CaseStudyGalleryMeta } from '@/components/plasmic-components/CaseStudyGallery';
+import { MockupFrame, MockupFrameMeta }           from '@/components/plasmic-components/MockupFrame';
 import {
   CmsPaginationContext, CmsPaginationContextMeta,
   CmsPaginationControls, CmsPaginationControlsMeta,
@@ -122,6 +123,7 @@ PLASMIC.registerComponent(Shimmer,             ShimmerMeta             as any);
 PLASMIC.registerComponent(RichText,         RichTextMeta         as any);
 PLASMIC.registerComponent(CaseStudyMeta,    CaseStudyMetaMeta    as any);
 PLASMIC.registerComponent(CaseStudyGallery, CaseStudyGalleryMeta as any);
+PLASMIC.registerComponent(MockupFrame,      MockupFrameMeta      as any);
 PLASMIC.registerComponent(CmsPaginationContext,  CmsPaginationContextMeta  as any);
 PLASMIC.registerComponent(CmsPaginationControls, CmsPaginationControlsMeta as any);
 PLASMIC.registerComponent(CmsPaginationButton,   CmsPaginationButtonMeta   as any);
