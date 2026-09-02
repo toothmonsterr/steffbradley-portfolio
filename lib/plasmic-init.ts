@@ -98,6 +98,11 @@ import {
   CmsPaginationControls, CmsPaginationControlsMeta,
   CmsPaginationButton, CmsPaginationButtonMeta,
 } from '@/components/plasmic-components/CmsPagination';
+import {
+  ContactForm, ContactFormMeta,
+  ContactField, ContactFieldMeta,
+  ContactSubmit, ContactSubmitMeta,
+} from '@/components/plasmic-components/ContactForm';
 
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
@@ -127,4 +132,7 @@ PLASMIC.registerComponent(MockupFrame,      MockupFrameMeta      as any);
 PLASMIC.registerComponent(CmsPaginationContext,  CmsPaginationContextMeta  as any);
 PLASMIC.registerComponent(CmsPaginationControls, CmsPaginationControlsMeta as any);
 PLASMIC.registerComponent(CmsPaginationButton,   CmsPaginationButtonMeta   as any);
+PLASMIC.registerComponent(ContactForm,   ContactFormMeta   as any);
+PLASMIC.registerComponent(ContactField,  ContactFieldMeta  as any);
+PLASMIC.registerComponent(ContactSubmit, ContactSubmitMeta as any);
 /* eslint-enable @typescript-eslint/no-explicit-any */

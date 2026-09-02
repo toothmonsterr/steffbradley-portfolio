@@ -1,0 +1,41 @@
+/* The form element carries no opinions of its own — Plasmic supplies layout,
+   spacing and styling through the className it passes down. Only the bare
+   browser reset lives here so the element does not fight Studio's box. */
+.form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Honeypot.
+
+   Positioned off-screen rather than `display: none` or `hidden`, because the
+   simpler bots skip fields hidden those two ways — which is exactly the
+   population this trap is meant to catch. Kept out of the tab order and out of
+   the accessibility tree so nobody using a keyboard or screen reader can reach
+   it by accident and trip the trap. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Screen-reader-only live region for status announcements. Visible content for
+   each state is designed in Studio via the success/error slots; this exists so
+   the change is announced even when the visual change is purely stylistic. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

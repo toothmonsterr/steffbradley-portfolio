@@ -14,7 +14,7 @@
     "@gsap/react": "^2.1.2",
     "@plasmicapp/cli": "^0.1.375",
     "@plasmicapp/loader-nextjs": "^2.0.1",
-    "@plasmicapp/react-web": "^1.0.1",
+    "@plasmicapp/react-web": "^1.0.34",
     "@plasmicpkgs/cms": "^0.0.39",
     "@plasmicpkgs/plasmic-cms": "^0.0.312",
     "@plasmicpkgs/plasmic-nav": "^0.0.214",
@@ -30,6 +30,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-parallax-tilt": "^1.7.323",
+    "resend": "^6.25.0",
     "three": "^0.183.2"
   },
   "devDependencies": {
