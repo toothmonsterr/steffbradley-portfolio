@@ -59,13 +59,26 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
 import { CmsQueryRepeater } from "@plasmicpkgs/plasmic-cms";
+import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
+import { ScotchTape } from "@/components/plasmic-components/ScotchTape"; // plasmic-import: TbfB48S8CS8c/codeComponent
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
+import { MockupFrame } from "@/components/plasmic-components/MockupFrame"; // plasmic-import: oycZ_XNMjvic/codeComponent
+import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
+import { StickerPeel } from "@/components/plasmic-components/StickerPeel"; // plasmic-import: J7gKDwRqusOu/codeComponent
+import { TornSection } from "@/components/plasmic-components/TornSection"; // plasmic-import: 8y_E0U1V1ob-/codeComponent
+import MarqueeScroll2 from "../../MarqueeScroll2"; // plasmic-import: a2tFCAaUQuGy/component
+import { RichText } from "@/components/plasmic-components/RichText"; // plasmic-import: AFjwBSjF0xKm/codeComponent
+import { CaseStudyGallery } from "@/components/plasmic-components/CaseStudyGallery"; // plasmic-import: d9wanfeydFZF/codeComponent
+import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
+import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicPortfolio.module.css"; // plasmic-import: KPdaUzZPxR9h/css
 
 const emptyProxy: any = new Proxy(() => "", {
@@ -117,7 +130,15 @@ export const PlasmicPortfolio__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicPortfolio__OverridesType = {
   root?: Flex__<"div">;
+  navBanner?: Flex__<typeof NavBanner>;
   cmsDataFetcher?: Flex__<typeof CmsQueryRepeater>;
+  hero?: Flex__<"div">;
+  section?: Flex__<"section">;
+  marqueeScroll2?: Flex__<typeof MarqueeScroll2>;
+  content?: Flex__<"div">;
+  caseStudyGallery?: Flex__<typeof CaseStudyGallery>;
+  marqueeScroll?: Flex__<typeof MarqueeScroll>;
+  footer?: Flex__<typeof Footer>;
 };
 
 export interface DefaultPortfolioProps {}
@@ -161,6 +182,8 @@ function PlasmicPortfolio__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const pageMetadata = generateDynamicMetadata(
     wrapQueriesWithLoadingProxy({}),
     $ctx as PageCtx
@@ -187,21 +210,30 @@ function PlasmicPortfolio__RenderFunc(props: {
         }
       `}</style>
 
-      <div className={projectcss.plasmic_page_wrapper}>
+      <div className={"plasmic_page_wrapper"}>
         <div
           data-plasmic-name={"root"}
           data-plasmic-override={overrides.root}
           data-plasmic-root={true}
           data-plasmic-for-node={forNode}
           className={classNames(
-            projectcss.all,
-            projectcss.root_reset,
-            projectcss.plasmic_default_styles,
-            projectcss.plasmic_mixins,
+            "all",
+            "root_reset_67C2x4VH9CGyuASG98L3XF",
+            "plasmic_default_styles",
+            "plasmic_mixins",
             styleTokensClassNames,
             sty.root
           )}
         >
+          <NavBanner
+            data-plasmic-name={"navBanner"}
+            data-plasmic-override={overrides.navBanner}
+            bottomTear={true}
+            className={classNames("__wab_instance", sty.navBanner)}
+            color={"midnight"}
+            effectVisible={true}
+          />
+
           <CmsQueryRepeater
             data-plasmic-name={"cmsDataFetcher"}
             data-plasmic-override={overrides.cmsDataFetcher}
@@ -211,11 +243,7 @@ function PlasmicPortfolio__RenderFunc(props: {
               <DataCtxReader__>
                 {$ctx => (
                   <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__rHYxR
-                    )}
+                    className={classNames("all", "__wab_text", sty.text__rHYxR)}
                   >
                     {"No matching published entries found."}
                   </div>
@@ -243,11 +271,7 @@ function PlasmicPortfolio__RenderFunc(props: {
               <DataCtxReader__>
                 {$ctx => (
                   <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__cZtDk
-                    )}
+                    className={classNames("all", "__wab_text", sty.text__cZtDk)}
                   >
                     {"Loading..."}
                   </div>
@@ -256,37 +280,888 @@ function PlasmicPortfolio__RenderFunc(props: {
             }
             noAutoRepeat={false}
             noLayout={false}
+            table={"caseStudyTitle"}
             useDraft={false}
           >
             <DataCtxReader__>
               {$ctx => (
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__wmKuG
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $ctx.plasmicCmsCaseStudyTitleItem.data
-                          .caseStudyYear;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
+                <React.Fragment>
+                  <div
+                    data-plasmic-name={"hero"}
+                    data-plasmic-override={overrides.hero}
+                    className={classNames("all", sty.hero)}
+                  >
+                    <section
+                      data-plasmic-name={"section"}
+                      data-plasmic-override={overrides.section}
+                      className={classNames("all", sty.section)}
+                    >
+                      <InkBleed
+                        bleedColor={true ? "#00427F40" : undefined}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.inkBleed__w1Fg3
+                        )}
+                        noiseFrequency={1}
+                        spread={3}
+                      >
+                        <h1
+                          className={classNames(
+                            "all",
+                            "h1",
+                            "h1__67C2x",
+                            "__wab_text",
+                            sty.h1__dEIn
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyTitle;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "You won't believe what happens next.";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </h1>
+                        <div
+                          className={classNames(
+                            "all",
+                            "__wab_text",
+                            sty.text__k5GCq
+                          )}
+                        >
+                          <React.Fragment>
+                            {
+                              $ctx.plasmicCmsCaseStudyTitleItem.data
+                                .caseStudyDesc
+                            }
+                          </React.Fragment>
+                        </div>
+                      </InkBleed>
+                      <div className={classNames("all", sty.freeBox__vwvDf)}>
+                        <div className={classNames("all", sty.freeBox__guwKn)}>
+                          <ScotchTape
+                            className={classNames(
+                              "__wab_instance",
+                              sty.scotchTape__zW6G7
+                            )}
+                            rotation={-12}
+                          >
+                            <div
+                              className={classNames("all", sty.freeBox__w6N4P)}
+                            >
+                              <NoiseOverlay
+                                animate={"never"}
+                                blendMode={"normal"}
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.noiseOverlay___5KlR5
+                                )}
+                                color={true ? "#EDE9E3" : undefined}
+                                intensity={0.5}
+                                isolateBlend={false}
+                              />
+
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox__uYdZi
+                                )}
+                              />
+                            </div>
+                          </ScotchTape>
+                        </div>
+                        <div className={classNames("all", sty.freeBox__khFcW)}>
+                          <MockupFrame
+                            bezel={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 4
+                                : undefined
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.mockupFrame__lP8Le
+                            )}
+                            device={"laptop"}
+                            tabLabel={""}
+                            url={""}
+                          >
+                            <NextImage
+                              alt={""}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.image__uYs4V
+                              )}
+                              src={
+                                $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyDesktopScreenshot.url
+                              }
+                            />
+                          </MockupFrame>
+                          <MockupFrame
+                            bezel={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 4
+                                : 8
+                            }
+                            bodyRadius={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 12
+                                : 32
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.mockupFrame__aHx37
+                            )}
+                            device={"phone"}
+                            screenRadius={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 8
+                                : 24
+                            }
+                            tabLabel={""}
+                            url={""}
+                          >
+                            <NextImage
+                              alt={""}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.image__zDmVu
+                              )}
+                              fill={true}
+                              src={
+                                $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyMobileScreenshot.url
+                              }
+                            />
+                          </MockupFrame>
+                        </div>
+                      </div>
+                      <InkBleed
+                        bleedColor={true ? "#00427F40" : undefined}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.inkBleed__kEgfE
+                        )}
+                        noiseFrequency={1}
+                        spread={3}
+                      >
+                        <div className={classNames("all", sty.freeBox__ij00G)}>
+                          {(() => {
+                            try {
+                              return !!$ctx.plasmicCmsCaseStudyTitleItem.data
+                                .caseStudyStat1;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return true;
+                              }
+                              throw e;
+                            }
+                          })() ? (
+                            <StickerPeel
+                              backColor={true ? "#CEBEE3" : undefined}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.stickerPeel___6TUw
+                              )}
+                              corner={"bottom-left"}
+                              fillColor={true ? "#EADBC2" : undefined}
+                              hoverPeelSize={32}
+                              peelSize={25}
+                            >
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox__uyBuw
+                                )}
+                              >
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    "__wab_text",
+                                    sty.text__cw4Xd
+                                  )}
+                                >
+                                  <React.Fragment>
+                                    {
+                                      $ctx.plasmicCmsCaseStudyTitleItem.data
+                                        .caseStudyStat1["1statNum"]
+                                    }
+                                  </React.Fragment>
+                                </div>
+                                <ScotchTape
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.scotchTape__a8M5A
+                                  )}
+                                  rotation={-1}
+                                >
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      sty.freeBox__cFok7
+                                    )}
+                                  />
+
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      sty.freeBox__i3Bf
+                                    )}
+                                  >
+                                    <div
+                                      className={classNames(
+                                        "all",
+                                        "__wab_text",
+                                        sty.text__mRxNw
+                                      )}
+                                    >
+                                      <React.Fragment>
+                                        {
+                                          $ctx.plasmicCmsCaseStudyTitleItem.data
+                                            .caseStudyStat1["1statLabel"]
+                                        }
+                                      </React.Fragment>
+                                    </div>
+                                  </div>
+                                </ScotchTape>
+                              </div>
+                            </StickerPeel>
+                          ) : null}
+                          {(() => {
+                            try {
+                              return !!$ctx.plasmicCmsCaseStudyTitleItem.data
+                                .caseStudyStat2;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return true;
+                              }
+                              throw e;
+                            }
+                          })() ? (
+                            <StickerPeel
+                              backColor={true ? "#FFAB7B" : undefined}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.stickerPeel__omLqs
+                              )}
+                              corner={"top-right"}
+                              fillColor={true ? "#EADBC2" : undefined}
+                              hoverPeelSize={32}
+                              peelSize={25}
+                            >
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox__z9OYc
+                                )}
+                              >
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    "__wab_text",
+                                    sty.text__qvi0E
+                                  )}
+                                >
+                                  <React.Fragment>
+                                    {
+                                      $ctx.plasmicCmsCaseStudyTitleItem.data
+                                        .caseStudyStat2["2statNum"]
+                                    }
+                                  </React.Fragment>
+                                </div>
+                                <ScotchTape
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.scotchTape__clgJm
+                                  )}
+                                  rotation={2}
+                                >
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      sty.freeBox__bk0Ax
+                                    )}
+                                  />
+
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      sty.freeBox__ipXgt
+                                    )}
+                                  >
+                                    <div
+                                      className={classNames(
+                                        "all",
+                                        "__wab_text",
+                                        sty.text__gjuFe
+                                      )}
+                                    >
+                                      <React.Fragment>
+                                        {
+                                          $ctx.plasmicCmsCaseStudyTitleItem.data
+                                            .caseStudyStat2["2statLabel"]
+                                        }
+                                      </React.Fragment>
+                                    </div>
+                                  </div>
+                                </ScotchTape>
+                              </div>
+                            </StickerPeel>
+                          ) : null}
+                        </div>
+                      </InkBleed>
+                    </section>
+                    <div className={classNames("all", sty.freeBox__uJHta)}>
+                      <div className={classNames("all", sty.freeBox__mxPdE)}>
+                        <div
+                          className={classNames("all", sty.freeBox___2ErQb)}
+                        />
+
+                        <div className={classNames("all", sty.freeBox__g9Baj)}>
+                          <TornSection
+                            background={
+                              <React.Fragment>
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__hZrFm
+                                  )}
+                                  style={{
+                                    backgroundColor:
+                                      $ctx.plasmicCmsCaseStudyTitleItem.data
+                                        .caseStudyColor
+                                  }}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__zmnBa
+                                  )}
+                                >
+                                  <NoiseOverlay
+                                    animate={"never"}
+                                    blendMode={"soft-light"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay___7Mqe
+                                    )}
+                                    color={true ? "#EDE9E3" : undefined}
+                                    intensity={0.5}
+                                    isolateBlend={false}
+                                  />
+
+                                  <NoiseOverlay
+                                    animate={"never"}
+                                    blendMode={"multiply"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__xl9N
+                                    )}
+                                    color={true ? "#00427F40" : undefined}
+                                    intensity={0.5}
+                                    isolateBlend={false}
+                                    seed={5}
+                                  />
+                                </div>
+                              </React.Fragment>
+                            }
+                            children={null}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.tornSection__iKau3
+                            )}
+                            tornBottom={false}
+                            tornTop={true}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <MarqueeScroll2
+                    data-plasmic-name={"marqueeScroll2"}
+                    data-plasmic-override={overrides.marqueeScroll2}
+                    className={classNames("__wab_instance", sty.marqueeScroll2)}
+                  />
+
+                  <div
+                    data-plasmic-name={"content"}
+                    data-plasmic-override={overrides.content}
+                    className={classNames("all", sty.content)}
+                  >
+                    <TornSection
+                      background={
+                        <div className={classNames("all", sty.freeBox__dbZfs)}>
+                          <div
+                            className={classNames("all", sty.freeBox__eWpTj)}
+                          />
+                        </div>
                       }
-                    })()}
-                  </React.Fragment>
-                </div>
+                      className={classNames(
+                        "__wab_instance",
+                        sty.tornSection__zIrOe
+                      )}
+                      tornBottom={true}
+                      tornBottomDepthPx={
+                        hasVariant(globalVariants, "screen", "mobile")
+                          ? 12
+                          : undefined
+                      }
+                    >
+                      <div className={classNames("all", sty.freeBox__dUs0P)}>
+                        <div className={classNames("all", sty.freeBox__ruEh)}>
+                          <div
+                            className={classNames(
+                              "all",
+                              "__wab_text",
+                              sty.text__boFA
+                            )}
+                          >
+                            {hasVariant(globalVariants, "screen", "mobile") ? (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h2
+                                    className={classNames(
+                                      "all",
+                                      "h2",
+                                      "h2__67C2x",
+                                      "__wab_text",
+                                      sty.h2__nCnKy
+                                    )}
+                                  >
+                                    {"overview"}
+                                  </h2>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h1
+                                    className={classNames(
+                                      "all",
+                                      "h1",
+                                      "h1__67C2x",
+                                      "__wab_text",
+                                      sty.h1__fi7K6
+                                    )}
+                                  >
+                                    {"overview"}
+                                  </h1>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            )}
+                          </div>
+                        </div>
+                        <div className={classNames("all", sty.freeBox__eElJj)}>
+                          <RichText
+                            className={classNames(
+                              "__wab_instance",
+                              sty.richText___83IhR
+                            )}
+                            html={(() => {
+                              try {
+                                return $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyContentTop;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                          />
+                        </div>
+                      </div>
+                    </TornSection>
+                    <div className={classNames("all", sty.freeBox__dpWFz)}>
+                      <CaseStudyGallery
+                        data-plasmic-name={"caseStudyGallery"}
+                        data-plasmic-override={overrides.caseStudyGallery}
+                        alt={""}
+                        arrowOffset={
+                          hasVariant(globalVariants, "screen", "mobile")
+                            ? 16
+                            : 48
+                        }
+                        aspectRatio={"4/3"}
+                        captionGap={
+                          hasVariant(globalVariants, "screen", "mobile")
+                            ? -48
+                            : -24
+                        }
+                        captionStyle={"tape"}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.caseStudyGallery
+                        )}
+                        images={
+                          $ctx.plasmicCmsCaseStudyTitleItem.data
+                            .caseStudyCarousel
+                        }
+                        layout={"carousel"}
+                        objectFit={"contain"}
+                        rounded={8}
+                        slideGap={32}
+                        tapeColor={true ? "#CEBEE3" : undefined}
+                        visibleSlides={2}
+                      />
+                    </div>
+                    <TornSection
+                      background={
+                        <div className={classNames("all", sty.freeBox___9Uwsn)}>
+                          <div
+                            className={classNames("all", sty.freeBox__bhWN)}
+                          />
+                        </div>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.tornSection__qDtrA
+                      )}
+                      tornBottom={false}
+                      tornBottomDepthPx={
+                        hasVariant(globalVariants, "screen", "mobile")
+                          ? 12
+                          : undefined
+                      }
+                      tornTop={true}
+                      tornTopDepthPx={
+                        hasVariant(globalVariants, "screen", "mobile")
+                          ? 12
+                          : undefined
+                      }
+                    >
+                      <div className={classNames("all", sty.freeBox___2Ejm4)}>
+                        <div className={classNames("all", sty.freeBox__vsd1K)}>
+                          <div
+                            className={classNames(
+                              "all",
+                              "__wab_text",
+                              sty.text__fpDxt
+                            )}
+                          >
+                            {hasVariant(globalVariants, "screen", "mobile") ? (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h2
+                                    className={classNames(
+                                      "all",
+                                      "h2",
+                                      "h2__67C2x",
+                                      "__wab_text",
+                                      sty.h2__asPgu
+                                    )}
+                                  >
+                                    {"execution"}
+                                  </h2>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h1
+                                    className={classNames(
+                                      "all",
+                                      "h1",
+                                      "h1__67C2x",
+                                      "__wab_text",
+                                      sty.h1__mt5R
+                                    )}
+                                  >
+                                    {"execution"}
+                                  </h1>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            )}
+                          </div>
+                        </div>
+                        <div className={classNames("all", sty.freeBox__eNliv)}>
+                          <RichText
+                            accentColor={(() => {
+                              try {
+                                return $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyAccentColor;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            captionStyle={"tape"}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.richText__iqZjw
+                            )}
+                            html={(() => {
+                              try {
+                                return $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyContentBottom;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            tapeColor={true ? "#EADBC2" : undefined}
+                            tapeRotation={1}
+                          />
+                        </div>
+                      </div>
+                    </TornSection>
+                    <TornSection
+                      background={
+                        <div className={classNames("all", sty.freeBox__gKldi)}>
+                          <div
+                            className={classNames("all", sty.freeBox__oTjky)}
+                          />
+                        </div>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.tornSection__nbFif
+                      )}
+                      tornTop={true}
+                      tornTopDepthPx={
+                        hasVariant(globalVariants, "screen", "mobile")
+                          ? 12
+                          : undefined
+                      }
+                    >
+                      <div className={classNames("all", sty.freeBox__qnpEn)}>
+                        <div className={classNames("all", sty.freeBox__syJWs)}>
+                          <div
+                            className={classNames(
+                              "all",
+                              "__wab_text",
+                              sty.text__lHy9C
+                            )}
+                          >
+                            {hasVariant(globalVariants, "screen", "mobile") ? (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h2
+                                    className={classNames(
+                                      "all",
+                                      "h2",
+                                      "h2__67C2x",
+                                      "__wab_text",
+                                      sty.h2__eRocD
+                                    )}
+                                  >
+                                    {"results"}
+                                  </h2>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h1
+                                    className={classNames(
+                                      "all",
+                                      "h1",
+                                      "h1__67C2x",
+                                      "__wab_text",
+                                      sty.h1__qMpxt
+                                    )}
+                                  >
+                                    {"results"}
+                                  </h1>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            )}
+                          </div>
+                        </div>
+                        <div className={classNames("all", sty.freeBox__xYfwW)}>
+                          <RichText
+                            captionStyle={"tape"}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.richText___7NaZj
+                            )}
+                            html={(() => {
+                              try {
+                                return $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyResults;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                            tapeColor={true ? "#EADBC2" : undefined}
+                            tapeRotation={1}
+                          />
+                        </div>
+                      </div>
+                      {(() => {
+                        try {
+                          return !!$ctx.plasmicCmsCaseStudyTitleItem.data
+                            .caseStudyFooterImg;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return true;
+                          }
+                          throw e;
+                        }
+                      })() ? (
+                        <div className={classNames("all", sty.freeBox___0O1Sz)}>
+                          <div
+                            className={classNames("all", sty.freeBox__gW8Kq)}
+                          >
+                            <ScotchTape
+                              className={classNames(
+                                "__wab_instance",
+                                sty.scotchTape__nXVw6
+                              )}
+                              rotation={2}
+                            >
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox___7JhmI
+                                )}
+                              >
+                                <NoiseOverlay
+                                  animate={"never"}
+                                  blendMode={"normal"}
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.noiseOverlay__jwthi
+                                  )}
+                                  color={true ? "#EDE9E3" : undefined}
+                                  intensity={0.5}
+                                  isolateBlend={false}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__tvyy9
+                                  )}
+                                />
+                              </div>
+                            </ScotchTape>
+                          </div>
+                          <InkBleed
+                            bleedColor={true ? "#00427F40" : undefined}
+                            blendMode={"normal"}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.inkBleed___0Oi2F
+                            )}
+                            noiseFrequency={1}
+                            spread={3}
+                          >
+                            <NextImage
+                              alt={""}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.image__naLk6
+                              )}
+                              src={
+                                $ctx.plasmicCmsCaseStudyTitleItem.data
+                                  .caseStudyFooterImg.url
+                              }
+                            />
+                          </InkBleed>
+                          <div
+                            className={classNames("all", sty.freeBox__bSePw)}
+                          >
+                            <ScotchTape
+                              className={classNames(
+                                "__wab_instance",
+                                sty.scotchTape__f5692
+                              )}
+                              rotation={-3}
+                            >
+                              <div
+                                className={classNames("all", sty.freeBox__rpPu)}
+                              >
+                                <NoiseOverlay
+                                  animate={"never"}
+                                  blendMode={"normal"}
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.noiseOverlay__cfPcy
+                                  )}
+                                  color={true ? "#EDE9E3" : undefined}
+                                  intensity={0.5}
+                                  isolateBlend={false}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__c5TxU
+                                  )}
+                                />
+                              </div>
+                            </ScotchTape>
+                          </div>
+                        </div>
+                      ) : null}
+                    </TornSection>
+                  </div>
+                </React.Fragment>
               )}
             </DataCtxReader__>
           </CmsQueryRepeater>
+          <MarqueeScroll
+            data-plasmic-name={"marqueeScroll"}
+            data-plasmic-override={overrides.marqueeScroll}
+            className={classNames("__wab_instance", sty.marqueeScroll)}
+          />
+
+          <Footer
+            data-plasmic-name={"footer"}
+            data-plasmic-override={overrides.footer}
+            className={classNames("__wab_instance", sty.footer)}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -294,15 +1169,49 @@ function PlasmicPortfolio__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "cmsDataFetcher"],
-  cmsDataFetcher: ["cmsDataFetcher"]
+  root: [
+    "root",
+    "navBanner",
+    "cmsDataFetcher",
+    "hero",
+    "section",
+    "marqueeScroll2",
+    "content",
+    "caseStudyGallery",
+    "marqueeScroll",
+    "footer"
+  ],
+  navBanner: ["navBanner"],
+  cmsDataFetcher: [
+    "cmsDataFetcher",
+    "hero",
+    "section",
+    "marqueeScroll2",
+    "content",
+    "caseStudyGallery"
+  ],
+  hero: ["hero", "section"],
+  section: ["section"],
+  marqueeScroll2: ["marqueeScroll2"],
+  content: ["content", "caseStudyGallery"],
+  caseStudyGallery: ["caseStudyGallery"],
+  marqueeScroll: ["marqueeScroll"],
+  footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  navBanner: typeof NavBanner;
   cmsDataFetcher: typeof CmsQueryRepeater;
+  hero: "div";
+  section: "section";
+  marqueeScroll2: typeof MarqueeScroll2;
+  content: "div";
+  caseStudyGallery: typeof CaseStudyGallery;
+  marqueeScroll: typeof MarqueeScroll;
+  footer: typeof Footer;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -367,7 +1276,15 @@ export const PlasmicPortfolio = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    navBanner: makeNodeComponent("navBanner"),
     cmsDataFetcher: makeNodeComponent("cmsDataFetcher"),
+    hero: makeNodeComponent("hero"),
+    section: makeNodeComponent("section"),
+    marqueeScroll2: makeNodeComponent("marqueeScroll2"),
+    content: makeNodeComponent("content"),
+    caseStudyGallery: makeNodeComponent("caseStudyGallery"),
+    marqueeScroll: makeNodeComponent("marqueeScroll"),
+    footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicPortfolio
     internalVariantProps: PlasmicPortfolio__VariantProps,

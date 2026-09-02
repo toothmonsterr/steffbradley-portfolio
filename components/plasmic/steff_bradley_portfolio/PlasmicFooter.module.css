@@ -1,0 +1,137 @@
+.root:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox___06Nrh {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: var(--token-K0mS66ClT3RA);
+  min-width: 0;
+  padding: 48px;
+}
+@media (max-width: 640px) {
+  .freeBox___06Nrh {
+    padding: 24px var(--token-XOrZk8yJ8Gx5);
+  }
+}
+.freeBox__qwKw7 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__i76Sb {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  column-gap: var(--token-JFSS6sSimwWg);
+}
+.svg__ngjX {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-tt4LcQz9DuF0);
+  height: 1em;
+}
+.text___81Uxj {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  padding-bottom: 0px;
+}
+.link__clfFj {
+  color: var(--token-5QKIfNB0tRzE);
+}
+.freeBox__gWBu {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  column-gap: var(--token-Fy7olHbm4g2T);
+}
+.link__cMqM {
+  display: flex;
+}
+.svg__zyCwE {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-5QKIfNB0tRzE);
+  height: 35px;
+}
+.link__evkp {
+  display: flex;
+}
+.svg__f13Cu {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-5QKIfNB0tRzE);
+  height: 35px;
+}
+.freeBox__y6Hxe {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.offsetCmyk__eYuEp:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.printColorbar:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: auto;
+}
+.offsetCmyk___7Ldph:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-self: flex-start;
+}
+.text__wqfko {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox__drf55 {
+  background: var(--token-6U10-UCl9glp);
+  display: block;
+  position: absolute;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}

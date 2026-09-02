@@ -7,16 +7,12 @@
   },
   "style": {
     "scheme": "css-modules",
-    "defaultStyleCssFilePath": "plasmic/plasmic__default_style.module.css"
+    "defaultStyleCssFilePath": "plasmic/plasmic__default_style.css"
   },
   "images": {
     "scheme": "public-files",
     "publicDir": "../public",
     "publicUrlPrefix": "/"
-  },
-  "tokens": {
-    "scheme": "theo",
-    "tokensFilePath": "plasmic-tokens.theo.json"
   },
   "srcDir": "components",
   "defaultPlasmicDir": "./plasmic",
@@ -26,7 +22,7 @@
       "projectApiToken": "SPBdkt73OFtq1kHnZibm53X9j5ueDaUPFKq7JYjwg8o9geyjqL4z1xm8AzpOQVJqn5GKWhUDLH4bEwYo4DOqg",
       "projectName": "[Library] Tabler 3.2 Icons",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/library_tabler_3_2_icons/plasmic.module.css",
+      "cssFilePath": "plasmic/library_tabler_3_2_icons/plasmic.css",
       "components": [],
       "icons": [
         {
@@ -26156,9 +26152,9 @@
     {
       "projectId": "67C2x4VH9CGyuASG98L3XF",
       "projectApiToken": "rVuTWPjqdzExpY6eIJNKb0BLdZU2v8gESyerINaWH8wMZTo9WuQofzPqmofqQrFaQu7ef9Vrf8ocjsNgA",
-      "projectName": "toothmonster",
+      "projectName": "Steff Bradley | Portfolio",
       "version": "latest",
-      "cssFilePath": "plasmic/toothmonster/plasmic.module.css",
+      "cssFilePath": "plasmic/toothmonster/plasmic.css",
       "components": [
         {
           "id": "FuUP13USuDR8",
@@ -26228,18 +26224,43 @@
           "componentType": "component"
         },
         {
-          "id": "DpQInUs0VBYI",
-          "name": "Artwork",
+          "id": "p7cDk5onbOfu",
+          "name": "MarqueeScroll",
           "type": "managed",
           "projectId": "67C2x4VH9CGyuASG98L3XF",
-          "renderModuleFilePath": "plasmic/toothmonster/PlasmicArtwork.tsx",
+          "renderModuleFilePath": "plasmic/steff_bradley_portfolio/PlasmicMarqueeScroll.tsx",
           "importSpec": {
-            "modulePath": "../pages/artwork/[slug].tsx"
+            "modulePath": "MarqueeScroll.tsx"
           },
-          "cssFilePath": "plasmic/toothmonster/PlasmicArtwork.module.css",
+          "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicMarqueeScroll.module.css",
           "scheme": "blackbox",
-          "componentType": "page",
-          "path": "/artwork/[slug]"
+          "componentType": "component"
+        },
+        {
+          "id": "a2tFCAaUQuGy",
+          "name": "MarqueeScroll2",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/steff_bradley_portfolio/PlasmicMarqueeScroll2.tsx",
+          "importSpec": {
+            "modulePath": "MarqueeScroll2.tsx"
+          },
+          "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicMarqueeScroll2.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "jjWjxw2fIQP_",
+          "name": "Footer",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/steff_bradley_portfolio/PlasmicFooter.tsx",
+          "importSpec": {
+            "modulePath": "Footer.tsx"
+          },
+          "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicFooter.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -26317,6 +26338,26 @@
           "id": "0vNaQ1KvdrHQ",
           "name": "ArrowRightSvgIcon",
           "moduleFilePath": "plasmic/toothmonster/icons/PlasmicIcon__ArrowRightSvg.tsx"
+        },
+        {
+          "id": "5i0G1-iAMfXN",
+          "name": "EyelogoIcon",
+          "moduleFilePath": "plasmic/steff_bradley_portfolio/icons/PlasmicIcon__Eyelogo.tsx"
+        },
+        {
+          "id": "g-I9JMTKZbp6",
+          "name": "LinkedinIcon",
+          "moduleFilePath": "plasmic/steff_bradley_portfolio/icons/PlasmicIcon__Linkedin.tsx"
+        },
+        {
+          "id": "qtZmytrTtsGk",
+          "name": "InstagramSvgIcon",
+          "moduleFilePath": "plasmic/steff_bradley_portfolio/icons/PlasmicIcon__InstagramSvg.tsx"
+        },
+        {
+          "id": "grc4tmDZEgyN",
+          "name": "SpiralShapeSvgIcon",
+          "moduleFilePath": "plasmic/steff_bradley_portfolio/icons/PlasmicIcon__SpiralShapeSvg.tsx"
         }
       ],
       "images": [
@@ -26449,6 +26490,16 @@
           "id": "KD5P0SZqL1pi",
           "name": "IMG_1464.png",
           "filePath": "../public/plasmic/toothmonster/images/img1464Png.png"
+        },
+        {
+          "id": "VVYmsAOVOtR1",
+          "name": "competitive analysis.png",
+          "filePath": "../public/plasmic/steff_bradley_portfolio/images/competitiveAnalysisPng.png"
+        },
+        {
+          "id": "3l3menIrZB0u",
+          "name": "toothmonster-88x31.gif",
+          "filePath": "../public/plasmic/steff_bradley_portfolio/images/toothmonster88X31Gif.gif"
         }
       ],
       "indirect": false,
@@ -26613,6 +26664,48 @@
           "name": "ScotchTape",
           "displayName": "ScotchTape",
           "componentImportPath": "@/components/plasmic-components/ScotchTape"
+        },
+        {
+          "id": "AFjwBSjF0xKm",
+          "name": "RichText",
+          "displayName": "RichText",
+          "componentImportPath": "@/components/plasmic-components/RichText"
+        },
+        {
+          "id": "xy6bcTadYIv-",
+          "name": "CaseStudyMeta",
+          "displayName": "CaseStudyMeta",
+          "componentImportPath": "@/components/plasmic-components/CaseStudyMeta"
+        },
+        {
+          "id": "d9wanfeydFZF",
+          "name": "CaseStudyGallery",
+          "displayName": "CaseStudyGallery",
+          "componentImportPath": "@/components/plasmic-components/CaseStudyGallery"
+        },
+        {
+          "id": "oycZ_XNMjvic",
+          "name": "MockupFrame",
+          "displayName": "MockupFrame",
+          "componentImportPath": "@/components/plasmic-components/MockupFrame"
+        },
+        {
+          "id": "JivwNWK20kIt",
+          "name": "ContactForm",
+          "displayName": "ContactForm",
+          "componentImportPath": "@/components/plasmic-components/ContactForm"
+        },
+        {
+          "id": "5qwWzawLe4Hl",
+          "name": "ContactField",
+          "displayName": "ContactField",
+          "componentImportPath": "@/components/plasmic-components/ContactForm"
+        },
+        {
+          "id": "xraZo1vHJbhP",
+          "name": "ContactSubmit",
+          "displayName": "ContactSubmit",
+          "componentImportPath": "@/components/plasmic-components/ContactForm"
         }
       ],
       "customFunctions": []
@@ -26622,7 +26715,7 @@
       "projectApiToken": "LBbn8U2dmbpX9oeuRsYNyEKki39EXydGQgs9vBvR5sLHfGEZsK4owvOj7Q7SnflW4ASIEdLFAeeoxGxXZ8dJtA",
       "projectName": "react-aria",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_aria/plasmic.module.css",
+      "cssFilePath": "plasmic/react_aria/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -26833,7 +26926,7 @@
       "projectApiToken": "DIkcfhBwjMCJSjcxfBkMuy4NImyytq5EWylxVcpS9t9EpdhnPQuBgBGxmk00AB1itMFa1KXTxOKnrjN2PN9nlA",
       "projectName": "react-awesome-reveal",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_awesome_reveal/plasmic.module.css",
+      "cssFilePath": "plasmic/react_awesome_reveal/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -26858,7 +26951,7 @@
       "projectApiToken": "uZp069FLSLNVA2dpWnqC3BUaj3flvtNBNXt6e1b67rm4Uh6lGHgYJ65FCBXlOFTB5KDW7RmmOxIAzgHYCg",
       "projectName": "plasmic-nav",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_nav/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_nav/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -26883,7 +26976,7 @@
       "projectApiToken": "xBIsrWHdWZ9kVgFEGUt29LOZPWfm0XidYqRHqPhQXsEjDHevjIbp44nEYMIZ46YOoxrN8anfXjreTkDtFjTA",
       "projectName": "react-parallax-tilt",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_parallax_tilt/plasmic.module.css",
+      "cssFilePath": "plasmic/react_parallax_tilt/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -26908,7 +27001,7 @@
       "projectApiToken": "L5kqyh9xqKCqpdc8gqCglVcLZTxdkkP1Dt9pLUlWpyKVItIbbXr5272ePgMpZZiezhSe0AIOuQB353jQnw",
       "projectName": "plasmic-cms",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_cms/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_cms/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -26969,7 +27062,7 @@
       "projectApiToken": "hOzXksPB8gkTrKnfJeV9VDS8m8dnIXQn1xxDQZ5MHxv9orQY6JNgwmk6aDMZPLkocV2KtD9gNJXv5JwIbbzIQ",
       "projectName": "react-scroll-parallax-global",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_scroll_parallax_global/plasmic.module.css",
+      "cssFilePath": "plasmic/react_scroll_parallax_global/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -27000,7 +27093,7 @@
       "projectApiToken": "d8UPLYphoxWJyIkfjww0UtNZijnhGYEzblzwwvbZ4inmZVmHBcolZVTPYtNkh6wsPfnQSAoYq5zuj13NQdUA",
       "projectName": "[PlasmicKit] Animations",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_kit_animations/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_kit_animations/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -27051,9 +27144,13 @@
   },
   "wrapPagesWithGlobalContexts": true,
   "preserveJsImportExtensions": false,
+  "tokens": {
+    "scheme": "theo",
+    "tokensFilePath": "plasmic-tokens.theo.json"
+  },
   "nextjsConfig": {
     "pagesDir": "../pages"
   },
-  "cliVersion": "0.1.360",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.360/dist/plasmic.schema.json"
+  "cliVersion": "0.1.375",
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.375/dist/plasmic.schema.json"
 }
