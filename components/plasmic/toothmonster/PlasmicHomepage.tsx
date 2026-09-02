@@ -59,15 +59,6 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { useMutablePlasmicQueryData } from "@plasmicapp/query";
-
-import { usePlasmicQueries } from "@plasmicapp/react-web/lib/data-sources";
-import type {
-  PlasmicQuery,
-  PlasmicQueryResult
-} from "@plasmicapp/react-web/lib/data-sources";
-import type { QueryComponentNode } from "@plasmicapp/react-web/lib/data-sources";
-
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
 import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
 import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
@@ -103,8 +94,6 @@ import CirclesparkleSvgIcon from "./icons/PlasmicIcon__CirclesparkleSvg"; // pla
 import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
 import ArrowRightSvgIcon from "./icons/PlasmicIcon__ArrowRightSvg"; // plasmic-import: 0vNaQ1KvdrHQ/icon
 import ArrowLeftSvgIcon from "./icons/PlasmicIcon__ArrowLeftSvg"; // plasmic-import: 1pIw_X8xb4RU/icon
-
-import { fetchTables as __fn_plasmicCms__fetchTables } from "@plasmicpkgs/cms";
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -169,37 +158,7 @@ export type PlasmicHomepage__OverridesType = {
 
 export interface DefaultHomepageProps {}
 
-const $$ = {
-  plasmicCms: {
-    fetchTables: __fn_plasmicCms__fetchTables
-  }
-};
-
-export const serverQueryTree: QueryComponentNode = {
-  type: "component",
-  queries: {
-    query: {
-      id: "plasmicCms.fetchTables",
-      fn: $$.plasmicCms.fetchTables,
-      args: ({ $q, $props, $ctx, $state }) => [
-        (() => {
-          const __composite = {
-            host: "https://data.plasmic.app",
-            cmsId: null,
-            cmsPublicToken: null
-          };
-          __composite["cmsId"] = "1XTea8SGxneQLsfTFD3nDB";
-          __composite["cmsPublicToken"] =
-            "8QLNduGOr5ivOEyTRMYivo9hizvASFYdD1muqeQuUh2IbycxLdMaWmeMe43ZjpENSsONuy3cjlT4EDwA";
-          return __composite;
-        })()
-      ]
-    }
-  },
-  propsContext: {},
-  stateSpecs: [],
-  children: []
-};
+const $$ = {};
 
 function useNextRouter() {
   try {
@@ -238,12 +197,10 @@ function PlasmicHomepage__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const $q = usePlasmicQueries(serverQueryTree, { $ctx, $props, $state: null });
-
   const globalVariants = _useGlobalVariants();
 
   const pageMetadata = generateDynamicMetadata(
-    wrapQueriesWithLoadingProxy($q),
+    wrapQueriesWithLoadingProxy({}),
     $ctx as PageCtx
   );
 
