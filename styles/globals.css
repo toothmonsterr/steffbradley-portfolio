@@ -26,8 +26,10 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
-  max-width: 100vw;
-  /*overflow-x: hidden;*/
+  /* No max-width/overflow-x here: `100vw` includes the scrollbar gutter (so it
+     can exceed the real content box), and `overflow-x: hidden` on `html` only
+     hid the overflow rather than containing it, which masked the actual cause.
+     Containment now lives on the page root below. */
 }
 
 img,
@@ -201,3 +203,23 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
+
+/* ─── Mobile horizontal-overflow containment ──────────────────
+   Decorative FloatingElement/OffsetShape instances are deliberately hung
+   past the layout edge with negative offsets (e.g. `right: -67px` on
+   PlasmicHomepage's .floatingElement__zri9C). On desktop there is enough
+   gutter to absorb them; on narrow viewports they push the document's
+   scrollWidth past the viewport, so the Plasmic root — being width:100% of
+   an over-wide containing block — no longer reaches the right edge and the
+   cream `body` background shows through as a vertical strip.
+
+   Clipping on the page root (not `html`) contains those decorations while
+   keeping `position: sticky` on the nav working — `overflow: hidden` on an
+   ancestor would break sticky, and `overflow-x: clip` does not, because it
+   creates no scroll container.
+
+   Measured on the deployed homepage at a 390px viewport:
+   documentElement.scrollWidth 538px → 390px. */
+.plasmic_page_wrapper > .all {
+  overflow-x: clip;
+}
