@@ -137,9 +137,18 @@
    caption is pushed away from the image it describes.
    The `> * + *` rule already supplies the gap above, so only the bottom is
    set here; declaring both stacked a full extra line onto every figure. */
+/*
+ * Shrink-wrap the figure to its image so a caption inside it aligns to the
+ * picture rather than to the full column. A figure is a plain block by
+ * default, which stretched to the column width and left a narrow image's
+ * caption floating far off to its right.
+ */
 .prose figure {
+  width: fit-content;
+  max-width: 100%;
   margin: 0 0 1.25em;
 }
+
 
 .prose figure img {
   margin: 0;
@@ -180,7 +189,10 @@
   display: block;
   width: fit-content;
   max-width: 100%;
-  margin-left: auto;
+  /* Left-aligned, not centred: a strip of tape stuck to the corner of a
+     photo reads as tape, whereas one centred under it reads as a label. It
+     also stays put regardless of how wide the image turns out to be. */
+  margin-left: 0;
   margin-right: auto;
   padding: 7px 22px;
   opacity: 1;
@@ -189,6 +201,11 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-midnight);
+  /* Wrap rather than widen: a caption longer than a narrow image would
+     otherwise stretch the shrink-wrapped figure and let the tape hang past
+     the picture's edge. */
+  white-space: normal;
+  overflow-wrap: break-word;
   /* Fill lives on ::before, so the text box itself stays transparent. */
   background: none;
 }
