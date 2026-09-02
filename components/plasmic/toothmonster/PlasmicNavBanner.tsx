@@ -69,7 +69,6 @@ import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-impor
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicNavBanner.module.css"; // plasmic-import: uEuM32AhsVsN/css
 
 import LogoLightSvg3Icon from "./icons/PlasmicIcon__LogoLightSvg3"; // plasmic-import: I0pUA66htPll/icon
@@ -161,8 +160,6 @@ function PlasmicNavBanner__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = _useGlobalVariants();
-
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -199,6 +196,9 @@ function PlasmicNavBanner__RenderFunc(props: {
     ],
     [$props, $ctx, $refs]
   );
+
+  const globalVariants = _useGlobalVariants();
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
@@ -298,7 +298,7 @@ function PlasmicNavBanner__RenderFunc(props: {
             />
           </RevealOnScroll>
           <div
-            className={classNames(projectcss.all, sty.freeBox___8NzTq, {
+            className={classNames("all", sty.freeBox___8NzTq, {
               [sty.freeBoxcolor_coral___8NzTqNpzn0]: hasVariant(
                 $state,
                 "color",
@@ -325,9 +325,9 @@ function PlasmicNavBanner__RenderFunc(props: {
       }
       className={classNames(
         "__wab_instance",
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
+        "root_reset_67C2x4VH9CGyuASG98L3XF",
+        "plasmic_default_styles",
+        "plasmic_mixins",
         styleTokensClassNames,
         sty.root,
         {
@@ -362,36 +362,30 @@ function PlasmicNavBanner__RenderFunc(props: {
         data-plasmic-override={overrides.navigationBar}
         brand={
           <PlasmicLink__
-            className={classNames(
-              projectcss.all,
-              projectcss.a,
-              projectcss.a__67C2x,
-              sty.link__xBeoZ,
-              {
-                [sty.linkbottomTear__xBeoZt01Q7]: hasVariant(
-                  $state,
-                  "bottomTear",
-                  "bottomTear"
-                ),
-                [sty.linkcolor_cream__xBeoZ9ImL]: hasVariant(
-                  $state,
-                  "color",
-                  "cream"
-                ),
-                [sty.linkeffectVisible__xBeoZyuJl7]: hasVariant(
-                  $state,
-                  "effectVisible",
-                  "effectVisible"
-                )
-              }
-            )}
+            className={classNames("all", "a", "a__67C2x", sty.link__xBeoZ, {
+              [sty.linkbottomTear__xBeoZt01Q7]: hasVariant(
+                $state,
+                "bottomTear",
+                "bottomTear"
+              ),
+              [sty.linkcolor_cream__xBeoZ9ImL]: hasVariant(
+                $state,
+                "color",
+                "cream"
+              ),
+              [sty.linkeffectVisible__xBeoZyuJl7]: hasVariant(
+                $state,
+                "effectVisible",
+                "effectVisible"
+              )
+            })}
             component={Link}
             href={"/"}
             legacyBehavior={false}
             platform={"nextjs"}
           >
             <LogoLightSvg3Icon
-              className={classNames(projectcss.all, sty.svg__yjLqg, {
+              className={classNames("all", sty.svg__yjLqg, {
                 [sty.svgcolor_coral__yjLqgNpzn0]: hasVariant(
                   $state,
                   "color",
@@ -434,7 +428,7 @@ function PlasmicNavBanner__RenderFunc(props: {
         })}
         closeButton={
           <MinusIcon
-            className={classNames(projectcss.all, sty.svg__tqkj, {
+            className={classNames("all", sty.svg__tqkj, {
               [sty.svgcolor_midnight__tqkj93TEr]: hasVariant(
                 $state,
                 "color",
@@ -455,7 +449,7 @@ function PlasmicNavBanner__RenderFunc(props: {
         itemsGap={8}
         menuItems={
           <div
-            className={classNames(projectcss.all, sty.freeBox__xOcgf, {
+            className={classNames("all", sty.freeBox__xOcgf, {
               [sty.freeBoxcolor_cream__xOcgf9ImL]: hasVariant(
                 $state,
                 "color",
@@ -470,10 +464,10 @@ function PlasmicNavBanner__RenderFunc(props: {
           >
             <PlasmicLink__
               className={classNames(
-                projectcss.all,
-                projectcss.a,
-                projectcss.a__67C2x,
-                projectcss.__wab_text,
+                "all",
+                "a",
+                "a__67C2x",
+                "__wab_text",
                 sty.link__tvF,
                 {
                   [sty.linkcolor_cream__tvF9ImL]: hasVariant(
@@ -492,10 +486,10 @@ function PlasmicNavBanner__RenderFunc(props: {
             </PlasmicLink__>
             <PlasmicLink__
               className={classNames(
-                projectcss.all,
-                projectcss.a,
-                projectcss.a__67C2x,
-                projectcss.__wab_text,
+                "all",
+                "a",
+                "a__67C2x",
+                "__wab_text",
                 sty.link__aqx6U,
                 {
                   [sty.linkcolor_cream__aqx6U9ImL]: hasVariant(
@@ -514,10 +508,10 @@ function PlasmicNavBanner__RenderFunc(props: {
             </PlasmicLink__>
             <PlasmicLink__
               className={classNames(
-                projectcss.all,
-                projectcss.a,
-                projectcss.a__67C2x,
-                projectcss.__wab_text,
+                "all",
+                "a",
+                "a__67C2x",
+                "__wab_text",
                 sty.link__xgET,
                 {
                   [sty.linkcolor_cream__xgET9ImL]: hasVariant(
@@ -538,7 +532,7 @@ function PlasmicNavBanner__RenderFunc(props: {
         }
         openButton={
           <ChevronDownIcon
-            className={classNames(projectcss.all, sty.svg__rzWJb, {
+            className={classNames("all", sty.svg__rzWJb, {
               [sty.svgcolor_midnight__rzWJb93TEr]: hasVariant(
                 $state,
                 "color",

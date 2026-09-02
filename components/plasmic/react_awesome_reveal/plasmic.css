@@ -1,5 +1,5 @@
 .plasmic_default_styles {
-  --mixin-hOOB1RkHQ8_white-space: pre-wrap;
+  --mixin-pvZsL8utzp_white-space: pre-wrap;
 }
 
 :where(.all) {
@@ -190,6 +190,22 @@
   text-transform: inherit;
 }
 
+:where(.b) {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+:where(.__wab_expr_html_text b) {
+  white-space: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+
 :where(.i) {
   font-family: inherit;
   line-height: inherit;
@@ -365,6 +381,6 @@
 .__wab_expr_html_text {
   white-space: normal;
 }
-:where(.root_reset) {
-  white-space: var(--mixin-hOOB1RkHQ8_white-space);
+:where(.root_reset_58GpZjZCWTaJ8AUhpCwt2K) {
+  white-space: var(--mixin-pvZsL8utzp_white-space);
 }

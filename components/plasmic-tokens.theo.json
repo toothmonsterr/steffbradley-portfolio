@@ -391,6 +391,16 @@
       }
     },
     {
+      "name": "360px",
+      "type": "spacing",
+      "value": "360px",
+      "category": "spacing",
+      "meta": {
+        "projectId": "67C2x4VH9CGyuASG98L3XF",
+        "id": "GIJDlWFp6Xbo"
+      }
+    },
+    {
       "name": "375px",
       "type": "spacing",
       "value": "375px",
@@ -633,7 +643,7 @@
     {
       "name": "Interaction / Pressed",
       "type": "color",
-      "value": "#00427F80",
+      "value": "#00427F40",
       "category": "color",
       "meta": {
         "projectId": "67C2x4VH9CGyuASG98L3XF",
@@ -1578,6 +1588,16 @@
       "meta": {
         "projectId": "67C2x4VH9CGyuASG98L3XF",
         "id": "BU2b6JgyybQl"
+      }
+    },
+    {
+      "name": "brand-slate",
+      "type": "color",
+      "value": "#93AECB",
+      "category": "color",
+      "meta": {
+        "projectId": "67C2x4VH9CGyuASG98L3XF",
+        "id": "hd9tseaAsNva"
       }
     },
     {

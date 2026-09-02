@@ -66,35 +66,34 @@ import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // pl
 import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
 import { OffsetCMYK } from "@/components/plasmic-components/OffsetCMYK"; // plasmic-import: W6F38AxYTSP7/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
-import { ScrollMarquee } from "@/components/plasmic-components/ScrollMarquee"; // plasmic-import: K8ICcSEKq3PA/codeComponent
+import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
 import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
 import { CmsPaginationContext } from "@/components/plasmic-components/CmsPagination"; // plasmic-import: XQkM4MEcOLl0/codeComponent
 import { CmsQueryRepeater } from "@plasmicpkgs/plasmic-cms";
-import { StickerPeel } from "@/components/plasmic-components/StickerPeel"; // plasmic-import: J7gKDwRqusOu/codeComponent
 import { TornSection } from "@/components/plasmic-components/TornSection"; // plasmic-import: 8y_E0U1V1ob-/codeComponent
 import { CmsRowField } from "@plasmicpkgs/plasmic-cms";
 import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
+import { ScotchTape } from "@/components/plasmic-components/ScotchTape"; // plasmic-import: TbfB48S8CS8c/codeComponent
 import { Shimmer } from "@/components/plasmic-components/Shimmer"; // plasmic-import: dBSvAg8mx3HD/codeComponent
 import { CmsPaginationControls } from "@/components/plasmic-components/CmsPagination"; // plasmic-import: Nj2KT56kVjVw/codeComponent
 import PageButton from "../../PageButton"; // plasmic-import: 6RLcIVBSHW0n/component
 import { HalftoneMask } from "@/components/plasmic-components/HalftoneMask"; // plasmic-import: tq6byP_N1Ydj/codeComponent
-import { ScotchTape } from "@/components/plasmic-components/ScotchTape"; // plasmic-import: TbfB48S8CS8c/codeComponent
-import { DotOverlay } from "@/components/plasmic-components/DotOverlay"; // plasmic-import: 8p09mZd-cKv0/codeComponent
+import MarqueeScroll2 from "../../MarqueeScroll2"; // plasmic-import: a2tFCAaUQuGy/component
+import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import sty from "./PlasmicHomepage.module.css"; // plasmic-import: FuUP13USuDR8/css
 
-import CirclesparkleSvgIcon from "./icons/PlasmicIcon__CirclesparkleSvg"; // plasmic-import: 9fph0KMRmqAr/icon
 import RegistrationMarkTargetSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
 import RegistrationMarkCornerSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkCornerSvg2"; // plasmic-import: S_mhq_tZ6KnU/icon
 import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
+import CirclesparkleSvgIcon from "./icons/PlasmicIcon__CirclesparkleSvg"; // plasmic-import: 9fph0KMRmqAr/icon
 import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
-import ArrowLeftSvgIcon from "./icons/PlasmicIcon__ArrowLeftSvg"; // plasmic-import: 1pIw_X8xb4RU/icon
 import ArrowRightSvgIcon from "./icons/PlasmicIcon__ArrowRightSvg"; // plasmic-import: 0vNaQ1KvdrHQ/icon
+import ArrowLeftSvgIcon from "./icons/PlasmicIcon__ArrowLeftSvg"; // plasmic-import: 1pIw_X8xb4RU/icon
 
 const emptyProxy: any = new Proxy(() => "", {
   get(_, prop) {
@@ -145,11 +144,16 @@ export type PlasmicHomepage__OverridesType = {
   h4?: Flex__<"h4">;
   freeBox5?: Flex__<"div">;
   freeBox6?: Flex__<"div">;
+  marqueeScroll?: Flex__<typeof MarqueeScroll>;
   section?: Flex__<"section">;
-  stickerPeel?: Flex__<typeof StickerPeel>;
+  cmsPaginationContext?: Flex__<typeof CmsPaginationContext>;
+  cmsDataFetcher?: Flex__<typeof CmsQueryRepeater>;
   freeBox4?: Flex__<"div">;
   freeBox3?: Flex__<"div">;
-  dotOverlay?: Flex__<typeof DotOverlay>;
+  cmsPaginationControls?: Flex__<typeof CmsPaginationControls>;
+  pageButton?: Flex__<typeof PageButton>;
+  marqueeScroll2?: Flex__<typeof MarqueeScroll2>;
+  footer?: Flex__<typeof Footer>;
 };
 
 export interface DefaultHomepageProps {}
@@ -212,17 +216,17 @@ function PlasmicHomepage__RenderFunc(props: {
         }
       `}</style>
 
-      <div className={projectcss.plasmic_page_wrapper}>
+      <div className={"plasmic_page_wrapper"}>
         <div
           data-plasmic-name={"root"}
           data-plasmic-override={overrides.root}
           data-plasmic-root={true}
           data-plasmic-for-node={forNode}
           className={classNames(
-            projectcss.all,
-            projectcss.root_reset,
-            projectcss.plasmic_default_styles,
-            projectcss.plasmic_mixins,
+            "all",
+            "root_reset_67C2x4VH9CGyuASG98L3XF",
+            "plasmic_default_styles",
+            "plasmic_mixins",
             styleTokensClassNames,
             sty.root
           )}
@@ -239,51 +243,36 @@ function PlasmicHomepage__RenderFunc(props: {
           <div
             data-plasmic-name={"columns"}
             data-plasmic-override={overrides.columns}
-            className={classNames(projectcss.all, sty.columns)}
+            className={classNames("all", sty.columns)}
           >
-            <div className={classNames(projectcss.all, sty.column___2GzTv)}>
-              <div className={classNames(projectcss.all, sty.freeBox__rt7Me)}>
-                <CirclesparkleSvgIcon
-                  className={classNames(projectcss.all, sty.svg__aXyVm)}
-                  role={"img"}
-                />
-
+            <div className={classNames("all", sty.column___2GzTv)}>
+              <div className={classNames("all", sty.freeBox__rt7Me)}>
                 <h4
                   data-plasmic-name={"h4"}
                   data-plasmic-override={overrides.h4}
                   className={classNames(
-                    projectcss.all,
-                    projectcss.h4,
-                    projectcss.h4__67C2x,
-                    projectcss.__wab_text,
+                    "all",
+                    "h4",
+                    "h4__67C2x",
+                    "__wab_text",
                     sty.h4
                   )}
                 >
                   {"hello, my name is"}
                 </h4>
-                <CirclesparkleSvgIcon
-                  className={classNames(projectcss.all, sty.svg__ry5WG)}
-                  role={"img"}
-                />
               </div>
               <h1
                 className={classNames(
-                  projectcss.all,
-                  projectcss.h1,
-                  projectcss.h1__67C2x,
-                  projectcss.__wab_text,
+                  "all",
+                  "h1",
+                  "h1__67C2x",
+                  "__wab_text",
                   sty.h1___2PyZv
                 )}
               >
                 {"steff bradley"}
               </h1>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__wlB8S
-                )}
-              >
+              <div className={classNames("all", "__wab_text", sty.text__wlB8S)}>
                 <React.Fragment>
                   <React.Fragment>{"i'm a "}</React.Fragment>
                   <span
@@ -323,7 +312,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   </span>
                   <React.Fragment>
                     {
-                      "; always experimenting & always learning\ni work with motion, interactivity, design engineering, and systems\ni also make illustrations, 3d renders, and games"
+                      "; always experimenting & always learning\ni work with motion, interactivity, design engineering, and systems"
                     }
                   </React.Fragment>
                 </React.Fragment>
@@ -348,7 +337,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   textureStep={3}
                 >
                   <RegistrationMarkTargetSvg2Icon
-                    className={classNames(projectcss.all, sty.svg__hwk3K)}
+                    className={classNames("all", sty.svg__hwk3K)}
                     role={"img"}
                   />
                 </OffsetShape>
@@ -370,7 +359,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   textureStep={3}
                 >
                   <RegistrationMarkCornerSvg2Icon
-                    className={classNames(projectcss.all, sty.svg__qKs5S)}
+                    className={classNames("all", sty.svg__qKs5S)}
                     role={"img"}
                   />
                 </OffsetShape>
@@ -392,12 +381,12 @@ function PlasmicHomepage__RenderFunc(props: {
                       <div
                         data-plasmic-name={"freeBox5"}
                         data-plasmic-override={overrides.freeBox5}
-                        className={classNames(projectcss.all, sty.freeBox5)}
+                        className={classNames("all", sty.freeBox5)}
                       />
                     }
                     end={
                       <CirclesparkleSvgIcon
-                        className={classNames(projectcss.all, sty.svg__v3HEj)}
+                        className={classNames("all", sty.svg__v3HEj)}
                         role={"img"}
                       />
                     }
@@ -405,8 +394,8 @@ function PlasmicHomepage__RenderFunc(props: {
                     label={
                       <div
                         className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
+                          "all",
+                          "__wab_text",
                           sty.text__vbMxN
                         )}
                       >
@@ -433,7 +422,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   <div
                     data-plasmic-name={"freeBox6"}
                     data-plasmic-override={overrides.freeBox6}
-                    className={classNames(projectcss.all, sty.freeBox6)}
+                    className={classNames("all", sty.freeBox6)}
                   />
                 }
                 texture={"noise"}
@@ -443,7 +432,7 @@ function PlasmicHomepage__RenderFunc(props: {
                 tintSlots={true}
               />
             </div>
-            <div className={classNames(projectcss.all, sty.column___77LZa)}>
+            <div className={classNames("all", sty.column___77LZa)}>
               <FloatingElement
                 animationAmplitude={40}
                 className={classNames(
@@ -475,66 +464,18 @@ function PlasmicHomepage__RenderFunc(props: {
               </FloatingElement>
             </div>
           </div>
-          <ScrollMarquee
-            className={classNames("__wab_instance", sty.scrollMarquee__ptFg2)}
-            height={"90px"}
-            pauseOnHover={false}
-          >
-            <OffsetCMYK
-              blendMode={"darken"}
-              className={classNames("__wab_instance", sty.offsetCmyk__pmkl0)}
-              colorC={true ? "#CEBEE3" : undefined}
-              colorK={true ? "#00427F" : undefined}
-              colorM={true ? "#FF6A50" : undefined}
-              colorY={true ? "#DDEA44" : undefined}
-              interaction={"inverse"}
-              jitter={0.3}
-              offsetX={1}
-              offsetY={1}
-              texture={"noise"}
-              textureContrast={75}
-              textureHoverEnabled={false}
-              textureStep={1}
-            >
-              <NextImage
-                alt={""}
-                className={classNames("__wab_instance", sty.image__kzDws)}
-                fill={true}
-                objectFit={"contain"}
-                src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-              />
-            </OffsetCMYK>
-            <OffsetCMYK
-              blendMode={"darken"}
-              className={classNames("__wab_instance", sty.offsetCmyk__u44F)}
-              colorC={true ? "#CEBEE3" : undefined}
-              colorK={true ? "#00427F" : undefined}
-              colorM={true ? "#FF6A50" : undefined}
-              colorY={true ? "#DDEA44" : undefined}
-              interaction={"inverse"}
-              jitter={0.3}
-              offsetX={1}
-              offsetY={1}
-              texture={"noise"}
-              textureContrast={75}
-              textureHoverEnabled={false}
-              textureStep={1}
-            >
-              <NextImage
-                alt={""}
-                className={classNames("__wab_instance", sty.image___7LiOg)}
-                fill={true}
-                objectFit={"contain"}
-                src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-              />
-            </OffsetCMYK>
-          </ScrollMarquee>
+          <MarqueeScroll
+            data-plasmic-name={"marqueeScroll"}
+            data-plasmic-override={overrides.marqueeScroll}
+            className={classNames("__wab_instance", sty.marqueeScroll)}
+          />
+
           <section
             data-plasmic-name={"section"}
             data-plasmic-override={overrides.section}
-            className={classNames(projectcss.all, sty.section)}
+            className={classNames("all", sty.section)}
           >
-            <div className={classNames(projectcss.all, sty.freeBox__jkuRf)}>
+            <div className={classNames("all", sty.freeBox__jkuRf)}>
               <InkBleed
                 bleedColor={true ? "#52A159" : undefined}
                 className={classNames("__wab_instance", sty.inkBleed__c3Ucr)}
@@ -544,31 +485,27 @@ function PlasmicHomepage__RenderFunc(props: {
               >
                 <h1
                   className={classNames(
-                    projectcss.all,
-                    projectcss.h1,
-                    projectcss.h1__67C2x,
-                    projectcss.__wab_text,
+                    "all",
+                    "h1",
+                    "h1__67C2x",
+                    "__wab_text",
                     sty.h1__v75DS
                   )}
                 >
                   {"archives"}
                 </h1>
               </InkBleed>
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__os7Jm
-                )}
-              >
+              <div className={classNames("all", "__wab_text", sty.text__os7Jm)}>
                 {"a portfolio of case studies"}
               </div>
             </div>
-            <div className={classNames(projectcss.all, sty.freeBox__mlmSe)}>
+            <div className={classNames("all", sty.freeBox__mlmSe)}>
               <CmsPaginationContext
+                data-plasmic-name={"cmsPaginationContext"}
+                data-plasmic-override={overrides.cmsPaginationContext}
                 className={classNames(
                   "__wab_instance",
-                  sty.cmsPaginationContext__lxs57
+                  sty.cmsPaginationContext
                 )}
                 databaseId={"1XTea8SGxneQLsfTFD3nDB"}
                 databaseToken={
@@ -583,9 +520,11 @@ function PlasmicHomepage__RenderFunc(props: {
                   {$ctx => (
                     <React.Fragment>
                       <CmsQueryRepeater
+                        data-plasmic-name={"cmsDataFetcher"}
+                        data-plasmic-override={overrides.cmsDataFetcher}
                         className={classNames(
                           "__wab_instance",
-                          sty.cmsDataFetcher___0VZb
+                          sty.cmsDataFetcher
                         )}
                         desc={false}
                         emptyMessage={
@@ -593,8 +532,8 @@ function PlasmicHomepage__RenderFunc(props: {
                             {$ctx => (
                               <div
                                 className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
+                                  "all",
+                                  "__wab_text",
                                   sty.text__oc6Ad
                                 )}
                               >
@@ -648,183 +587,159 @@ function PlasmicHomepage__RenderFunc(props: {
                         noLayout={false}
                         offset={$ctx.paginationCtx.offset}
                         orderBy={"caseStudyYear"}
+                        table={"caseStudyTitle"}
                         useDraft={false}
                       >
                         <DataCtxReader__>
                           {$ctx => (
-                            <StickerPeel
-                              data-plasmic-name={"stickerPeel"}
-                              data-plasmic-override={overrides.stickerPeel}
-                              backColor={(() => {
-                                try {
-                                  return $ctx.plasmicCmsCaseStudyTitleItem.data
-                                    .caseStudyColor;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "var(--token-6U10-UCl9glp)";
-                                  }
-                                  throw e;
-                                }
-                              })()}
-                              className={classNames(
-                                "__wab_instance",
-                                sty.stickerPeel
-                              )}
-                              hoverPeelSize={90}
-                              peelSize={75}
-                              perspective={300}
-                              shadowColor={true ? "#000000" : undefined}
-                              tilt={4}
-                              trigger={"hover"}
+                            <div
+                              className={classNames("all", sty.freeBox__o20Od)}
                             >
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.freeBox__o20Od
-                                )}
-                              >
-                                <TornSection
-                                  background={
-                                    <React.Fragment>
-                                      <NoiseOverlay
-                                        className={classNames(
-                                          "__wab_instance",
-                                          sty.noiseOverlay__dfJt
-                                        )}
-                                        color={true ? "#504C57" : undefined}
-                                      />
-
-                                      <div
-                                        className={classNames(
-                                          projectcss.all,
-                                          sty.freeBox___5QeFc
-                                        )}
-                                      />
-                                    </React.Fragment>
-                                  }
-                                  className={classNames(
-                                    "__wab_instance",
-                                    sty.tornSection__xeClH
-                                  )}
-                                  tornBottom={true}
-                                  tornBottomDepthPx={4}
-                                  tornTop={false}
-                                >
-                                  <div
-                                    className={classNames(
-                                      projectcss.all,
-                                      sty.freeBox__u892S
-                                    )}
-                                  >
-                                    <EyeconSvgIcon
-                                      className={classNames(
-                                        projectcss.all,
-                                        sty.svg__g3NRr
-                                      )}
-                                      role={"img"}
-                                    />
-
-                                    <CmsRowField
+                              <TornSection
+                                background={
+                                  <React.Fragment>
+                                    <NoiseOverlay
                                       className={classNames(
                                         "__wab_instance",
-                                        sty.cmsEntryField__uQQx
+                                        sty.noiseOverlay__dfJt
                                       )}
-                                      field={"caseStudyYear"}
-                                      themeResetClassName={classNames(
-                                        projectcss.root_reset,
-                                        projectcss.root_reset_tags,
-                                        projectcss.plasmic_default_styles,
-                                        projectcss.plasmic_mixins,
-                                        styleTokensClassNames
+                                      color={true ? "#504C57" : undefined}
+                                    />
+
+                                    <div
+                                      className={classNames(
+                                        "all",
+                                        sty.freeBox___5QeFc
                                       )}
                                     />
-                                  </div>
-                                </TornSection>
+                                  </React.Fragment>
+                                }
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.tornSection__xeClH
+                                )}
+                                tornBottom={true}
+                                tornBottomDepthPx={4}
+                                tornTop={false}
+                              >
                                 <div
                                   className={classNames(
-                                    projectcss.all,
-                                    sty.freeBox__soZho
+                                    "all",
+                                    sty.freeBox__u892S
                                   )}
                                 >
-                                  <OffsetCMYK
-                                    blendMode={"multiply"}
-                                    channelContrast={1.2}
+                                  <EyeconSvgIcon
+                                    className={classNames(
+                                      "all",
+                                      sty.svg__g3NRr
+                                    )}
+                                    role={"img"}
+                                  />
+
+                                  <CmsRowField
                                     className={classNames(
                                       "__wab_instance",
-                                      sty.offsetCmyk__jr5Hn
+                                      sty.cmsEntryField__uQQx
                                     )}
-                                    colorC={true ? "#CEBEE3" : undefined}
-                                    colorK={true ? "#00427F" : undefined}
-                                    colorM={true ? "#FF6A50" : undefined}
-                                    colorY={true ? "#DDEA44" : undefined}
-                                    interaction={"inverse"}
-                                    jitter={2}
-                                    offsetX={0.3}
-                                    offsetY={0.2}
-                                    texture={"halftone"}
-                                    textureContrast={90}
-                                    textureHoverEnabled={false}
-                                    textureStep={3}
-                                  >
-                                    <NextImage
-                                      alt={""}
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.image__tPqGa
-                                      )}
-                                      src={
-                                        $ctx.plasmicCmsCaseStudyTitleItem.data
-                                          .caseStudyCardImg.url
-                                      }
-                                    />
-                                  </OffsetCMYK>
-                                  <div
-                                    className={classNames(
-                                      projectcss.all,
-                                      sty.freeBox__gn4Il
+                                    field={"caseStudyYear"}
+                                    themeResetClassName={classNames(
+                                      "root_reset_67C2x4VH9CGyuASG98L3XF",
+                                      "root_reset_67C2x4VH9CGyuASG98L3XF_tags",
+                                      "plasmic_default_styles",
+                                      "plasmic_mixins",
+                                      styleTokensClassNames
                                     )}
                                   />
                                 </div>
-                                <TornSection
-                                  background={
-                                    <React.Fragment>
-                                      <NoiseOverlay
-                                        className={classNames(
-                                          "__wab_instance",
-                                          sty.noiseOverlay__c0Oc
-                                        )}
-                                        color={true ? "#EDE9E3" : undefined}
-                                      />
-
-                                      <div
-                                        className={classNames(
-                                          projectcss.all,
-                                          sty.freeBox___71K9A
-                                        )}
-                                      />
-                                    </React.Fragment>
-                                  }
+                              </TornSection>
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox__soZho
+                                )}
+                              >
+                                <OffsetCMYK
+                                  blendMode={"multiply"}
+                                  channelContrast={1.2}
                                   className={classNames(
                                     "__wab_instance",
-                                    sty.tornSection___3PrAn
+                                    sty.offsetCmyk__jr5Hn
                                   )}
-                                  tornBottom={false}
-                                  tornTop={true}
-                                  tornTopDepthPx={4}
+                                  colorC={true ? "#CEBEE3" : undefined}
+                                  colorK={true ? "#00427F" : undefined}
+                                  colorM={true ? "#FF6A50" : undefined}
+                                  colorY={true ? "#DDEA44" : undefined}
+                                  interaction={"inverse"}
+                                  jitter={2}
+                                  offsetX={0.3}
+                                  offsetY={0.2}
+                                  texture={"halftone"}
+                                  textureContrast={90}
+                                  textureHoverEnabled={false}
+                                  textureStep={3}
+                                >
+                                  <NextImage
+                                    alt={""}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.image__tPqGa
+                                    )}
+                                    objectFit={"cover"}
+                                    src={
+                                      $ctx.plasmicCmsCaseStudyTitleItem.data
+                                        .caseStudyCardImg.url
+                                    }
+                                  />
+                                </OffsetCMYK>
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__gn4Il
+                                  )}
+                                />
+                              </div>
+                              <TornSection
+                                background={
+                                  <React.Fragment>
+                                    <NoiseOverlay
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.noiseOverlay__c0Oc
+                                      )}
+                                      color={true ? "#EDE9E3" : undefined}
+                                    />
+
+                                    <div
+                                      className={classNames(
+                                        "all",
+                                        sty.freeBox___71K9A
+                                      )}
+                                    />
+                                  </React.Fragment>
+                                }
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.tornSection___3PrAn
+                                )}
+                                tornBottom={false}
+                                tornTop={true}
+                                tornTopDepthPx={4}
+                              >
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__feoX5
+                                  )}
                                 >
                                   <div
                                     className={classNames(
-                                      projectcss.all,
-                                      sty.freeBox__feoX5
+                                      "all",
+                                      sty.freeBox__fmcLb
                                     )}
                                   >
                                     <div
                                       className={classNames(
-                                        projectcss.all,
+                                        "all",
                                         sty.freeBox__xFfEu
                                       )}
                                     >
@@ -846,10 +761,10 @@ function PlasmicHomepage__RenderFunc(props: {
                                           )}
                                           field={"caseStudyTitle"}
                                           themeResetClassName={classNames(
-                                            projectcss.root_reset,
-                                            projectcss.root_reset_tags,
-                                            projectcss.plasmic_default_styles,
-                                            projectcss.plasmic_mixins,
+                                            "root_reset_67C2x4VH9CGyuASG98L3XF",
+                                            "root_reset_67C2x4VH9CGyuASG98L3XF_tags",
+                                            "plasmic_default_styles",
+                                            "plasmic_mixins",
                                             styleTokensClassNames
                                           )}
                                         />
@@ -859,125 +774,40 @@ function PlasmicHomepage__RenderFunc(props: {
                                           "__wab_instance",
                                           sty.cmsEntryField__ddsi
                                         )}
-                                        field={"caseStudyTitle"}
+                                        field={"caseStudyDesc"}
                                         themeResetClassName={classNames(
-                                          projectcss.root_reset,
-                                          projectcss.root_reset_tags,
-                                          projectcss.plasmic_default_styles,
-                                          projectcss.plasmic_mixins,
+                                          "root_reset_67C2x4VH9CGyuASG98L3XF",
+                                          "root_reset_67C2x4VH9CGyuASG98L3XF_tags",
+                                          "plasmic_default_styles",
+                                          "plasmic_mixins",
                                           styleTokensClassNames
                                         )}
                                       />
                                     </div>
+                                  </div>
+                                  {(() => {
+                                    try {
+                                      return true;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return true;
+                                      }
+                                      throw e;
+                                    }
+                                  })() ? (
                                     <div
                                       className={classNames(
-                                        projectcss.all,
-                                        sty.freeBox___41QhX
+                                        "all",
+                                        sty.freeBox__sT4Ma
                                       )}
                                     >
-                                      <OffsetImage
-                                        className={classNames(
-                                          "__wab_instance",
-                                          sty.offsetImage__c47R
-                                        )}
-                                        colorA={true ? "#FFAB7B" : undefined}
-                                        colorB={true ? "#DDEA44" : undefined}
-                                        imageContrast={2}
-                                        interaction={
-                                          hasVariant(
-                                            globalVariants,
-                                            "screen",
-                                            "mobile"
-                                          )
-                                            ? "click"
-                                            : undefined
-                                        }
-                                        jitter={0.3}
-                                        offsetX={2}
-                                        offsetY={2}
-                                        slotA={
-                                          <Button
-                                            className={classNames(
-                                              "__wab_instance",
-                                              sty.button__dfAjz
-                                            )}
-                                            color={"blue"}
-                                            disabled={false}
-                                            effect={
-                                              <div
-                                                data-plasmic-name={"freeBox4"}
-                                                data-plasmic-override={
-                                                  overrides.freeBox4
-                                                }
-                                                className={classNames(
-                                                  projectcss.all,
-                                                  sty.freeBox4
-                                                )}
-                                              />
-                                            }
-                                            end={
-                                              <CirclesparkleSvgIcon
-                                                className={classNames(
-                                                  projectcss.all,
-                                                  sty.svg__j0Xov
-                                                )}
-                                                role={"img"}
-                                              />
-                                            }
-                                            iconEnd={true}
-                                            label={
-                                              <div
-                                                className={classNames(
-                                                  projectcss.all,
-                                                  projectcss.__wab_text,
-                                                  sty.text__zmmpr
-                                                )}
-                                              >
-                                                {"case study"}
-                                              </div>
-                                            }
-                                            linkTo={`/portfolio/${(() => {
-                                              try {
-                                                return $ctx
-                                                  .plasmicCmsCaseStudyTitleItem
-                                                  .data.caseStudyUrl;
-                                              } catch (e) {
-                                                if (
-                                                  e instanceof TypeError ||
-                                                  e?.plasmicType ===
-                                                    "PlasmicUndefinedDataError"
-                                                ) {
-                                                  return undefined;
-                                                }
-                                                throw e;
-                                              }
-                                            })()}`}
-                                          />
-                                        }
-                                        slotB={
-                                          <div
-                                            data-plasmic-name={"freeBox3"}
-                                            data-plasmic-override={
-                                              overrides.freeBox3
-                                            }
-                                            className={classNames(
-                                              projectcss.all,
-                                              sty.freeBox3
-                                            )}
-                                          />
-                                        }
-                                        texture={"noise"}
-                                        textureContrast={80}
-                                        textureHoverEnabled={false}
-                                        textureStep={1}
-                                        tintSlots={true}
-                                      />
-
                                       {(() => {
                                         try {
-                                          return !!$ctx
-                                            .plasmicCmsCaseStudyTitleItem?.data
-                                            ?.caseStudyLiveLink;
+                                          return true;
                                         } catch (e) {
                                           if (
                                             e instanceof TypeError ||
@@ -989,17 +819,284 @@ function PlasmicHomepage__RenderFunc(props: {
                                           throw e;
                                         }
                                       })() ? (
+                                        <ScotchTape
+                                          className={classNames(
+                                            "__wab_instance",
+                                            sty.scotchTape__lsJyl
+                                          )}
+                                        >
+                                          {(() => {
+                                            try {
+                                              return !!$ctx
+                                                .plasmicCmsCaseStudyTitleItem
+                                                .data.caseStudyStat1;
+                                            } catch (e) {
+                                              if (
+                                                e instanceof TypeError ||
+                                                e?.plasmicType ===
+                                                  "PlasmicUndefinedDataError"
+                                              ) {
+                                                return true;
+                                              }
+                                              throw e;
+                                            }
+                                          })() ? (
+                                            <div
+                                              className={classNames(
+                                                "all",
+                                                sty.freeBox__uLe3I
+                                              )}
+                                            >
+                                              <InkBleed
+                                                bleedColor={(() => {
+                                                  try {
+                                                    return $ctx
+                                                      .plasmicCmsCaseStudyTitleItem
+                                                      .data.caseStudyColor;
+                                                  } catch (e) {
+                                                    if (
+                                                      e instanceof TypeError ||
+                                                      e?.plasmicType ===
+                                                        "PlasmicUndefinedDataError"
+                                                    ) {
+                                                      return "var(--token-tt4LcQz9DuF0)";
+                                                    }
+                                                    throw e;
+                                                  }
+                                                })()}
+                                                className={classNames(
+                                                  "__wab_instance",
+                                                  sty.inkBleed__e5O2L
+                                                )}
+                                                noiseFrequency={1}
+                                                spread={0.2}
+                                              >
+                                                <div
+                                                  className={classNames(
+                                                    "all",
+                                                    "__wab_text",
+                                                    sty.text___2GmT7
+                                                  )}
+                                                  style={{
+                                                    color:
+                                                      $ctx
+                                                        .plasmicCmsCaseStudyTitleItem
+                                                        .data.caseStudyColor
+                                                  }}
+                                                >
+                                                  <React.Fragment>
+                                                    {
+                                                      $ctx
+                                                        .plasmicCmsCaseStudyTitleItem
+                                                        .data.caseStudyStat1[
+                                                        "1statNum"
+                                                      ]
+                                                    }
+                                                  </React.Fragment>
+                                                </div>
+                                              </InkBleed>
+                                              <div
+                                                className={classNames(
+                                                  "all",
+                                                  "__wab_text",
+                                                  sty.text__oEz86
+                                                )}
+                                              >
+                                                <React.Fragment>
+                                                  {
+                                                    $ctx
+                                                      .plasmicCmsCaseStudyTitleItem
+                                                      .data.caseStudyStat1[
+                                                      "1statLabel"
+                                                    ]
+                                                  }
+                                                </React.Fragment>
+                                              </div>
+                                            </div>
+                                          ) : null}
+                                        </ScotchTape>
+                                      ) : null}
+                                      <ScotchTape
+                                        className={classNames(
+                                          "__wab_instance",
+                                          sty.scotchTape__gkSoL
+                                        )}
+                                        rotation={2}
+                                      >
+                                        {(() => {
+                                          try {
+                                            return !!$ctx
+                                              .plasmicCmsCaseStudyTitleItem.data
+                                              .caseStudyStat2;
+                                          } catch (e) {
+                                            if (
+                                              e instanceof TypeError ||
+                                              e?.plasmicType ===
+                                                "PlasmicUndefinedDataError"
+                                            ) {
+                                              return true;
+                                            }
+                                            throw e;
+                                          }
+                                        })() ? (
+                                          <div
+                                            className={classNames(
+                                              "all",
+                                              sty.freeBox__jLey1
+                                            )}
+                                          >
+                                            <InkBleed
+                                              bleedColor={(() => {
+                                                try {
+                                                  return $ctx
+                                                    .plasmicCmsCaseStudyTitleItem
+                                                    .data.caseStudyColor;
+                                                } catch (e) {
+                                                  if (
+                                                    e instanceof TypeError ||
+                                                    e?.plasmicType ===
+                                                      "PlasmicUndefinedDataError"
+                                                  ) {
+                                                    return "var(--token-tt4LcQz9DuF0)";
+                                                  }
+                                                  throw e;
+                                                }
+                                              })()}
+                                              className={classNames(
+                                                "__wab_instance",
+                                                sty.inkBleed__mAanX
+                                              )}
+                                              noiseFrequency={1}
+                                              spread={0.2}
+                                            >
+                                              <div
+                                                className={classNames(
+                                                  "all",
+                                                  "__wab_text",
+                                                  sty.text__ejBwm
+                                                )}
+                                                style={{
+                                                  color:
+                                                    $ctx
+                                                      .plasmicCmsCaseStudyTitleItem
+                                                      .data.caseStudyColor
+                                                }}
+                                              >
+                                                <React.Fragment>
+                                                  {
+                                                    $ctx
+                                                      .plasmicCmsCaseStudyTitleItem
+                                                      .data.caseStudyStat2[
+                                                      "2statNum"
+                                                    ]
+                                                  }
+                                                </React.Fragment>
+                                              </div>
+                                            </InkBleed>
+                                            <div
+                                              className={classNames(
+                                                "all",
+                                                "__wab_text",
+                                                sty.text__krsGt
+                                              )}
+                                            >
+                                              <React.Fragment>
+                                                {
+                                                  $ctx
+                                                    .plasmicCmsCaseStudyTitleItem
+                                                    .data.caseStudyStat2[
+                                                    "2statLabel"
+                                                  ]
+                                                }
+                                              </React.Fragment>
+                                            </div>
+                                          </div>
+                                        ) : null}
+                                      </ScotchTape>
+                                    </div>
+                                  ) : null}
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      sty.freeBox___41QhX
+                                    )}
+                                  >
+                                    <OffsetImage
+                                      blendMode={"overlay"}
+                                      className={classNames(
+                                        "__wab_instance",
+                                        sty.offsetImage__c47R
+                                      )}
+                                      colorA={(() => {
+                                        try {
+                                          return $ctx
+                                            .plasmicCmsCaseStudyTitleItem.data
+                                            .caseStudyColor;
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return "var(--token-tt4LcQz9DuF0)";
+                                          }
+                                          throw e;
+                                        }
+                                      })()}
+                                      colorB={(() => {
+                                        try {
+                                          return $ctx
+                                            .plasmicCmsCaseStudyTitleItem.data
+                                            .caseStudyAccentColor;
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return "var(--token-doCHQ9G8_OsB)";
+                                          }
+                                          throw e;
+                                        }
+                                      })()}
+                                      imageContrast={0}
+                                      interaction={
+                                        hasVariant(
+                                          globalVariants,
+                                          "screen",
+                                          "mobile"
+                                        )
+                                          ? "click"
+                                          : "hover"
+                                      }
+                                      jitter={0.3}
+                                      offsetX={2}
+                                      offsetY={2}
+                                      slotA={
                                         <Button
                                           className={classNames(
                                             "__wab_instance",
-                                            sty.button__wcEqo
+                                            sty.button__dfAjz
                                           )}
-                                          color={"neutral"}
-                                          end={
-                                            <CirclesparkleSvgIcon
+                                          color={"blue"}
+                                          disabled={false}
+                                          effect={
+                                            <div
+                                              data-plasmic-name={"freeBox4"}
+                                              data-plasmic-override={
+                                                overrides.freeBox4
+                                              }
                                               className={classNames(
-                                                projectcss.all,
-                                                sty.svg__e408V
+                                                "all",
+                                                sty.freeBox4
+                                              )}
+                                            />
+                                          }
+                                          end={
+                                            <ArrowRightSvgIcon
+                                              className={classNames(
+                                                "all",
+                                                sty.svg__j0Xov
                                               )}
                                               role={"img"}
                                             />
@@ -1008,45 +1105,61 @@ function PlasmicHomepage__RenderFunc(props: {
                                           label={
                                             <div
                                               className={classNames(
-                                                projectcss.all,
-                                                projectcss.__wab_text,
-                                                sty.text__qDOgf
+                                                "all",
+                                                "__wab_text",
+                                                sty.text__zmmpr
                                               )}
                                             >
-                                              {"live link"}
+                                              {"case study"}
                                             </div>
                                           }
-                                          linkTo={(() => {
+                                          linkTo={`/portfolio/${(() => {
                                             try {
-                                              return $ctx
-                                                .plasmicCmsCaseStudyTitleItem
-                                                .data.caseStudyLiveLink;
+                                              return `"/portfolio/" + $ctx.plasmicCmsCaseStudyTitleItem.data.caseStudySlug`;
                                             } catch (e) {
                                               if (
                                                 e instanceof TypeError ||
                                                 e?.plasmicType ===
                                                   "PlasmicUndefinedDataError"
                                               ) {
-                                                return "";
+                                                return undefined;
                                               }
                                               throw e;
                                             }
-                                          })()}
-                                          type={"bordered"}
+                                          })()}`}
                                         />
-                                      ) : null}
-                                    </div>
+                                      }
+                                      slotB={
+                                        <div
+                                          data-plasmic-name={"freeBox3"}
+                                          data-plasmic-override={
+                                            overrides.freeBox3
+                                          }
+                                          className={classNames(
+                                            "all",
+                                            sty.freeBox3
+                                          )}
+                                        />
+                                      }
+                                      texture={"noise"}
+                                      textureContrast={80}
+                                      textureHoverEnabled={false}
+                                      textureStep={1}
+                                      tintSlots={true}
+                                    />
                                   </div>
-                                </TornSection>
-                              </div>
-                            </StickerPeel>
+                                </div>
+                              </TornSection>
+                            </div>
                           )}
                         </DataCtxReader__>
                       </CmsQueryRepeater>
                       <CmsPaginationControls
+                        data-plasmic-name={"cmsPaginationControls"}
+                        data-plasmic-override={overrides.cmsPaginationControls}
                         className={classNames(
                           "__wab_instance",
-                          sty.cmsPaginationControls__iLkMx
+                          sty.cmsPaginationControls
                         )}
                         maxPageButtons={
                           hasVariant(globalVariants, "screen", "mobile")
@@ -1055,45 +1168,35 @@ function PlasmicHomepage__RenderFunc(props: {
                         }
                         nextButton={
                           <ArrowRightSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg___4IaMu
-                            )}
+                            className={classNames("all", sty.svg___4IaMu)}
                             role={"img"}
                           />
                         }
                         nextButtonInactive={
                           <ArrowRightSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__rtLfu
-                            )}
+                            className={classNames("all", sty.svg__rtLfu)}
                             role={"img"}
                           />
                         }
                         pageButton={
                           <PageButton
+                            data-plasmic-name={"pageButton"}
+                            data-plasmic-override={overrides.pageButton}
                             className={classNames(
                               "__wab_instance",
-                              sty.pageButton__rbWaS
+                              sty.pageButton
                             )}
                           />
                         }
                         prevButton={
                           <ArrowLeftSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__kK1Qx
-                            )}
+                            className={classNames("all", sty.svg__kK1Qx)}
                             role={"img"}
                           />
                         }
                         prevButtonInactive={
                           <ArrowLeftSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__kwd8K
-                            )}
+                            className={classNames("all", sty.svg__kwd8K)}
                             role={"img"}
                           />
                         }
@@ -1103,7 +1206,7 @@ function PlasmicHomepage__RenderFunc(props: {
                 </DataCtxReader__>
               </CmsPaginationContext>
             </div>
-            <div className={classNames(projectcss.all, sty.freeBox__awWL)}>
+            <div className={classNames("all", sty.freeBox__awWL)}>
               <HalftoneMask
                 className={classNames(
                   "__wab_instance",
@@ -1138,7 +1241,7 @@ function PlasmicHomepage__RenderFunc(props: {
                 />
               </HalftoneMask>
             </div>
-            <div className={classNames(projectcss.all, sty.freeBox___4ElwX)}>
+            <div className={classNames("all", sty.freeBox___4ElwX)}>
               <HalftoneMask
                 className={classNames("__wab_instance", sty.halftoneMask__mLp1)}
                 color={true ? "#CEBEE3" : undefined}
@@ -1171,609 +1274,17 @@ function PlasmicHomepage__RenderFunc(props: {
               </HalftoneMask>
             </div>
           </section>
-          <TornSection
-            background={
-              <div className={classNames(projectcss.all, sty.freeBox__u2Onx)} />
-            }
-            className={classNames("__wab_instance", sty.tornSection__cS5)}
-            tornBottom={false}
-            tornTop={true}
-            tornTopDepthPx={12}
-            tornTopStepSize={4}
-          >
-            <div className={classNames(projectcss.all, sty.freeBox__ontuW)}>
-              <div className={classNames(projectcss.all, sty.freeBox__lwbPi)}>
-                <InkBleed
-                  bleedColor={true ? "#FF6A50" : undefined}
-                  className={classNames("__wab_instance", sty.inkBleed__v5CXq)}
-                  noiseFrequency={2}
-                  softness={10}
-                  spread={2}
-                >
-                  <h1
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.h1,
-                      projectcss.h1__67C2x,
-                      projectcss.__wab_text,
-                      sty.h1__eI8Pi
-                    )}
-                  >
-                    {"ephemera"}
-                  </h1>
-                </InkBleed>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__vToRk
-                  )}
-                >
-                  {"a collection of art and objects"}
-                </div>
-              </div>
-              <InkBleed
-                bleedColor={true ? "#00427F40" : undefined}
-                className={classNames("__wab_instance", sty.inkBleed__o47Sj)}
-                noiseFrequency={2}
-                spread={2}
-              >
-                <ScotchTape
-                  className={classNames(
-                    "__wab_instance",
-                    sty.scotchTape__bHcDt
-                  )}
-                  rotation={-20}
-                >
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__wU98)}
-                  />
-                </ScotchTape>
-              </InkBleed>
-              <InkBleed
-                bleedColor={true ? "#00427F40" : undefined}
-                className={classNames("__wab_instance", sty.inkBleed__oUjo)}
-                noiseFrequency={2}
-                spread={2}
-              >
-                <ScotchTape
-                  className={classNames(
-                    "__wab_instance",
-                    sty.scotchTape__dipUf
-                  )}
-                  rotation={-4}
-                >
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__lbChF)}
-                  />
-                </ScotchTape>
-              </InkBleed>
-              <CmsPaginationContext
-                className={classNames(
-                  "__wab_instance",
-                  sty.cmsPaginationContext__pae3C
-                )}
-                databaseId={"1XTea8SGxneQLsfTFD3nDB"}
-                databaseToken={
-                  "8QLNduGOr5ivOEyTRMYivo9hizvASFYdD1muqeQuUh2IbycxLdMaWmeMe43ZjpENSsONuy3cjlT4EDwA"
-                }
-                pageSize={
-                  hasVariant(globalVariants, "screen", "mobile") ? 1 : 4
-                }
-                table={"art"}
-              >
-                <DataCtxReader__>
-                  {$ctx => (
-                    <React.Fragment>
-                      <CmsQueryRepeater
-                        className={classNames(
-                          "__wab_instance",
-                          sty.cmsDataFetcher__zRpg
-                        )}
-                        desc={false}
-                        emptyMessage={
-                          <DataCtxReader__>
-                            {$ctx => (
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__fv2Hq
-                                )}
-                              >
-                                {"No matching published entries found."}
-                              </div>
-                            )}
-                          </DataCtxReader__>
-                        }
-                        forceEmptyState={false}
-                        forceLoadingState={false}
-                        limit={(() => {
-                          try {
-                            return $ctx.paginationCtx.pageSize;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return 2;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        loadingMessage={
-                          <DataCtxReader__>
-                            {$ctx => (
-                              <React.Fragment>
-                                {(_par =>
-                                  !_par
-                                    ? []
-                                    : Array.isArray(_par)
-                                      ? _par
-                                      : [_par])(
-                                  (() => {
-                                    try {
-                                      return $ctx.paginationCtx.totalCount;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return [];
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                                  const currentItem = __plasmic_item_0;
-                                  const currentIndex = __plasmic_idx_0;
-                                  return (
-                                    <Shimmer
-                                      baseColor={true ? "#EDE9E3" : undefined}
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.shimmer__exB5U
-                                      )}
-                                      highlightColor={
-                                        true ? "#CEBEE3" : undefined
-                                      }
-                                      key={currentIndex}
-                                    />
-                                  );
-                                })}
-                                {(_par =>
-                                  !_par
-                                    ? []
-                                    : Array.isArray(_par)
-                                      ? _par
-                                      : [_par])(
-                                  (() => {
-                                    try {
-                                      return $ctx.paginationCtx.totalCount;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return [];
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                                  const currentItem = __plasmic_item_0;
-                                  const currentIndex = __plasmic_idx_0;
-                                  return (
-                                    <Shimmer
-                                      baseColor={true ? "#EDE9E3" : undefined}
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.shimmer__gse6N
-                                      )}
-                                      highlightColor={
-                                        true ? "#CEBEE3" : undefined
-                                      }
-                                      key={currentIndex}
-                                    />
-                                  );
-                                })}
-                                {(_par =>
-                                  !_par
-                                    ? []
-                                    : Array.isArray(_par)
-                                      ? _par
-                                      : [_par])(
-                                  (() => {
-                                    try {
-                                      return $ctx.paginationCtx.totalCount;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return [];
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                                  const currentItem = __plasmic_item_0;
-                                  const currentIndex = __plasmic_idx_0;
-                                  return (
-                                    <Shimmer
-                                      baseColor={true ? "#EDE9E3" : undefined}
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.shimmer___0MSwR
-                                      )}
-                                      highlightColor={
-                                        true ? "#CEBEE3" : undefined
-                                      }
-                                      key={currentIndex}
-                                    />
-                                  );
-                                })}
-                                {(_par =>
-                                  !_par
-                                    ? []
-                                    : Array.isArray(_par)
-                                      ? _par
-                                      : [_par])(
-                                  (() => {
-                                    try {
-                                      return $ctx.paginationCtx.totalCount;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return [];
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                                  const currentItem = __plasmic_item_0;
-                                  const currentIndex = __plasmic_idx_0;
-                                  return (
-                                    <Shimmer
-                                      baseColor={true ? "#EDE9E3" : undefined}
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.shimmer__bEjJl
-                                      )}
-                                      highlightColor={
-                                        true ? "#CEBEE3" : undefined
-                                      }
-                                      key={currentIndex}
-                                    />
-                                  );
-                                })}
-                              </React.Fragment>
-                            )}
-                          </DataCtxReader__>
-                        }
-                        mode={"rows"}
-                        noAutoRepeat={false}
-                        noLayout={false}
-                        offset={$ctx.paginationCtx.offset}
-                        orderBy={"artYear"}
-                        table={"art"}
-                        useDraft={false}
-                      >
-                        <DataCtxReader__>
-                          {$ctx => (
-                            <InkBleed
-                              bleedColor={true ? "#FFAB7B" : undefined}
-                              blendMode={"normal"}
-                              className={classNames(
-                                "__wab_instance",
-                                sty.inkBleed__iAnMy
-                              )}
-                              isolateBlend={true}
-                              noiseFrequency={2}
-                              softness={7}
-                              spread={2}
-                            >
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.freeBox__tieWb
-                                )}
-                                onClick={async event => {
-                                  const $steps = {};
+          <MarqueeScroll2
+            data-plasmic-name={"marqueeScroll2"}
+            data-plasmic-override={overrides.marqueeScroll2}
+            className={classNames("__wab_instance", sty.marqueeScroll2)}
+          />
 
-                                  $steps["goToArtwork"] = true
-                                    ? (() => {
-                                        const actionArgs = {
-                                          destination: `/artwork/${(() => {
-                                            try {
-                                              return $ctx.plasmicCmsArtItem.data
-                                                .artSlug;
-                                            } catch (e) {
-                                              if (
-                                                e instanceof TypeError ||
-                                                e?.plasmicType ===
-                                                  "PlasmicUndefinedDataError"
-                                              ) {
-                                                return undefined;
-                                              }
-                                              throw e;
-                                            }
-                                          })()}`
-                                        };
-                                        return (({ destination }) => {
-                                          if (
-                                            typeof destination === "string" &&
-                                            destination.startsWith("#")
-                                          ) {
-                                            document
-                                              .getElementById(
-                                                destination.substr(1)
-                                              )
-                                              .scrollIntoView({
-                                                behavior: "smooth"
-                                              });
-                                          } else {
-                                            __nextRouter?.push(destination);
-                                          }
-                                        })?.apply(null, [actionArgs]);
-                                      })()
-                                    : undefined;
-                                  if (
-                                    $steps["goToArtwork"] != null &&
-                                    typeof $steps["goToArtwork"] === "object" &&
-                                    typeof $steps["goToArtwork"].then ===
-                                      "function"
-                                  ) {
-                                    $steps["goToArtwork"] =
-                                      await $steps["goToArtwork"];
-                                  }
-                                }}
-                              >
-                                <OffsetCMYK
-                                  blendMode={"darken"}
-                                  channelContrast={1.2}
-                                  className={classNames(
-                                    "__wab_instance",
-                                    sty.offsetCmyk__fKPzy
-                                  )}
-                                  colorC={true ? "#CEBEE3" : undefined}
-                                  colorK={true ? "#00427F" : undefined}
-                                  colorM={true ? "#FF6A50" : undefined}
-                                  colorY={true ? "#DDEA44" : undefined}
-                                  interaction={"inverse"}
-                                  jitter={2}
-                                  offsetX={0.3}
-                                  offsetY={0.2}
-                                  texture={"noise"}
-                                  textureContrast={74}
-                                  textureHoverEnabled={false}
-                                  textureStep={2}
-                                >
-                                  <NextImage
-                                    alt={""}
-                                    className={classNames(
-                                      "__wab_instance",
-                                      sty.image__zzAph
-                                    )}
-                                    fill={true}
-                                    src={
-                                      $ctx.plasmicCmsArtItem.data.artCardImg.url
-                                    }
-                                  />
-                                </OffsetCMYK>
-                                <DotOverlay
-                                  data-plasmic-name={"dotOverlay"}
-                                  data-plasmic-override={overrides.dotOverlay}
-                                  className={classNames(
-                                    "__wab_instance",
-                                    sty.dotOverlay
-                                  )}
-                                  dotColorA={true ? "#DDEA44" : undefined}
-                                  dotColorB={true ? "#52A159" : undefined}
-                                  dotEdgeMax={200}
-                                  dotEdgeMin={0}
-                                  falloffRadius={70}
-                                />
-
-                                <TornSection
-                                  background={
-                                    <React.Fragment>
-                                      <NoiseOverlay
-                                        className={classNames(
-                                          "__wab_instance",
-                                          sty.noiseOverlay__lG8If
-                                        )}
-                                        color={true ? "#504C57" : undefined}
-                                      />
-
-                                      <div
-                                        className={classNames(
-                                          projectcss.all,
-                                          sty.freeBox__ycTs3
-                                        )}
-                                      />
-                                    </React.Fragment>
-                                  }
-                                  className={classNames(
-                                    "__wab_instance",
-                                    sty.tornSection__wiM5H
-                                  )}
-                                  tornBottom={false}
-                                  tornTop={true}
-                                  tornTopDepthPx={4}
-                                >
-                                  <div
-                                    className={classNames(
-                                      projectcss.all,
-                                      sty.freeBox___43TRd
-                                    )}
-                                  >
-                                    <EyeconSvgIcon
-                                      className={classNames(
-                                        projectcss.all,
-                                        sty.svg__ue2Mc
-                                      )}
-                                      role={"img"}
-                                    />
-
-                                    <CmsRowField
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.cmsEntryField__gKmNw
-                                      )}
-                                      field={"artTitle"}
-                                      themeResetClassName={classNames(
-                                        projectcss.root_reset,
-                                        projectcss.root_reset_tags,
-                                        projectcss.plasmic_default_styles,
-                                        projectcss.plasmic_mixins,
-                                        styleTokensClassNames
-                                      )}
-                                    />
-
-                                    <CmsRowField
-                                      className={classNames(
-                                        "__wab_instance",
-                                        sty.cmsEntryField__d6YS
-                                      )}
-                                      field={"artYear"}
-                                      themeResetClassName={classNames(
-                                        projectcss.root_reset,
-                                        projectcss.root_reset_tags,
-                                        projectcss.plasmic_default_styles,
-                                        projectcss.plasmic_mixins,
-                                        styleTokensClassNames
-                                      )}
-                                    />
-                                  </div>
-                                </TornSection>
-                              </div>
-                            </InkBleed>
-                          )}
-                        </DataCtxReader__>
-                      </CmsQueryRepeater>
-                      <CmsPaginationControls
-                        className={classNames(
-                          "__wab_instance",
-                          sty.cmsPaginationControls___6TwdZ
-                        )}
-                        maxPageButtons={
-                          hasVariant(globalVariants, "screen", "mobile")
-                            ? 4
-                            : undefined
-                        }
-                        nextButton={
-                          <ArrowRightSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__obEqp
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        nextButtonInactive={
-                          <ArrowRightSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__xYkOc
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        pageButton={
-                          <PageButton
-                            className={classNames(
-                              "__wab_instance",
-                              sty.pageButton__vSbI3
-                            )}
-                          />
-                        }
-                        prevButton={
-                          <ArrowLeftSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg___2Lnlv
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        prevButtonInactive={
-                          <ArrowLeftSvgIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__hMmSo
-                            )}
-                            role={"img"}
-                          />
-                        }
-                      />
-                    </React.Fragment>
-                  )}
-                </DataCtxReader__>
-              </CmsPaginationContext>
-            </div>
-          </TornSection>
-          <ScrollMarquee
-            className={classNames("__wab_instance", sty.scrollMarquee__pygIq)}
-            direction={"right"}
-            height={"90px"}
-            pauseOnHover={false}
-          >
-            <OffsetCMYK
-              blendMode={"darken"}
-              className={classNames("__wab_instance", sty.offsetCmyk__vr2Kf)}
-              colorC={true ? "#CEBEE3" : undefined}
-              colorK={true ? "#00427F" : undefined}
-              colorM={true ? "#FF6A50" : undefined}
-              colorY={true ? "#DDEA44" : undefined}
-              interaction={"inverse"}
-              jitter={0.3}
-              offsetX={1}
-              offsetY={1}
-              texture={"noise"}
-              textureContrast={75}
-              textureHoverEnabled={false}
-              textureStep={1}
-            >
-              <NextImage
-                alt={""}
-                className={classNames("__wab_instance", sty.image__kj7Fs)}
-                fill={true}
-                objectFit={"contain"}
-                src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-              />
-            </OffsetCMYK>
-            <OffsetCMYK
-              blendMode={"darken"}
-              className={classNames("__wab_instance", sty.offsetCmyk___8LzyA)}
-              colorC={true ? "#CEBEE3" : undefined}
-              colorK={true ? "#00427F" : undefined}
-              colorM={true ? "#FF6A50" : undefined}
-              colorY={true ? "#DDEA44" : undefined}
-              interaction={"inverse"}
-              jitter={0.3}
-              offsetX={1}
-              offsetY={1}
-              texture={"noise"}
-              textureContrast={75}
-              textureHoverEnabled={false}
-              textureStep={1}
-            >
-              <NextImage
-                alt={""}
-                className={classNames("__wab_instance", sty.image__dMfae)}
-                fill={true}
-                objectFit={"contain"}
-                src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-              />
-            </OffsetCMYK>
-          </ScrollMarquee>
+          <Footer
+            data-plasmic-name={"footer"}
+            data-plasmic-override={overrides.footer}
+            className={classNames("__wab_instance", sty.footer)}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -1788,22 +1299,47 @@ const PlasmicDescendants = {
     "h4",
     "freeBox5",
     "freeBox6",
+    "marqueeScroll",
     "section",
-    "stickerPeel",
+    "cmsPaginationContext",
+    "cmsDataFetcher",
     "freeBox4",
     "freeBox3",
-    "dotOverlay"
+    "cmsPaginationControls",
+    "pageButton",
+    "marqueeScroll2",
+    "footer"
   ],
   navBanner: ["navBanner"],
   columns: ["columns", "h4", "freeBox5", "freeBox6"],
   h4: ["h4"],
   freeBox5: ["freeBox5"],
   freeBox6: ["freeBox6"],
-  section: ["section", "stickerPeel", "freeBox4", "freeBox3"],
-  stickerPeel: ["stickerPeel", "freeBox4", "freeBox3"],
+  marqueeScroll: ["marqueeScroll"],
+  section: [
+    "section",
+    "cmsPaginationContext",
+    "cmsDataFetcher",
+    "freeBox4",
+    "freeBox3",
+    "cmsPaginationControls",
+    "pageButton"
+  ],
+  cmsPaginationContext: [
+    "cmsPaginationContext",
+    "cmsDataFetcher",
+    "freeBox4",
+    "freeBox3",
+    "cmsPaginationControls",
+    "pageButton"
+  ],
+  cmsDataFetcher: ["cmsDataFetcher", "freeBox4", "freeBox3"],
   freeBox4: ["freeBox4"],
   freeBox3: ["freeBox3"],
-  dotOverlay: ["dotOverlay"]
+  cmsPaginationControls: ["cmsPaginationControls", "pageButton"],
+  pageButton: ["pageButton"],
+  marqueeScroll2: ["marqueeScroll2"],
+  footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1815,11 +1351,16 @@ type NodeDefaultElementType = {
   h4: "h4";
   freeBox5: "div";
   freeBox6: "div";
+  marqueeScroll: typeof MarqueeScroll;
   section: "section";
-  stickerPeel: typeof StickerPeel;
+  cmsPaginationContext: typeof CmsPaginationContext;
+  cmsDataFetcher: typeof CmsQueryRepeater;
   freeBox4: "div";
   freeBox3: "div";
-  dotOverlay: typeof DotOverlay;
+  cmsPaginationControls: typeof CmsPaginationControls;
+  pageButton: typeof PageButton;
+  marqueeScroll2: typeof MarqueeScroll2;
+  footer: typeof Footer;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1889,11 +1430,16 @@ export const PlasmicHomepage = Object.assign(
     h4: makeNodeComponent("h4"),
     freeBox5: makeNodeComponent("freeBox5"),
     freeBox6: makeNodeComponent("freeBox6"),
+    marqueeScroll: makeNodeComponent("marqueeScroll"),
     section: makeNodeComponent("section"),
-    stickerPeel: makeNodeComponent("stickerPeel"),
+    cmsPaginationContext: makeNodeComponent("cmsPaginationContext"),
+    cmsDataFetcher: makeNodeComponent("cmsDataFetcher"),
     freeBox4: makeNodeComponent("freeBox4"),
     freeBox3: makeNodeComponent("freeBox3"),
-    dotOverlay: makeNodeComponent("dotOverlay"),
+    cmsPaginationControls: makeNodeComponent("cmsPaginationControls"),
+    pageButton: makeNodeComponent("pageButton"),
+    marqueeScroll2: makeNodeComponent("marqueeScroll2"),
+    footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,
