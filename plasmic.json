@@ -27118,6 +27118,46 @@
         }
       ],
       "customFunctions": []
+    },
+    {
+      "projectId": "hPz6Q3nQJn9Q8DTBgANGwo",
+      "projectApiToken": "LjSpKE3KGAP0BTj4Pw8tdHYXzQ9mZeNg0L7YRJ25qLJhCZwbS2n1ybcTImjPg1BuEA0QKeRAjEW1DLKh0VQ",
+      "projectName": "cms",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/cms/plasmic.css",
+      "components": [],
+      "icons": [],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "styleTokensProviderFilePath": "plasmic/cms/PlasmicStyleTokensProvider.tsx",
+      "dataTokensFilePath": "",
+      "projectModuleFilePath": "plasmic/cms/plasmic.tsx",
+      "codeComponents": [],
+      "customFunctions": [
+        {
+          "defaultExport": false,
+          "id": "plasmicCms.fetchTables",
+          "importPath": "@plasmicpkgs/cms",
+          "name": "fetchTables",
+          "namespace": "plasmicCms"
+        },
+        {
+          "defaultExport": false,
+          "id": "plasmicCms.fetchContent",
+          "importPath": "@plasmicpkgs/cms",
+          "name": "fetchContent",
+          "namespace": "plasmicCms"
+        },
+        {
+          "defaultExport": false,
+          "id": "plasmicCms.fetchCount",
+          "importPath": "@plasmicpkgs/cms",
+          "name": "fetchCount",
+          "namespace": "plasmicCms"
+        }
+      ]
     }
   ],
   "globalVariants": {
