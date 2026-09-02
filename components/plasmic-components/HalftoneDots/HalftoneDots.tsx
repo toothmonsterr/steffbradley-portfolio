@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './HalftoneDots.module.css';
 import { findHoverHost } from '@/hooks/findHoverHost';
 import { colorOrDefault } from '@/hooks/colorDefault';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 
 export interface HalftoneDotsProps {
   /** First ink color */
@@ -93,7 +93,7 @@ export function HalftoneDots({
   // Cursor activity ramp (0 = idle, 1 = fully hovered). Used for shift/pulse.
   const activityRef = useRef(0);
   const hoveringRef = useRef(false);
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -239,7 +239,9 @@ export function HalftoneDots({
 
     // Under reduced motion, cursor-driven shift/pulse ramps are disabled —
     // dots stay in their static base layout regardless of hover.
-    const isAnimated = !prefersReduced && (cursor === 'shift' || cursor === 'pulse');
+    // On touch there is no cursor to drive shift/pulse, so keep the dots in
+    // their static base layout and skip the hover listeners below entirely.
+    const isAnimated = !prefersReduced && !isTouch && (cursor === 'shift' || cursor === 'pulse');
 
     const onEnter = () => {
       hoveringRef.current = true;
@@ -279,7 +281,7 @@ export function HalftoneDots({
     };
   }, [
     resolvedColorA, resolvedColorB, layerAAngle, layerBAngle,
-    step, dotSize, cursor, trigger, easeDuration, prefersReduced,
+    step, dotSize, cursor, trigger, easeDuration, prefersReduced, isTouch,
   ]);
 
   // ── Cursor-following mask ────────────────────────────────────────────
@@ -293,10 +295,16 @@ export function HalftoneDots({
     const host = findHoverHost(root);
     if (!host) return;
 
+    // getBoundingClientRect() forces synchronous layout; calling it per
+    // mousemove thrashes. Cache it and refresh only when geometry can change.
+    let hostRect = host.getBoundingClientRect();
+    const refreshRect = () => { hostRect = host.getBoundingClientRect(); };
+    window.addEventListener('scroll', refreshRect, { passive: true });
+    window.addEventListener('resize', refreshRect, { passive: true });
+
     const onMove = (e: MouseEvent) => {
-      const rect = host.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = e.clientX - hostRect.left;
+      const y = e.clientY - hostRect.top;
       canvas.style.setProperty('--mask-x', `${x}px`);
       canvas.style.setProperty('--mask-y', `${y}px`);
     };
@@ -305,9 +313,21 @@ export function HalftoneDots({
     canvas.style.setProperty('--mask-x', `${host.offsetWidth / 2}px`);
     canvas.style.setProperty('--mask-y', `${host.offsetHeight / 2}px`);
 
-    host.addEventListener('mousemove', onMove);
-    return () => host.removeEventListener('mousemove', onMove);
-  }, [iconUrl, iconFollowsCursor]);
+    // The icon follows the cursor, so on touch it would sit frozen at that
+    // centre position forever — leave it there and track nothing.
+    if (isTouch) {
+      window.removeEventListener('scroll', refreshRect);
+      window.removeEventListener('resize', refreshRect);
+      return;
+    }
+
+    host.addEventListener('mousemove', onMove, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', refreshRect);
+      window.removeEventListener('resize', refreshRect);
+      host.removeEventListener('mousemove', onMove);
+    };
+  }, [iconUrl, iconFollowsCursor, isTouch]);
 
   if (trigger === 'never') return null;
 

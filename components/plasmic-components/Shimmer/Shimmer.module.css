@@ -8,23 +8,29 @@
   border-radius: var(--shimmer-radius, 6px);
 }
 
+/* Swept with `transform: translateX` rather than `background-position`, which
+   repaints the element on the main thread every frame. The element is twice
+   the parent width and slides across it; `.root` is already overflow:hidden. */
 .root::after {
   content: '';
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 200%;
   background: linear-gradient(
     var(--shimmer-angle, 90deg),
     transparent 0%,
     var(--shimmer-highlight, rgba(255, 255, 255, 0.6)) 50%,
     transparent 100%
   );
-  background-size: 200% 100%;
+  will-change: transform;
   animation: shimmer-sweep var(--shimmer-duration, 1.4s) ease-in-out infinite;
 }
 
 @keyframes shimmer-sweep {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

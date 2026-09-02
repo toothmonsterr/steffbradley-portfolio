@@ -1,7 +1,7 @@
 import React, { useId, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import styles from './OffsetImage.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import {
   buildWobble,
   imageFilterJSX,
@@ -66,7 +66,7 @@ export const OffsetImage = React.memo(function OffsetImage({
   const uid       = useId().replace(/:/g, '');
   const filterAId = `oi-a-${uid}`;
   const filterBId = `oi-b-${uid}`;
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, frameInterval } = useAnimationTier();
 
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -83,6 +83,7 @@ export const OffsetImage = React.memo(function OffsetImage({
     offsetY,
     easeDuration,
     prefersReduced,
+    frameInterval,
     layers,
   });
 

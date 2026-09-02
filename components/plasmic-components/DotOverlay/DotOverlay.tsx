@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './DotOverlay.module.css';
 import { findHoverHost } from '@/hooks/findHoverHost';
 import { colorOrDefault } from '@/hooks/colorDefault';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 
 export interface DotOverlayProps {
   /** First dot color (at cursor) */
@@ -82,7 +82,7 @@ export const DotOverlay = React.memo(function DotOverlay({
   // Linear activity ramp 0..1 (time-based). 1 = fully hovered, 0 = at rest.
   const activityRef = useRef(0);
   const hoveringRef = useRef(false);
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -213,7 +213,9 @@ export const DotOverlay = React.memo(function DotOverlay({
     // Under reduced motion, skip the cursor-follow spotlight entirely — dots
     // stay at their static base (min) size, with only a plain show/hide of
     // the canvas on hover (no proximity animation, no mousemove tracking).
-    if (prefersReduced) {
+    // No cursor on touch: the proximity spotlight can never render, so skip
+    // the mousemove tracking and RAF entirely and show the static base grid.
+    if (prefersReduced || isTouch) {
       if (trigger === 'hover') {
         const onEnterStatic = () => canvas.classList.add(styles.active);
         const onLeaveStatic = () => canvas.classList.remove(styles.active);
@@ -230,14 +232,21 @@ export const DotOverlay = React.memo(function DotOverlay({
       return () => ro.disconnect();
     }
 
+    // getBoundingClientRect() forces synchronous layout, so calling it on every
+    // mousemove is a per-event layout thrash. Cache it and refresh only when
+    // the geometry can actually have changed.
+    let hostRect = host.getBoundingClientRect();
+    const refreshRect = () => { hostRect = host.getBoundingClientRect(); };
+    window.addEventListener('scroll', refreshRect, { passive: true });
+    window.addEventListener('resize', refreshRect, { passive: true });
+
     const onMove = (e: MouseEvent) => {
-      const rect = host.getBoundingClientRect();
-      targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      targetRef.current = { x: e.clientX - hostRect.left, y: e.clientY - hostRect.top };
       startLoop();
     };
     const onEnter = (e: MouseEvent) => {
-      const rect = host.getBoundingClientRect();
-      const pos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      refreshRect();
+      const pos = { x: e.clientX - hostRect.left, y: e.clientY - hostRect.top };
       curRef.current = { ...pos };
       targetRef.current = { ...pos };
       hoveringRef.current = true;
@@ -253,7 +262,7 @@ export const DotOverlay = React.memo(function DotOverlay({
       canvas.classList.remove(styles.active);
     };
 
-    host.addEventListener('mousemove', onMove);
+    host.addEventListener('mousemove', onMove, { passive: true });
     if (trigger === 'hover') {
       host.addEventListener('mouseenter', onEnter);
       host.addEventListener('mouseleave', onLeave);
@@ -271,13 +280,15 @@ export const DotOverlay = React.memo(function DotOverlay({
       cancelAnimationFrame(rafRef.current);
       runningRef.current = false;
       ro.disconnect();
+      window.removeEventListener('scroll', refreshRect);
+      window.removeEventListener('resize', refreshRect);
       host.removeEventListener('mousemove', onMove);
       host.removeEventListener('mouseenter', onEnter);
       host.removeEventListener('mouseleave', onLeave);
     };
   }, [
     resolvedColorA, resolvedColorB, effectiveStep, dotEdgeMin, dotEdgeMax,
-    effectiveFalloff, trigger, easeDuration, prefersReduced,
+    effectiveFalloff, trigger, easeDuration, prefersReduced, isTouch,
   ]);
 
   if (trigger === 'never') return null;

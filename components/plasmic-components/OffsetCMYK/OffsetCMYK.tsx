@@ -1,7 +1,7 @@
 import React, { useId, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import styles from './OffsetCMYK.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import {
   buildWobble,
   useOffsetActivity,
@@ -80,7 +80,7 @@ export function OffsetCMYK({
     Y: `cmyk-y-${uid}`,
     K: `cmyk-k-${uid}`,
   };
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, frameInterval } = useAnimationTier();
 
   const wobbleC = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleM = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -96,7 +96,7 @@ export function OffsetCMYK({
   const layers = [layerC, layerM, layerY, layerK];
 
   useOffsetActivity(hostRef, {
-    interaction, offsetX, offsetY, easeDuration, prefersReduced, layers,
+    interaction, offsetX, offsetY, easeDuration, prefersReduced, frameInterval, layers,
   });
 
   const halftoneIds = useMemo(

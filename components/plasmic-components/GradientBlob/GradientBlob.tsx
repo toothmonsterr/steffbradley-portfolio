@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import styles from './GradientBlob.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { colorOrDefault } from '@/hooks/colorDefault';
+
+// The output is a heavy Gaussian blur, so full-resolution pixels are wasted —
+// nothing above this frequency survives the filter. Halving each axis is
+// visually indistinguishable and quarters the fill cost per frame.
+const RENDER_SCALE = 0.5;
 
 export interface GradientBlobProps {
   /** Up to 4 ink colors cycled through the blobs */
@@ -115,7 +120,7 @@ export function GradientBlob({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
 
   const colors = useMemo(
     () => [
@@ -142,9 +147,12 @@ export function GradientBlob({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Backing store is deliberately smaller than the CSS box; the canvas is
+    // stretched back to 100% by CSS. Blur radius is scaled to match below so
+    // the result is identical.
     const resize = () => {
-      canvas.width = root.offsetWidth;
-      canvas.height = root.offsetHeight;
+      canvas.width = Math.max(1, Math.round(root.offsetWidth * RENDER_SCALE));
+      canvas.height = Math.max(1, Math.round(root.offsetHeight * RENDER_SCALE));
     };
     resize();
     const ro = new ResizeObserver(() => {
@@ -204,7 +212,8 @@ export function GradientBlob({
       }
 
       ctx.clearRect(0, 0, w, h);
-      const effectiveBlur = Math.min(blurAmount, Math.min(w, h) / 2);
+      const scaledBlur = blurAmount * RENDER_SCALE;
+      const effectiveBlur = Math.min(scaledBlur, Math.min(w, h) / 2);
       ctx.filter = `blur(${effectiveBlur}px)`;
       ctx.drawImage(offscreen, 0, 0);
     };
@@ -250,7 +259,10 @@ export function GradientBlob({
     // Initial render — shows at least one frame even in 'never' mode
     renderFrame();
 
-    if (prefersReduced || animate === 'never') {
+    // A full-canvas Gaussian blur every frame is the most expensive op in the
+    // project. On touch the blobs stay as a static gradient wash — and 'hover'
+    // could never start the loop there anyway.
+    if (prefersReduced || isTouch || animate === 'never') {
       return () => ro.disconnect();
     }
 
@@ -285,7 +297,7 @@ export function GradientBlob({
       ro.disconnect();
       io.disconnect();
     };
-  }, [blobs, blurAmount, animate, easeDuration, prefersReduced]);
+  }, [blobs, blurAmount, animate, easeDuration, prefersReduced, isTouch]);
 
   return (
     <div

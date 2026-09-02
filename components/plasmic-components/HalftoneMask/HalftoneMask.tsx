@@ -1,6 +1,7 @@
 import React, { useId, useEffect, useRef } from 'react';
 import styles from './HalftoneMask.module.css';
 import { buildHalftoneSVG, invTable } from '../OffsetShape/shared';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 
 const SCREEN_ANGLES = [15, 30, 45, 60];
 const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
@@ -44,6 +45,7 @@ export function HalftoneMask({
   const filterId = `htmask-${uid}`;
   const angle = SCREEN_ANGLES[angleIndex % SCREEN_ANGLES.length];
 
+  const { prefersReduced, isTouch } = useAnimationTier();
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const sizeRef = useRef({ w: 0, h: 0 });
   const activityRef = useRef(0);
@@ -98,6 +100,10 @@ export function HalftoneMask({
 
   useEffect(() => {
     if (hoverContrast == null) return;
+    // The contrast ease is hover-driven: it can never fire without a pointer,
+    // and it regenerates the halftone SVG per frame, so skip it on touch.
+    // prefersReduced is honoured here too — this guard was missing entirely.
+    if (prefersReduced || isTouch) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
@@ -141,7 +147,7 @@ export function HalftoneMask({
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
     };
-  }, [hoverContrast]);
+  }, [hoverContrast, prefersReduced, isTouch]);
 
   return (
     <span

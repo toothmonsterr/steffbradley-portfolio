@@ -60,11 +60,11 @@
     var(--shadow-blur)
     rgba(var(--shadow-rgb), var(--shadow-opacity))
   );
-  transition:
-    width var(--ease-duration) ease,
-    height var(--ease-duration) ease,
-    transform var(--ease-duration) cubic-bezier(0.34, 1.32, 0.64, 1),
-    filter var(--ease-duration) ease;
+  /* Only `transform` is transitioned. width/height come from --peel-size,
+     which the JS already animates per frame as a motion value, so a CSS
+     transition on them was redundant layout work stacked on a JS animation.
+     `filter: drop-shadow` is a per-frame paint and is left to snap. */
+  transition: transform var(--ease-duration) cubic-bezier(0.34, 1.32, 0.64, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

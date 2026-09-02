@@ -25,7 +25,6 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
   /* No max-width/overflow-x here: `100vw` includes the scrollbar gutter (so it
      can exceed the real content box), and `overflow-x: hidden` on `html` only
      hid the overflow rather than containing it, which masked the actual cause.
@@ -222,4 +221,27 @@ h1, h2, h3, h4, h5, h6 {
    documentElement.scrollWidth 538px → 390px. */
 .plasmic_page_wrapper > .all {
   overflow-x: clip;
+}
+
+/* ─── Motion ──────────────────────────────────────────────────
+   Smooth scrolling is opt-out, not unconditional: under a reduced-motion
+   preference every anchor navigation would otherwise animate. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Global stopgap. Also neutralises the animations declared in Plasmic's
+   generated CSS (which we can't edit — `plasmic sync` overwrites it),
+   including the `transition-property: all` rules on layout properties. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

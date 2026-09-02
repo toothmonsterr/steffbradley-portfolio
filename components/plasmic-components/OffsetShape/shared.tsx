@@ -243,6 +243,10 @@ export interface UseOffsetActivityOpts {
   offsetY: number;
   easeDuration: number;
   prefersReduced: boolean;
+  /** Minimum ms between rendered frames (0 = uncapped). Throttles the
+   *  breathing wobble to ~30fps on touch, where it runs on a dozen-plus
+   *  layers at once. */
+  frameInterval?: number;
   layers: LayerSpec[];
   sizerX?: MotionValue<number>;
   sizerY?: MotionValue<number>;
@@ -340,7 +344,15 @@ export function useOffsetActivity(
     };
 
     const tick = (now: number) => {
-      const { interaction: ia, easeDuration, prefersReduced } = optsRef.current;
+      const { interaction: ia, easeDuration, prefersReduced, frameInterval = 0 } = optsRef.current;
+
+      // Throttled tier: skip this frame's work but keep the loop alive so
+      // easing still completes. dt is measured from the last *rendered* frame,
+      // so the motion stays time-correct rather than running slow.
+      if (frameInterval > 0 && lastTsRef.current !== 0 && now - lastTsRef.current < frameInterval) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
       const restActivity = ia === 'inverse' ? 1 : 0;
       const hoverActivity = ia === 'inverse' ? 0 : 1;
       const easeSec = Math.max(0.05, easeDuration);
@@ -378,14 +390,18 @@ export function useOffsetActivity(
 
     writeTransforms(elapsed);
     startLoop();
-
     // Pause the RAF loop entirely while scrolled out of view — the last
-    // written transforms persist, so there's nothing jarring on return.
+    // written transforms persist, so there is nothing jarring on return.
     const io = new IntersectionObserver((entries) => {
       inViewport = entries[0].isIntersecting;
+      // The dataset flag drives `will-change: transform` on the ink layers.
+      // Promoting a dozen-plus composite layers for the whole page life is
+      // real GPU memory pressure on a phone, so only hint while on screen.
       if (inViewport) {
+        host.dataset.offsetActive = 'true';
         startLoop();
       } else {
+        delete host.dataset.offsetActive;
         cancelAnimationFrame(rafRef.current);
         rafRef.current = 0;
       }
@@ -410,6 +426,7 @@ export function useOffsetActivity(
       host.removeEventListener('click', onClick);
       host.removeEventListener('touchend', onClick);
       io.disconnect();
+      delete host.dataset.offsetActive;
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
       lastTsRef.current = 0;
@@ -511,6 +528,11 @@ export function useHalftoneProximity(
     };
     window.addEventListener('mousemove', onMove, { passive: true });
 
+    // Rebuilding a few thousand <circle>s and base64-encoding them is by far
+    // the most expensive per-frame work in the project — never do it for an
+    // element that isn't on screen.
+    let inViewport = true;
+
     const tick = () => {
       const host = hostRef.current;
       const { step, baseDotSize, hoverDotSize, proximityRadius = 150, feather = 0.5 } = optsRef.current;
@@ -526,7 +548,7 @@ export function useHalftoneProximity(
       curRef.current.x += (targetRef.current.x - curRef.current.x) * 0.13;
       curRef.current.y += (targetRef.current.y - curRef.current.y) * 0.13;
 
-      if (host && ids.length) {
+      if (inViewport && host && ids.length) {
         const rect = host.getBoundingClientRect();
         const w = Math.ceil(rect.width);
         const h = Math.ceil(rect.height);
@@ -555,12 +577,31 @@ export function useHalftoneProximity(
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
+    const startLoop = () => {
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    const stopLoop = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    };
+
+    startLoop();
+
+    // Pause entirely while scrolled out of view. The last built SVG persists,
+    // and the cursor is re-sampled on the next frame, so there's nothing
+    // jarring on return.
+    const io = new IntersectionObserver((entries) => {
+      inViewport = entries[0].isIntersecting;
+      if (inViewport) startLoop();
+      else stopLoop();
+    }, { threshold: 0 });
+    if (hostRef.current) io.observe(hostRef.current);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = 0;
+      io.disconnect();
+      stopLoop();
     };
   // Re-mount only when enabled/disabled state changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps

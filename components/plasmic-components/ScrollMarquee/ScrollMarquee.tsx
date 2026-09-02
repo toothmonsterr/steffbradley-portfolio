@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useAnimationFrame, useMotionValue, useTransform } from 'motion/react';
 import { useScrollVelocity } from '@/hooks/useScrollVelocity';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
@@ -30,12 +30,26 @@ export const ScrollMarquee = React.memo(function ScrollMarquee({
   const baseX = useMotionValue(0);
   const copyRef = useRef<HTMLDivElement>(null);
 
+  // offsetWidth forces a synchronous layout read. Doing that every frame is a
+  // guaranteed per-frame layout flush, so measure once and refresh only when
+  // the content actually resizes.
+  const copyWidthRef = useRef(0);
+  useEffect(() => {
+    const el = copyRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const measure = () => { copyWidthRef.current = el.offsetWidth; };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const dirMul = direction === 'left' ? -1 : 1;
 
   useAnimationFrame((_, delta) => {
     if (isPaused.current || prefersReduced) return;
 
-    const copyWidth = copyRef.current?.offsetWidth ?? 0;
+    const copyWidth = copyWidthRef.current;
     if (copyWidth === 0) return;
 
     const factor = velocityFactor.get();

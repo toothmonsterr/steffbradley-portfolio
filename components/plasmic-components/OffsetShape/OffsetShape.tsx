@@ -1,7 +1,7 @@
 import React, { useId, useMemo, useRef } from 'react';
 import { motion } from 'motion/react';
 import styles from './OffsetShape.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import {
   buildWobble,
   shapeFilterJSX,
@@ -69,7 +69,7 @@ export function OffsetShape({
   const uid        = useId().replace(/:/g, '');
   const filterAId  = `os-a-${uid}`;
   const filterBId  = `os-b-${uid}`;
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, frameInterval } = useAnimationTier();
 
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -80,7 +80,7 @@ export function OffsetShape({
   const hostRef = useRef<HTMLSpanElement>(null);
   const layers = [layerA, layerB];
 
-  useOffsetActivity(hostRef, { interaction, offsetX, offsetY, easeDuration, prefersReduced, layers });
+  useOffsetActivity(hostRef, { interaction, offsetX, offsetY, easeDuration, prefersReduced, frameInterval, layers });
 
   const halftoneIds = useMemo(
     () => texture === 'halftone' && textureHoverContrast != null && textureHoverEnabled ? [filterAId, filterBId] : [],

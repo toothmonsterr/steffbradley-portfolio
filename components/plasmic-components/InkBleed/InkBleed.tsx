@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef } from 'react';
 import styles from './InkBleed.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { findHoverHost } from '@/hooks/findHoverHost';
 
 export interface InkBleedProps {
@@ -55,7 +55,7 @@ export function InkBleed({
   const filterId = `inkbleed-${uid}`;
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const turbRef    = useRef<SVGFETurbulenceElement>(null);
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
 
   // Build a discrete tableValues string for feFuncA.
   // noiseThreshold=0 → dense fiber (many ones), 1 → sparse (few ones).
@@ -64,16 +64,17 @@ export function InkBleed({
   const tv   = Array.from({ length: N }, (_, i) => (i >= N - ones ? 1 : 0)).join(' ');
 
   useEffect(() => {
-    if (animate === 'never' || prefersReduced) return;
+    // Static on touch: 'hover' can never fire without a pointer, and the
+    // 'always' flicker isn't worth a permanent SVG filter re-render on a phone.
+    if (animate === 'never' || prefersReduced || isTouch) return;
     const el = turbRef.current;
     if (!el) return;
 
     let raf = 0;
     let last = 0;
     let s = seed;
-    let visible = true;
     const tick = (t: number) => {
-      if (visible && t - last > 83) {
+      if (t - last > 83) {
         s = (s + 1) % 1000;
         el.setAttribute('seed', String(s));
         last = t;
@@ -81,19 +82,23 @@ export function InkBleed({
       raf = requestAnimationFrame(tick);
     };
     const start = () => {
-      cancelAnimationFrame(raf);
+      if (raf) return;
       last = 0;
       raf = requestAnimationFrame(tick);
     };
     const stop = () => {
       cancelAnimationFrame(raf);
+      raf = 0;
       el.setAttribute('seed', String(seed));
       s = seed;
     };
 
     if (animate === 'always') {
+      // Actually cancel the RAF off-screen. Previously this only flipped a
+      // flag, so the frame callback kept firing for the life of the page.
       const io = new IntersectionObserver((entries) => {
-        visible = entries[0].isIntersecting;
+        if (entries[0].isIntersecting) start();
+        else stop();
       }, { threshold: 0 });
       if (wrapperRef.current) io.observe(wrapperRef.current);
       start();
@@ -112,7 +117,7 @@ export function InkBleed({
       host.removeEventListener('mouseleave', onLeave);
       stop();
     };
-  }, [animate, seed, prefersReduced]);
+  }, [animate, seed, prefersReduced, isTouch]);
 
   return (
     <span

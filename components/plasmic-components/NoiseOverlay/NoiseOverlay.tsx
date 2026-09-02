@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef } from 'react';
 import styles from './NoiseOverlay.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { colorOrDefault } from '@/hooks/colorDefault';
 import { findHoverHost } from '@/hooks/findHoverHost';
 
@@ -46,22 +46,23 @@ export function NoiseOverlay({
   const filterId = `noise-${uid}`;
   const svgRef = useRef<SVGSVGElement>(null);
   const turbRef = useRef<SVGFETurbulenceElement>(null);
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
 
   // Larger grain = lower frequency.
   const baseFrequency = Math.max(0.1, 0.85 / Math.max(0.4, grainSize));
 
   useEffect(() => {
-    if (animate === 'never' || prefersReduced) return;
+    // Static grain on touch: 'hover' can never fire without a pointer, and the
+    // 'always' flicker isn't worth a permanent SVG filter re-render on a phone.
+    if (animate === 'never' || prefersReduced || isTouch) return;
     const el = turbRef.current;
     if (!el) return;
 
     let raf = 0;
     let last = 0;
     let s = seed;
-    let visible = true;
     const tick = (t: number) => {
-      if (visible && t - last > 83) {
+      if (t - last > 83) {
         s = (s + 1) % 1000;
         el.setAttribute('seed', String(s));
         last = t;
@@ -69,20 +70,24 @@ export function NoiseOverlay({
       raf = requestAnimationFrame(tick);
     };
     const start = () => {
-      cancelAnimationFrame(raf);
+      if (raf) return;
       last = 0;
       raf = requestAnimationFrame(tick);
     };
     const stop = () => {
       cancelAnimationFrame(raf);
+      raf = 0;
       // Reset to the base seed so the grain returns to its "rest" state
       el.setAttribute('seed', String(seed));
       s = seed;
     };
 
     if (animate === 'always') {
+      // Actually cancel the RAF off-screen. Previously this only flipped a
+      // flag, so the frame callback kept firing for the life of the page.
       const io = new IntersectionObserver((entries) => {
-        visible = entries[0].isIntersecting;
+        if (entries[0].isIntersecting) start();
+        else stop();
       }, { threshold: 0 });
       if (svgRef.current) io.observe(svgRef.current);
       start();
@@ -101,7 +106,7 @@ export function NoiseOverlay({
       host.removeEventListener('mouseleave', onLeave);
       stop();
     };
-  }, [animate, seed, prefersReduced]);
+  }, [animate, seed, prefersReduced, isTouch]);
 
   return (
     <svg

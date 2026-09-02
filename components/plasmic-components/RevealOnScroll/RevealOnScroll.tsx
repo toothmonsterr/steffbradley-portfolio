@@ -1,7 +1,7 @@
-import React, { useEffect, useId, useMemo, useRef } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { animate, motion, useAnimationFrame, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
 import styles from './RevealOnScroll.module.css';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
+import { useAnimationTier } from '@/hooks/useAnimationTier';
 
 export interface RevealOnScrollProps {
   children?: React.ReactNode;
@@ -59,9 +59,20 @@ export function RevealOnScroll({
   trigger = 'scroll',
   className,
 }: RevealOnScrollProps) {
-  const prefersReduced = usePrefersReducedMotion();
+  const { prefersReduced, isTouch } = useAnimationTier();
   const uid = useId().replace(/:/g, '');
   const rootRef = useRef<HTMLDivElement>(null);
+
+  // The whole effect is a stack of per-frame SVG filter primitives
+  // (turbulence + gaussian blur + displacement map). That is far too expensive
+  // for a phone GPU, especially on the sticky nav where it never scrolls away.
+  // Touch devices get the content with no filter at all.
+  const disabled = prefersReduced || isTouch || trigger === 'always';
+
+  // Once a playOnce reveal has finished there is nothing left to animate, but
+  // motion keeps invoking the frame callback and the element keeps carrying a
+  // live filter: url(...). Flip this and both go away for good.
+  const [settled, setSettled] = useState(false);
 
   const turbRef     = useRef<SVGFETurbulenceElement>(null);
   const blurRef     = useRef<SVGFEGaussianBlurElement>(null);
@@ -92,7 +103,7 @@ export function RevealOnScroll({
   const scrollParamsRef = useRef({ triggerPoint, revealDuration });
   scrollParamsRef.current = { triggerPoint, revealDuration };
   useEffect(() => {
-    if (scrollMode !== 'page' || trigger !== 'scroll') return;
+    if (scrollMode !== 'page' || trigger !== 'scroll' || disabled || settled) return;
     const onScroll = () => {
       const { triggerPoint: tp, revealDuration: rd } = scrollParamsRef.current;
       const scrollY = window.scrollY;
@@ -104,7 +115,7 @@ export function RevealOnScroll({
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // sync on mount
     return () => window.removeEventListener('scroll', onScroll);
-  }, [scrollMode, trigger, pageProgress]);
+  }, [scrollMode, trigger, pageProgress, disabled, settled]);
 
   const smoothPageProgress = useSpring(pageProgress, { stiffness: 80, damping: 25 });
 
@@ -113,14 +124,14 @@ export function RevealOnScroll({
   const contentOpacity    = useTransform(effectiveProgress, [0, 1], [startOpacity, 1]);
 
   useEffect(() => {
-    if (trigger !== 'load' || prefersReduced) return;
+    if (trigger !== 'load' || disabled) return;
     const controls = animate(effectiveProgress, 1, { duration: 1.5, ease: 'easeOut' });
     return () => controls.stop();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger, prefersReduced]);
+  }, [trigger, disabled]);
 
   useAnimationFrame(() => {
-    if (prefersReduced || trigger === 'always') return;
+    if (disabled || settled) return;
 
     if (trigger === 'scroll') {
       const raw = scrollMode === 'page' ? smoothPageProgress.get() : smoothProgress.get();
@@ -131,6 +142,13 @@ export function RevealOnScroll({
 
     const p     = effectiveProgress.get();
     const chaos = Math.max(0, 1 - p);
+
+    // Fully revealed and it can never go back — tear the filter down.
+    if (playOnce && p >= 0.999) {
+      effectiveProgress.set(1);
+      setSettled(true);
+      return;
+    }
 
     if (blurRef.current)     blurRef.current.setAttribute('stdDeviation', String((1 - p) * blurAmount));
     if (displaceRef.current) displaceRef.current.setAttribute('scale',    String((1 - p) * displaceAmount));
@@ -144,7 +162,7 @@ export function RevealOnScroll({
 
   const filterId = `reveal-content-${uid}`;
 
-  if (trigger === 'always' || prefersReduced) {
+  if (disabled || settled) {
     return (
       <div ref={rootRef} className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
         {children}
