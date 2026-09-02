@@ -45,7 +45,13 @@
   width: auto;
 }
 
-/* Visible layers — absolutely cover the sizer's box. */
+/* Visible layers — absolutely cover the sizer's box.
+
+   overflow stays visible: the misregistration transform deliberately pushes
+   each layer a few px outside this box, and hiding overflow crops exactly the
+   part of the offset the effect exists to show — visible as clipped left and
+   right edges on wide slot content like a button. OffsetShape omits it for
+   the same reason. */
 .layer {
   position: absolute;
   inset: 0;
@@ -53,7 +59,6 @@
   display: block;
   will-change: transform;
   line-height: 0;
-  overflow: hidden;
 }
 
 /* Transparent interaction layer — sits on top of the ink layers, invisible but
