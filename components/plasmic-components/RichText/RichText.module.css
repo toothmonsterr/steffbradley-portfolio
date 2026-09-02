@@ -19,6 +19,17 @@
   margin-top: 1em;
 }
 
+/*
+ * Nothing above the first element, whatever it is. The heading rules below
+ * set a generous margin-top to separate a section from the text before it,
+ * but that margin also applied when a heading opened the block — a leading
+ * h2 sat under ~56px of empty space with nothing above it to separate from.
+ * This is a rich-text fragment, so any element can come first.
+ */
+.prose > :first-child {
+  margin-top: 0;
+}
+
 .prose h2,
 .prose h3,
 .prose h4 {
