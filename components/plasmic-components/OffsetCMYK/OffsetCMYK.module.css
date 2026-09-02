@@ -83,11 +83,15 @@
 /* Media fills the plate area. This deliberately does NOT mirror the .sizer
    rules (width/height: auto): the sizer measures an image at its natural size
    to establish the wrapper box, and the plate then paints it across that same
-   box. Making the two match collapses every image to its intrinsic size. */
-.filterInner img,
-.filterInner svg,
-.filterInner video,
-.filterInner picture {
+   box. Making the two match collapses every image to its intrinsic size.
+
+   Direct children only, so the rule cannot reach icons nested inside slotted
+   components and override their own sizing (see OffsetImage for the Firefox
+   failure mode this causes). */
+.filterInner > img,
+.filterInner > svg,
+.filterInner > video,
+.filterInner > picture {
   display: block;
   width: 100%;
   height: 100%;

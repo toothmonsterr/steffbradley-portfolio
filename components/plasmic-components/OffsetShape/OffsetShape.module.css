@@ -48,14 +48,3 @@
 .filterInner {
   display: contents;
 }
-
-/* Firefox: Plasmic icons carry height="1em" and a viewBox but no width
-   attribute. Inside the ink layers the chain to this shell is all
-   display: contents (our .filterInner plus Plasmic's .__wab_slot), so the
-   svg has no box-generating ancestor to resolve an auto width against and
-   Firefox falls back to the 300px replaced-element default, which the
-   aspect ratio then applies to the height too. Pinning width to the aspect
-   ratio keeps the declared height authoritative in every engine. */
-.filterShell svg:not([width]) {
-  width: auto;
-}

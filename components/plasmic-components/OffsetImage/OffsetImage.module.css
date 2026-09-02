@@ -84,11 +84,18 @@
 }
 
 /* Media inside a layer fills the layer box (which matches the sizer area).
-   object-fit: contain prevents a differently-sized slotB from distorting. */
-.filterInner img,
-.filterInner svg,
-.filterInner video,
-.filterInner picture {
+   object-fit: contain prevents a differently-sized slotB from distorting.
+
+   Direct children only: as a descendant selector this also matched icons
+   nested inside slotted components (e.g. a Button's end-slot svg), where it
+   outranks the icon's own size class. Those icons sit under Plasmic's
+   display: contents slot wrapper, so the 100% had no box to resolve against
+   and Firefox fell back to the 300px replaced-element default while Chrome
+   resolved it from the nearest real ancestor. */
+.filterInner > img,
+.filterInner > svg,
+.filterInner > video,
+.filterInner > picture {
   display: block;
   width: 100%;
   height: 100%;
