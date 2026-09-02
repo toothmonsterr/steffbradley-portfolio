@@ -118,9 +118,10 @@
  */
 .prose img {
   max-width: 100%;
-  /* Only the bottom — the `> * + *` rule already spaces this from what
-     precedes it, and setting both doubled the gap. */
-  margin: 0 0 1.25em;
+  /* Matches the figure spacing above, for images that sit on their own
+     without a caption. Adjacent margins collapse, so this does not stack
+     with the surrounding blocks' own spacing. */
+  margin: 2em 0;
 }
 
 /*
@@ -157,7 +158,10 @@
 .prose figure {
   width: fit-content;
   max-width: 100%;
-  margin: 0 0 1.25em;
+  /* Explicit top margin rather than leaning on `> * + *`: an image is a
+     heavier block than a paragraph and wants more air on both sides than the
+     1em body rhythm gives it. */
+  margin: 2em 0;
 }
 
 
