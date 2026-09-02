@@ -46,13 +46,10 @@
 .filterShell {
   display: inline-flex;
   align-items: flex-start;
-  height: 100%;
 }
 
 /* A real box rather than display: contents, so it can carry the height down.
    inline-flex keeps it hugging the child horizontally. */
 .filterInner {
-  display: inline-flex;
-  height: 100%;
-  min-width: 0;
+  display: contents;
 }
