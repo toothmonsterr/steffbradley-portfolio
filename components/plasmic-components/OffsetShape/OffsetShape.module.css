@@ -39,12 +39,20 @@
 }
 
 /* filterShell sizes to its content so SourceAlpha matches the child exactly.
-   display: inline-flex prevents it from stretching to the layer width. */
+   display: inline-flex prevents it from stretching to the layer width.
+   height: 100% gives percentage-height children (a common Plasmic pattern) a
+   definite containing block to resolve against — without it Firefox falls back
+   to the child's intrinsic size while Chrome treats it as auto. */
 .filterShell {
   display: inline-flex;
   align-items: flex-start;
+  height: 100%;
 }
 
+/* A real box rather than display: contents, so it can carry the height down.
+   inline-flex keeps it hugging the child horizontally. */
 .filterInner {
-  display: contents;
+  display: inline-flex;
+  height: 100%;
+  min-width: 0;
 }
