@@ -93,12 +93,43 @@
 }
 
 /* Images embedded in CMS content — full width, never overflowing. */
+/*
+ * Images size themselves, so a width or height set in the CMS editor is
+ * honoured. `width: 100%` used to be forced here, which silently overrode
+ * every author-set size.
+ *
+ * `max-width: 100%` keeps an oversized image inside the column — the editor
+ * records intrinsic upload dimensions (a 1610px-wide asset carries
+ * width="1610"), so without the cap those would overflow. `height: auto`
+ * is deliberately NOT set, or it would override an author-set height; the
+ * `img[height]` rule below restores aspect-ratio behaviour only for images
+ * that specify a width alone.
+ */
 .prose img {
-  width: 100%;
-  height: auto;
+  max-width: 100%;
   /* Only the bottom — the `> * + *` rule already spaces this from what
      precedes it, and setting both doubled the gap. */
   margin: 0 0 1.25em;
+}
+
+/*
+ * Height comes from the aspect ratio unless a height is set in the element's
+ * own style attribute.
+ *
+ * This matters because `max-width: 100%` can shrink the width while a
+ * `height` ATTRIBUTE stays fixed, which stretches the image — the editor
+ * records intrinsic dimensions on upload, so an existing 1610x1434 asset
+ * rendered 720x1434. Attribute width/height are treated as the intrinsic
+ * size (a ratio hint), while an inline style is treated as a deliberate
+ * choice and left alone.
+ */
+.prose img:not([style*='height']) {
+  height: auto;
+}
+
+/* No dimensions at all — fill the column, as before. */
+.prose img:not([width]):not([style*='width']) {
+  width: 100%;
 }
 
 /* Figures wrap a CMS image with its caption. The figure owns the vertical
