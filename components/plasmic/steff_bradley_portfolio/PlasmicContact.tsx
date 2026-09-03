@@ -67,7 +67,6 @@ import Label from "../../Label"; // plasmic-import: BYBqjVrGPH5t/component
 import TextInput from "../../TextInput"; // plasmic-import: ct_DnrV178NJ/component
 import TextAreaInput from "../../TextAreaInput"; // plasmic-import: M9d78DwckmWy/component
 import { ContactSubmit } from "@/components/plasmic-components/ContactForm"; // plasmic-import: xraZo1vHJbhP/codeComponent
-import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
 import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
 import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
@@ -77,7 +76,6 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import sty from "./PlasmicContact.module.css"; // plasmic-import: O81Fd1q4ueaL/css
 
-import CircleIcon from "../toothmonster/icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
 import ArrowRightSvgIcon from "../toothmonster/icons/PlasmicIcon__ArrowRightSvg"; // plasmic-import: 0vNaQ1KvdrHQ/icon
 import RegistrationMarkTargetSvg2Icon from "../toothmonster/icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
 
@@ -133,8 +131,6 @@ export type PlasmicContact__OverridesType = {
   subjectInput?: Flex__<typeof TextInput>;
   textAreaInput?: Flex__<typeof TextAreaInput>;
   contactSubmitButton?: Flex__<typeof ContactSubmit>;
-  button?: Flex__<typeof Button>;
-  freeBox?: Flex__<"div">;
   text?: Flex__<"div">;
   h4?: Flex__<"h4">;
   footer?: Flex__<typeof Footer>;
@@ -564,60 +560,33 @@ function PlasmicContact__RenderFunc(props: {
                               ])}
                             />
                           </ContactField>
-                          <div
-                            className={classNames("all", sty.freeBox__obP6Z)}
+                          <ContactSubmit
+                            data-plasmic-name={"contactSubmitButton"}
+                            data-plasmic-override={
+                              overrides.contactSubmitButton
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactSubmitButton
+                            )}
+                            label={"Submit"}
                           >
-                            <ContactSubmit
-                              data-plasmic-name={"contactSubmitButton"}
-                              data-plasmic-override={
-                                overrides.contactSubmitButton
-                              }
+                            <div
+                              data-plasmic-name={"text"}
+                              data-plasmic-override={overrides.text}
                               className={classNames(
-                                "__wab_instance",
-                                sty.contactSubmitButton
+                                "all",
+                                "__wab_text",
+                                sty.text
                               )}
-                              label={"Submit"}
                             >
-                              <Button
-                                data-plasmic-name={"button"}
-                                data-plasmic-override={overrides.button}
-                                className={classNames(
-                                  "__wab_instance",
-                                  sty.button
-                                )}
-                                effect={
-                                  <div
-                                    data-plasmic-name={"freeBox"}
-                                    data-plasmic-override={overrides.freeBox}
-                                    className={classNames("all", sty.freeBox)}
-                                  />
-                                }
-                                end={
-                                  <ArrowRightSvgIcon
-                                    className={classNames(
-                                      "all",
-                                      sty.svg__ihUjC
-                                    )}
-                                    role={"img"}
-                                  />
-                                }
-                                iconEnd={true}
-                                label={
-                                  <div
-                                    data-plasmic-name={"text"}
-                                    data-plasmic-override={overrides.text}
-                                    className={classNames(
-                                      "all",
-                                      "__wab_text",
-                                      sty.text
-                                    )}
-                                  >
-                                    {"Submit"}
-                                  </div>
-                                }
-                              />
-                            </ContactSubmit>
-                          </div>
+                              {"Submit"}
+                            </div>
+                            <ArrowRightSvgIcon
+                              className={classNames("all", sty.svg__ihUjC)}
+                              role={"img"}
+                            />
+                          </ContactSubmit>
                         </React.Fragment>
                       )}
                     </DataCtxReader__>
@@ -706,8 +675,6 @@ const PlasmicDescendants = {
     "subjectInput",
     "textAreaInput",
     "contactSubmitButton",
-    "button",
-    "freeBox",
     "text",
     "h4",
     "footer"
@@ -721,8 +688,6 @@ const PlasmicDescendants = {
     "subjectInput",
     "textAreaInput",
     "contactSubmitButton",
-    "button",
-    "freeBox",
     "text",
     "h4"
   ],
@@ -733,8 +698,6 @@ const PlasmicDescendants = {
     "subjectInput",
     "textAreaInput",
     "contactSubmitButton",
-    "button",
-    "freeBox",
     "text",
     "h4"
   ],
@@ -742,9 +705,7 @@ const PlasmicDescendants = {
   emailInput: ["emailInput"],
   subjectInput: ["subjectInput"],
   textAreaInput: ["textAreaInput"],
-  contactSubmitButton: ["contactSubmitButton", "button", "freeBox", "text"],
-  button: ["button", "freeBox", "text"],
-  freeBox: ["freeBox"],
+  contactSubmitButton: ["contactSubmitButton", "text"],
   text: ["text"],
   h4: ["h4"],
   footer: ["footer"]
@@ -762,8 +723,6 @@ type NodeDefaultElementType = {
   subjectInput: typeof TextInput;
   textAreaInput: typeof TextAreaInput;
   contactSubmitButton: typeof ContactSubmit;
-  button: typeof Button;
-  freeBox: "div";
   text: "div";
   h4: "h4";
   footer: typeof Footer;
@@ -839,8 +798,6 @@ export const PlasmicContact = Object.assign(
     subjectInput: makeNodeComponent("subjectInput"),
     textAreaInput: makeNodeComponent("textAreaInput"),
     contactSubmitButton: makeNodeComponent("contactSubmitButton"),
-    button: makeNodeComponent("button"),
-    freeBox: makeNodeComponent("freeBox"),
     text: makeNodeComponent("text"),
     h4: makeNodeComponent("h4"),
     footer: makeNodeComponent("footer"),
