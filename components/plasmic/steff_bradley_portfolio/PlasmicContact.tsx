@@ -66,8 +66,9 @@ import { ContactField } from "@/components/plasmic-components/ContactForm"; // p
 import Label from "../../Label"; // plasmic-import: BYBqjVrGPH5t/component
 import TextInput from "../../TextInput"; // plasmic-import: ct_DnrV178NJ/component
 import TextAreaInput from "../../TextAreaInput"; // plasmic-import: M9d78DwckmWy/component
-import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
 import { ContactSubmit } from "@/components/plasmic-components/ContactForm"; // plasmic-import: xraZo1vHJbhP/codeComponent
+import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
+import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
 import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "../toothmonster/PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
@@ -126,15 +127,16 @@ export type PlasmicContact__OverridesType = {
   root?: Flex__<"div">;
   navBanner?: Flex__<typeof NavBanner>;
   section?: Flex__<"section">;
-  h1?: Flex__<"h1">;
   contactForm?: Flex__<typeof ContactForm>;
   nameInput?: Flex__<typeof TextInput>;
   emailInput?: Flex__<typeof TextInput>;
   subjectInput?: Flex__<typeof TextInput>;
   textAreaInput?: Flex__<typeof TextAreaInput>;
+  contactSubmitButton?: Flex__<typeof ContactSubmit>;
   button?: Flex__<typeof Button>;
   freeBox?: Flex__<"div">;
-  contactSubmitButton?: Flex__<typeof ContactSubmit>;
+  text?: Flex__<"div">;
+  h4?: Flex__<"h4">;
   footer?: Flex__<typeof Footer>;
 };
 
@@ -209,6 +211,8 @@ function PlasmicContact__RenderFunc(props: {
     [$props, $ctx, $refs]
   );
 
+  const globalVariants = _useGlobalVariants();
+
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
@@ -269,14 +273,12 @@ function PlasmicContact__RenderFunc(props: {
               spread={3}
             >
               <h1
-                data-plasmic-name={"h1"}
-                data-plasmic-override={overrides.h1}
                 className={classNames(
                   "all",
                   "h1",
                   "h1__67C2x",
                   "__wab_text",
-                  sty.h1
+                  sty.h1__lm12B
                 )}
               >
                 {"contact me"}
@@ -311,6 +313,54 @@ function PlasmicContact__RenderFunc(props: {
                             }
                           })()}
                         </React.Fragment>
+                      )}
+                    </DataCtxReader__>
+                  }
+                  successContent={
+                    <DataCtxReader__>
+                      {$ctx => (
+                        <div className={classNames("all", sty.freeBox__mc3UY)}>
+                          <RegistrationMarkTargetSvg2Icon
+                            className={classNames("all", sty.svg__uuRp1)}
+                            role={"img"}
+                          />
+
+                          <h1
+                            className={classNames(
+                              "all",
+                              "h1",
+                              "h1__67C2x",
+                              "__wab_text",
+                              sty.h1__ylEo
+                            )}
+                          >
+                            <React.Fragment>
+                              <React.Fragment>{""}</React.Fragment>
+                              {
+                                <h4
+                                  data-plasmic-name={"h4"}
+                                  data-plasmic-override={overrides.h4}
+                                  className={classNames(
+                                    "all",
+                                    "h4",
+                                    "h4__67C2x",
+                                    "__wab_text",
+                                    sty.h4
+                                  )}
+                                >
+                                  {
+                                    "Thank you for reaching out! I'll get back to you as soon as possible."
+                                  }
+                                </h4>
+                              }
+                              <React.Fragment>{""}</React.Fragment>
+                            </React.Fragment>
+                          </h1>
+                          <RegistrationMarkTargetSvg2Icon
+                            className={classNames("all", sty.svg___3IzX2)}
+                            role={"img"}
+                          />
+                        </div>
                       )}
                     </DataCtxReader__>
                   }
@@ -512,69 +562,114 @@ function PlasmicContact__RenderFunc(props: {
                           />
                         </ContactField>
                         <div className={classNames("all", sty.freeBox__obP6Z)}>
-                          <Button
-                            data-plasmic-name={"button"}
-                            data-plasmic-override={overrides.button}
-                            className={classNames("__wab_instance", sty.button)}
-                            effect={
-                              <React.Fragment>
+                          <ContactSubmit
+                            data-plasmic-name={"contactSubmitButton"}
+                            data-plasmic-override={
+                              overrides.contactSubmitButton
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactSubmitButton
+                            )}
+                            label={"Submit"}
+                          >
+                            <Button
+                              data-plasmic-name={"button"}
+                              data-plasmic-override={overrides.button}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.button
+                              )}
+                              effect={
                                 <div
                                   data-plasmic-name={"freeBox"}
                                   data-plasmic-override={overrides.freeBox}
                                   className={classNames("all", sty.freeBox)}
                                 />
-
-                                <ContactSubmit
-                                  data-plasmic-name={"contactSubmitButton"}
-                                  data-plasmic-override={
-                                    overrides.contactSubmitButton
-                                  }
+                              }
+                              end={
+                                <ArrowRightSvgIcon
+                                  className={classNames("all", sty.svg__ihUjC)}
+                                  role={"img"}
+                                />
+                              }
+                              iconEnd={true}
+                              label={
+                                <div
+                                  data-plasmic-name={"text"}
+                                  data-plasmic-override={overrides.text}
                                   className={classNames(
-                                    "__wab_instance",
-                                    sty.contactSubmitButton
+                                    "all",
+                                    "__wab_text",
+                                    sty.text
                                   )}
-                                  label={"Submit"}
                                 >
-                                  <div
-                                    className={classNames(
-                                      "all",
-                                      "__wab_text",
-                                      sty.text___5WZoH
-                                    )}
-                                  >
-                                    {""}
-                                  </div>
-                                </ContactSubmit>
-                              </React.Fragment>
-                            }
-                            end={
-                              <ArrowRightSvgIcon
-                                className={classNames("all", sty.svg__ihUjC)}
-                                role={"img"}
-                              />
-                            }
-                            iconEnd={true}
-                            label={
-                              <div
-                                className={classNames(
-                                  "all",
-                                  "__wab_text",
-                                  sty.text__wjHsB
-                                )}
-                              >
-                                {"Submit"}
-                              </div>
-                            }
-                          />
+                                  {"Submit"}
+                                </div>
+                              }
+                            />
+                          </ContactSubmit>
                         </div>
                       </React.Fragment>
                     )}
                   </DataCtxReader__>
                 </ContactForm>
-                <RegistrationMarkTargetSvg2Icon
-                  className={classNames("all", sty.svg__qwgEp)}
-                  role={"img"}
-                />
+                <div className={classNames("all", sty.freeBox__aXiKz)}>
+                  <FloatingElement
+                    animationAmplitude={-4}
+                    animationDuration={12}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.floatingElement__nhD0Y
+                    )}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img__inIpY)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
+                        fullWidth: 40,
+                        fullHeight: 40,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </FloatingElement>
+                </div>
+                <div className={classNames("all", sty.freeBox__lr11R)}>
+                  <FloatingElement
+                    animationAmplitude={4}
+                    animationDuration={12}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.floatingElement__qzVgh
+                    )}
+                  >
+                    <PlasmicImg__
+                      alt={""}
+                      className={classNames(sty.img___526G)}
+                      displayHeight={"auto"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"auto"}
+                      loading={"lazy"}
+                      src={{
+                        src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
+                        fullWidth: 40,
+                        fullHeight: 40,
+                        aspectRatio: undefined
+                      }}
+                    />
+                  </FloatingElement>
+                </div>
               </div>
             </InkBleed>
           </section>
@@ -594,48 +689,53 @@ const PlasmicDescendants = {
     "root",
     "navBanner",
     "section",
-    "h1",
     "contactForm",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
+    "contactSubmitButton",
     "button",
     "freeBox",
-    "contactSubmitButton",
+    "text",
+    "h4",
     "footer"
   ],
   navBanner: ["navBanner"],
   section: [
     "section",
-    "h1",
     "contactForm",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
+    "contactSubmitButton",
     "button",
     "freeBox",
-    "contactSubmitButton"
+    "text",
+    "h4"
   ],
-  h1: ["h1"],
   contactForm: [
     "contactForm",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
+    "contactSubmitButton",
     "button",
     "freeBox",
-    "contactSubmitButton"
+    "text",
+    "h4"
   ],
   nameInput: ["nameInput"],
   emailInput: ["emailInput"],
   subjectInput: ["subjectInput"],
   textAreaInput: ["textAreaInput"],
-  button: ["button", "freeBox", "contactSubmitButton"],
+  contactSubmitButton: ["contactSubmitButton", "button", "freeBox", "text"],
+  button: ["button", "freeBox", "text"],
   freeBox: ["freeBox"],
-  contactSubmitButton: ["contactSubmitButton"],
+  text: ["text"],
+  h4: ["h4"],
   footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -645,15 +745,16 @@ type NodeDefaultElementType = {
   root: "div";
   navBanner: typeof NavBanner;
   section: "section";
-  h1: "h1";
   contactForm: typeof ContactForm;
   nameInput: typeof TextInput;
   emailInput: typeof TextInput;
   subjectInput: typeof TextInput;
   textAreaInput: typeof TextAreaInput;
+  contactSubmitButton: typeof ContactSubmit;
   button: typeof Button;
   freeBox: "div";
-  contactSubmitButton: typeof ContactSubmit;
+  text: "div";
+  h4: "h4";
   footer: typeof Footer;
 };
 
@@ -721,15 +822,16 @@ export const PlasmicContact = Object.assign(
     // Helper components rendering sub-elements
     navBanner: makeNodeComponent("navBanner"),
     section: makeNodeComponent("section"),
-    h1: makeNodeComponent("h1"),
     contactForm: makeNodeComponent("contactForm"),
     nameInput: makeNodeComponent("nameInput"),
     emailInput: makeNodeComponent("emailInput"),
     subjectInput: makeNodeComponent("subjectInput"),
     textAreaInput: makeNodeComponent("textAreaInput"),
+    contactSubmitButton: makeNodeComponent("contactSubmitButton"),
     button: makeNodeComponent("button"),
     freeBox: makeNodeComponent("freeBox"),
-    contactSubmitButton: makeNodeComponent("contactSubmitButton"),
+    text: makeNodeComponent("text"),
+    h4: makeNodeComponent("h4"),
     footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicContact
