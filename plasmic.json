@@ -26340,6 +26340,20 @@
           "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicTextField.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "eU1aRzc-ixpQ",
+          "name": "About",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/steff_bradley_portfolio/PlasmicAbout.tsx",
+          "importSpec": {
+            "modulePath": "../pages/about.tsx"
+          },
+          "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicAbout.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/about"
         }
       ],
       "icons": [

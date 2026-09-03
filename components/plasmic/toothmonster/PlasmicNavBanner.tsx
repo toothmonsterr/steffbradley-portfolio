@@ -500,7 +500,7 @@ function PlasmicNavBanner__RenderFunc(props: {
                 }
               )}
               component={Link}
-              href={"/"}
+              href={`/about`}
               legacyBehavior={false}
               platform={"nextjs"}
             >
@@ -522,7 +522,7 @@ function PlasmicNavBanner__RenderFunc(props: {
                 }
               )}
               component={Link}
-              href={"/"}
+              href={`/contact`}
               legacyBehavior={false}
               platform={"nextjs"}
             >
