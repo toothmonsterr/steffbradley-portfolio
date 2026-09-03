@@ -123,3 +123,27 @@
 .wrapper[data-offset-active] .layer {
   will-change: transform;
 }
+
+
+/* Scroll-time containment.
+
+   Four blended, SVG-filtered plates inside an `isolation: isolate` group give
+   the compositor one large, expensive-to-rasterize layer.
+
+   `contain: layout style` lets the browser treat this subtree as independent
+   for layout and style invalidation, so a change here cannot force work on
+   the rest of the page. Deliberately NOT `paint` or `content`: those clip to
+   the wrapper box, and the misregistration offset is meant to paint a few px
+   outside it (see .layer above). */
+.wrapper {
+  contain: layout style;
+}
+
+/* On touch the breathing wobble is off (see staticWobble in OffsetCMYK.tsx),
+   so the plates never move — drop the compositor hint and let the layer stay
+   cached for the whole scroll instead of being re-rasterized. */
+@media (pointer: coarse) {
+  .wrapper[data-offset-active] .layer {
+    will-change: auto;
+  }
+}

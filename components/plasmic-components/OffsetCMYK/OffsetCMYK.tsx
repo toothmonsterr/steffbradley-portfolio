@@ -80,7 +80,7 @@ export function OffsetCMYK({
     Y: `cmyk-y-${uid}`,
     K: `cmyk-k-${uid}`,
   };
-  const { prefersReduced, frameInterval } = useAnimationTier();
+  const { prefersReduced, frameInterval, isTouch } = useAnimationTier();
 
   const wobbleC = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleM = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -97,6 +97,9 @@ export function OffsetCMYK({
 
   useOffsetActivity(hostRef, {
     interaction, offsetX, offsetY, easeDuration, prefersReduced, frameInterval, layers,
+    // Each plate is a full SVG filter chain, so a transform write re-renders
+    // four of them. Sub-pixel breathing is not worth that on a phone.
+    staticWobble: isTouch,
   });
 
   const halftoneIds = useMemo(

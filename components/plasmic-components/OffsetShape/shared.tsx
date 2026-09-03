@@ -247,6 +247,11 @@ export interface UseOffsetActivityOpts {
    *  breathing wobble to ~30fps on touch, where it runs on a dozen-plus
    *  layers at once. */
   frameInterval?: number;
+  /** Disables the continuous breathing wobble, leaving only the
+   *  hover/click misregistration ease. Set for OffsetCMYK on touch: each
+   *  wobble frame there re-renders four SVG filter chains for sub-pixel
+   *  movement nobody can see. */
+  staticWobble?: boolean;
   layers: LayerSpec[];
   sizerX?: MotionValue<number>;
   sizerY?: MotionValue<number>;
@@ -319,28 +324,43 @@ export function useOffsetActivity(
     let elapsed = 0;
     let inViewport = true;
 
+    // Returns true if it actually wrote a change. Motion values are cheap to
+      const { offsetX, offsetY, prefersReduced, staticWobble, sizerX, sizerY, sizerRotate, sizerWobble } = optsRef.current;
+      const noWobble = prefersReduced || staticWobble;
+    // filter chains) forces the whole filter to re-render, so skipping
+    // no-op writes is what keeps that component off the main thread.
+    const EPS = 0.01;
     const writeTransforms = (tSec: number) => {
       const { offsetX, offsetY, prefersReduced, sizerX, sizerY, sizerRotate, sizerWobble } = optsRef.current;
       const layers = layersRef.current;
       const a = smoothstep(Math.max(0, Math.min(1, activityRef.current)));
+      let changed = false;
 
       for (const layer of layers) {
-        const [bx, by, br] = prefersReduced ? [0, 0, 0] : sampleBreathe(layer.wobble, tSec);
+        const [bx, by, br] = noWobble ? [0, 0, 0] : sampleBreathe(layer.wobble, tSec);
         const mx = layer.dxSign * offsetX + bx;
         const my = layer.dySign * offsetY + by;
         const rx = layer.dxSign * REG;
         const ry = layer.dySign * REG;
-        layer.x.set(mx + (rx - mx) * a);
-        layer.y.set(my + (ry - my) * a);
-        layer.rotate.set(br * (1 - a));
+        const nx = mx + (rx - mx) * a;
+        const ny = my + (ry - my) * a;
+        const nr = br * (1 - a);
+        if (Math.abs(nx - layer.x.get()) > EPS) { layer.x.set(nx); changed = true; }
+        if (Math.abs(ny - layer.y.get()) > EPS) { layer.y.set(ny); changed = true; }
+        if (Math.abs(nr - layer.rotate.get()) > EPS) { layer.rotate.set(nr); changed = true; }
       }
 
       if (sizerX && sizerY && sizerRotate && sizerWobble) {
-        const [bx, by, br] = prefersReduced ? [0, 0, 0] : sampleBreathe(sizerWobble, tSec);
-        sizerX.set(bx * (1 - a));
-        sizerY.set(by * (1 - a));
-        sizerRotate.set(br * (1 - a));
+        const [bx, by, br] = noWobble ? [0, 0, 0] : sampleBreathe(sizerWobble, tSec);
+        const nx = bx * (1 - a);
+        const ny = by * (1 - a);
+        const nr = br * (1 - a);
+        if (Math.abs(nx - sizerX.get()) > EPS) { sizerX.set(nx); changed = true; }
+        if (Math.abs(ny - sizerY.get()) > EPS) { sizerY.set(ny); changed = true; }
+        if (Math.abs(nr - sizerRotate.get()) > EPS) { sizerRotate.set(nr); changed = true; }
       }
+
+      return changed;
     };
 
     const tick = (now: number) => {
@@ -372,13 +392,21 @@ export function useOffsetActivity(
         activityRef.current = Math.max(target, cur - delta);
       }
 
-      if (!prefersReduced) elapsed += dt;
-      writeTransforms(elapsed);
+      const wobbleRunning = !prefersReduced && !optsRef.current.staticWobble;
+      if (wobbleRunning) elapsed += dt;
+      const changed = writeTransforms(elapsed);
+      const settling = activityRef.current !== target;
 
-      if (!prefersReduced && inViewport) {
+      // Keep going while the wobble is animating, while the hover/click ease
+      // is still settling, or while the last write actually moved something.
+      // Otherwise idle out — with staticWobble there is nothing to animate at
+      // rest, so the loop must not spin (each frame would re-render four SVG
+      // filter chains on OffsetCMYK).
+      if (inViewport && (wobbleRunning || settling || changed)) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = 0;
+        lastTsRef.current = 0;
       }
     };
 
@@ -408,8 +436,10 @@ export function useOffsetActivity(
     }, { threshold: 0 });
     io.observe(host);
 
-    const onEnter = () => { hoveringRef.current = true; };
-    const onLeave = () => { hoveringRef.current = false; };
+    // startLoop is required here: the loop now idles out when nothing is
+    // changing, so hover has to wake it rather than relying on it spinning.
+    const onEnter = () => { hoveringRef.current = true; startLoop(); };
+    const onLeave = () => { hoveringRef.current = false; startLoop(); };
     const onClick = () => { clickedRef.current = !clickedRef.current; startLoop(); };
 
     if (optsRef.current.interaction === 'click') {
