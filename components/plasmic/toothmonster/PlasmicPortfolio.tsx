@@ -233,7 +233,6 @@ function PlasmicPortfolio__RenderFunc(props: {
             bottomTear={true}
             className={classNames("__wab_instance", sty.navBanner)}
             color={"midnight"}
-            effectVisible={true}
           />
 
           <CmsQueryRepeater
