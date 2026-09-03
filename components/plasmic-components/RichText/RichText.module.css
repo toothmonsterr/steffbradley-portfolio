@@ -2,7 +2,7 @@
  * Prose styling for CMS rich-text HTML.
  *
  * globals.css applies an aggressive reset — all margins zeroed, `a` set to
- * `color: inherit; text-decoration: none`, `img` set to `display: block`.
+ * `text-decoration: none`, `img` set to `display: block`.
  * Everything below therefore has to be restated explicitly, or CMS content
  * renders as an undifferentiated wall of text.
  */
