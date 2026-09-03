@@ -654,15 +654,12 @@
 .freeBox__ruEh {
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: relative;
   width: 100%;
   height: auto;
   max-width: 33%;
   justify-content: flex-start;
   align-items: center;
-  left: 0px;
-  top: 64px;
-  z-index: 1;
   min-width: 0;
 }
 @media (max-width: 640px) {
@@ -767,15 +764,12 @@
 .freeBox__vsd1K {
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: relative;
   width: 100%;
   height: auto;
   max-width: 33%;
   justify-content: flex-start;
   align-items: center;
-  left: 0px;
-  top: 64px;
-  z-index: 1;
   min-width: 0;
 }
 @media (max-width: 640px) {
@@ -860,15 +854,12 @@
 .freeBox__syJWs {
   display: flex;
   flex-direction: column;
-  position: sticky;
+  position: relative;
   width: 100%;
   height: auto;
   max-width: 33%;
   justify-content: flex-start;
   align-items: center;
-  left: 0px;
-  top: 64px;
-  z-index: 1;
   min-width: 0;
 }
 @media (max-width: 640px) {
