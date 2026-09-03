@@ -261,423 +261,434 @@ function PlasmicContact__RenderFunc(props: {
             color={"coral"}
           />
 
-          <section
-            data-plasmic-name={"section"}
-            data-plasmic-override={overrides.section}
-            className={classNames("all", sty.section)}
-          >
-            <InkBleed
-              bleedColor={true ? "#00427F40" : undefined}
-              className={classNames("__wab_instance", sty.inkBleed__aurVu)}
-              noiseFrequency={1}
-              spread={3}
+          <div className={classNames("all", sty.freeBox__wUQf)}>
+            <section
+              data-plasmic-name={"section"}
+              data-plasmic-override={overrides.section}
+              className={classNames("all", sty.section)}
             >
-              <h1
-                className={classNames(
-                  "all",
-                  "h1",
-                  "h1__67C2x",
-                  "__wab_text",
-                  sty.h1__lm12B
-                )}
+              <InkBleed
+                bleedColor={true ? "#00427F40" : undefined}
+                className={classNames("__wab_instance", sty.inkBleed__aurVu)}
+                noiseFrequency={1}
+                spread={3}
               >
-                {"contact me"}
-              </h1>
-            </InkBleed>
-            <InkBleed
-              bleedColor={true ? "#00427F40" : undefined}
-              className={classNames("__wab_instance", sty.inkBleed__nktew)}
-              noiseFrequency={1}
-              spread={4}
-            >
-              <div className={classNames("all", sty.freeBox__okMvB)}>
-                <ContactForm
-                  data-plasmic-name={"contactForm"}
-                  data-plasmic-override={overrides.contactForm}
-                  className={classNames("__wab_instance", sty.contactForm)}
-                  errorContent={
+                <h1
+                  className={classNames(
+                    "all",
+                    "h1",
+                    "h1__67C2x",
+                    "__wab_text",
+                    sty.h1__lm12B
+                  )}
+                >
+                  {"contact me"}
+                </h1>
+              </InkBleed>
+              <InkBleed
+                bleedColor={true ? "#00427F40" : undefined}
+                className={classNames("__wab_instance", sty.inkBleed__nktew)}
+                noiseFrequency={1}
+                spread={4}
+              >
+                <div className={classNames("all", sty.freeBox__okMvB)}>
+                  <ContactForm
+                    data-plasmic-name={"contactForm"}
+                    data-plasmic-override={overrides.contactForm}
+                    className={classNames("__wab_instance", sty.contactForm)}
+                    errorContent={
+                      <DataCtxReader__>
+                        {$ctx => (
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return $ctx.contactForm.errorMessage;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "Error";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        )}
+                      </DataCtxReader__>
+                    }
+                    successContent={
+                      <DataCtxReader__>
+                        {$ctx => (
+                          <div
+                            className={classNames("all", sty.freeBox__mc3UY)}
+                          >
+                            <RegistrationMarkTargetSvg2Icon
+                              className={classNames("all", sty.svg__uuRp1)}
+                              role={"img"}
+                            />
+
+                            <h1
+                              className={classNames(
+                                "all",
+                                "h1",
+                                "h1__67C2x",
+                                "__wab_text",
+                                sty.h1__ylEo
+                              )}
+                            >
+                              <React.Fragment>
+                                <React.Fragment>{""}</React.Fragment>
+                                {
+                                  <h4
+                                    data-plasmic-name={"h4"}
+                                    data-plasmic-override={overrides.h4}
+                                    className={classNames(
+                                      "all",
+                                      "h4",
+                                      "h4__67C2x",
+                                      "__wab_text",
+                                      sty.h4
+                                    )}
+                                  >
+                                    {
+                                      "Thank you for reaching out! I'll get back to you as soon as possible."
+                                    }
+                                  </h4>
+                                }
+                                <React.Fragment>{""}</React.Fragment>
+                              </React.Fragment>
+                            </h1>
+                            <RegistrationMarkTargetSvg2Icon
+                              className={classNames("all", sty.svg___3IzX2)}
+                              role={"img"}
+                            />
+                          </div>
+                        )}
+                      </DataCtxReader__>
+                    }
+                  >
                     <DataCtxReader__>
                       {$ctx => (
                         <React.Fragment>
-                          {(() => {
-                            try {
-                              return $ctx.contactForm.errorMessage;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "Error";
+                          <ContactField
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactField__dUhcG
+                            )}
+                            errorContent={null}
+                            field={"name"}
+                            hideError={false}
+                            required={true}
+                          >
+                            <Label
+                              className={classNames(
+                                "__wab_instance",
+                                sty.label__n8K5K
+                              )}
+                              requirementIndicator={"required"}
+                            >
+                              {"Name"}
+                            </Label>
+                            <TextInput
+                              data-plasmic-name={"nameInput"}
+                              data-plasmic-override={overrides.nameInput}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.nameInput
+                              )}
+                              inputMode={"text"}
+                              onChange={async (...eventArgs: any) => {
+                                generateStateOnChangeProp($state, [
+                                  "nameInput",
+                                  "value"
+                                ]).apply(null, eventArgs);
+
+                                if (
+                                  eventArgs.length > 1 &&
+                                  eventArgs[1] &&
+                                  eventArgs[1]._plasmic_state_init_
+                                ) {
+                                  return;
+                                }
+                              }}
+                              placeholder={"Enter name"}
+                              value={generateStateValueProp($state, [
+                                "nameInput",
+                                "value"
+                              ])}
+                            />
+                          </ContactField>
+                          <ContactField
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactField___0MFsy
+                            )}
+                            errorContent={null}
+                            field={"email"}
+                            hideError={false}
+                            required={true}
+                          >
+                            <Label
+                              className={classNames(
+                                "__wab_instance",
+                                sty.label__uoKwh
+                              )}
+                              requirementIndicator={"required"}
+                            >
+                              {"Email"}
+                            </Label>
+                            <TextInput
+                              data-plasmic-name={"emailInput"}
+                              data-plasmic-override={overrides.emailInput}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.emailInput
+                              )}
+                              inputMode={"email"}
+                              inputType={"email"}
+                              onChange={async (...eventArgs: any) => {
+                                generateStateOnChangeProp($state, [
+                                  "emailInput",
+                                  "value"
+                                ]).apply(null, eventArgs);
+
+                                if (
+                                  eventArgs.length > 1 &&
+                                  eventArgs[1] &&
+                                  eventArgs[1]._plasmic_state_init_
+                                ) {
+                                  return;
+                                }
+                              }}
+                              placeholder={"Enter email"}
+                              value={generateStateValueProp($state, [
+                                "emailInput",
+                                "value"
+                              ])}
+                            />
+                          </ContactField>
+                          <ContactField
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactField__yRq3M
+                            )}
+                            errorContent={""}
+                            field={"subject"}
+                            hideError={false}
+                            required={true}
+                          >
+                            <Label
+                              className={classNames(
+                                "__wab_instance",
+                                sty.label___7JV9G
+                              )}
+                              requirementIndicator={"required"}
+                            >
+                              {"Subject"}
+                            </Label>
+                            <TextInput
+                              data-plasmic-name={"subjectInput"}
+                              data-plasmic-override={overrides.subjectInput}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.subjectInput
+                              )}
+                              inputMode={"text"}
+                              onChange={async (...eventArgs: any) => {
+                                generateStateOnChangeProp($state, [
+                                  "subjectInput",
+                                  "value"
+                                ]).apply(null, eventArgs);
+
+                                if (
+                                  eventArgs.length > 1 &&
+                                  eventArgs[1] &&
+                                  eventArgs[1]._plasmic_state_init_
+                                ) {
+                                  return;
+                                }
+                              }}
+                              placeholder={"Enter subject line"}
+                              value={generateStateValueProp($state, [
+                                "subjectInput",
+                                "value"
+                              ])}
+                            />
+                          </ContactField>
+                          <ContactField
+                            className={classNames(
+                              "__wab_instance",
+                              sty.contactField___3SoFk
+                            )}
+                            errorContent={null}
+                            field={"message"}
+                            hideError={false}
+                            required={true}
+                          >
+                            <Label
+                              className={classNames(
+                                "__wab_instance",
+                                sty.label___7CnnT
+                              )}
+                              requirementIndicator={"required"}
+                            >
+                              {"Message"}
+                            </Label>
+                            <TextAreaInput
+                              data-plasmic-name={"textAreaInput"}
+                              data-plasmic-override={overrides.textAreaInput}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.textAreaInput
+                              )}
+                              inputMode={"text"}
+                              onChange={async (...eventArgs: any) => {
+                                generateStateOnChangeProp($state, [
+                                  "textAreaInput",
+                                  "value"
+                                ]).apply(null, eventArgs);
+
+                                if (
+                                  eventArgs.length > 1 &&
+                                  eventArgs[1] &&
+                                  eventArgs[1]._plasmic_state_init_
+                                ) {
+                                  return;
+                                }
+                              }}
+                              padded={[]}
+                              value={generateStateValueProp($state, [
+                                "textAreaInput",
+                                "value"
+                              ])}
+                            />
+                          </ContactField>
+                          <div
+                            className={classNames("all", sty.freeBox__obP6Z)}
+                          >
+                            <ContactSubmit
+                              data-plasmic-name={"contactSubmitButton"}
+                              data-plasmic-override={
+                                overrides.contactSubmitButton
                               }
-                              throw e;
-                            }
-                          })()}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.contactSubmitButton
+                              )}
+                              label={"Submit"}
+                            >
+                              <Button
+                                data-plasmic-name={"button"}
+                                data-plasmic-override={overrides.button}
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.button
+                                )}
+                                effect={
+                                  <div
+                                    data-plasmic-name={"freeBox"}
+                                    data-plasmic-override={overrides.freeBox}
+                                    className={classNames("all", sty.freeBox)}
+                                  />
+                                }
+                                end={
+                                  <ArrowRightSvgIcon
+                                    className={classNames(
+                                      "all",
+                                      sty.svg__ihUjC
+                                    )}
+                                    role={"img"}
+                                  />
+                                }
+                                iconEnd={true}
+                                label={
+                                  <div
+                                    data-plasmic-name={"text"}
+                                    data-plasmic-override={overrides.text}
+                                    className={classNames(
+                                      "all",
+                                      "__wab_text",
+                                      sty.text
+                                    )}
+                                  >
+                                    {"Submit"}
+                                  </div>
+                                }
+                              />
+                            </ContactSubmit>
+                          </div>
                         </React.Fragment>
                       )}
                     </DataCtxReader__>
-                  }
-                  successContent={
-                    <DataCtxReader__>
-                      {$ctx => (
-                        <div className={classNames("all", sty.freeBox__mc3UY)}>
-                          <RegistrationMarkTargetSvg2Icon
-                            className={classNames("all", sty.svg__uuRp1)}
-                            role={"img"}
-                          />
-
-                          <h1
-                            className={classNames(
-                              "all",
-                              "h1",
-                              "h1__67C2x",
-                              "__wab_text",
-                              sty.h1__ylEo
-                            )}
-                          >
-                            <React.Fragment>
-                              <React.Fragment>{""}</React.Fragment>
-                              {
-                                <h4
-                                  data-plasmic-name={"h4"}
-                                  data-plasmic-override={overrides.h4}
-                                  className={classNames(
-                                    "all",
-                                    "h4",
-                                    "h4__67C2x",
-                                    "__wab_text",
-                                    sty.h4
-                                  )}
-                                >
-                                  {
-                                    "Thank you for reaching out! I'll get back to you as soon as possible."
-                                  }
-                                </h4>
-                              }
-                              <React.Fragment>{""}</React.Fragment>
-                            </React.Fragment>
-                          </h1>
-                          <RegistrationMarkTargetSvg2Icon
-                            className={classNames("all", sty.svg___3IzX2)}
-                            role={"img"}
-                          />
-                        </div>
+                  </ContactForm>
+                  <div className={classNames("all", sty.freeBox__aXiKz)}>
+                    <FloatingElement
+                      animationAmplitude={-4}
+                      animationDuration={12}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.floatingElement__nhD0Y
                       )}
-                    </DataCtxReader__>
-                  }
-                >
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <React.Fragment>
-                        <ContactField
-                          className={classNames(
-                            "__wab_instance",
-                            sty.contactField__dUhcG
-                          )}
-                          errorContent={null}
-                          field={"name"}
-                          hideError={false}
-                          required={true}
-                        >
-                          <Label
-                            className={classNames(
-                              "__wab_instance",
-                              sty.label__n8K5K
-                            )}
-                            requirementIndicator={"required"}
-                          >
-                            {"Name"}
-                          </Label>
-                          <TextInput
-                            data-plasmic-name={"nameInput"}
-                            data-plasmic-override={overrides.nameInput}
-                            className={classNames(
-                              "__wab_instance",
-                              sty.nameInput
-                            )}
-                            inputMode={"text"}
-                            onChange={async (...eventArgs: any) => {
-                              generateStateOnChangeProp($state, [
-                                "nameInput",
-                                "value"
-                              ]).apply(null, eventArgs);
-
-                              if (
-                                eventArgs.length > 1 &&
-                                eventArgs[1] &&
-                                eventArgs[1]._plasmic_state_init_
-                              ) {
-                                return;
-                              }
-                            }}
-                            placeholder={"Enter name"}
-                            value={generateStateValueProp($state, [
-                              "nameInput",
-                              "value"
-                            ])}
-                          />
-                        </ContactField>
-                        <ContactField
-                          className={classNames(
-                            "__wab_instance",
-                            sty.contactField___0MFsy
-                          )}
-                          errorContent={null}
-                          field={"email"}
-                          hideError={false}
-                          required={true}
-                        >
-                          <Label
-                            className={classNames(
-                              "__wab_instance",
-                              sty.label__uoKwh
-                            )}
-                            requirementIndicator={"required"}
-                          >
-                            {"Email"}
-                          </Label>
-                          <TextInput
-                            data-plasmic-name={"emailInput"}
-                            data-plasmic-override={overrides.emailInput}
-                            className={classNames(
-                              "__wab_instance",
-                              sty.emailInput
-                            )}
-                            inputMode={"email"}
-                            inputType={"email"}
-                            onChange={async (...eventArgs: any) => {
-                              generateStateOnChangeProp($state, [
-                                "emailInput",
-                                "value"
-                              ]).apply(null, eventArgs);
-
-                              if (
-                                eventArgs.length > 1 &&
-                                eventArgs[1] &&
-                                eventArgs[1]._plasmic_state_init_
-                              ) {
-                                return;
-                              }
-                            }}
-                            placeholder={"Enter email"}
-                            value={generateStateValueProp($state, [
-                              "emailInput",
-                              "value"
-                            ])}
-                          />
-                        </ContactField>
-                        <ContactField
-                          className={classNames(
-                            "__wab_instance",
-                            sty.contactField__yRq3M
-                          )}
-                          errorContent={""}
-                          field={"subject"}
-                          hideError={false}
-                          required={true}
-                        >
-                          <Label
-                            className={classNames(
-                              "__wab_instance",
-                              sty.label___7JV9G
-                            )}
-                            requirementIndicator={"required"}
-                          >
-                            {"Subject"}
-                          </Label>
-                          <TextInput
-                            data-plasmic-name={"subjectInput"}
-                            data-plasmic-override={overrides.subjectInput}
-                            className={classNames(
-                              "__wab_instance",
-                              sty.subjectInput
-                            )}
-                            inputMode={"text"}
-                            onChange={async (...eventArgs: any) => {
-                              generateStateOnChangeProp($state, [
-                                "subjectInput",
-                                "value"
-                              ]).apply(null, eventArgs);
-
-                              if (
-                                eventArgs.length > 1 &&
-                                eventArgs[1] &&
-                                eventArgs[1]._plasmic_state_init_
-                              ) {
-                                return;
-                              }
-                            }}
-                            placeholder={"Enter subject line"}
-                            value={generateStateValueProp($state, [
-                              "subjectInput",
-                              "value"
-                            ])}
-                          />
-                        </ContactField>
-                        <ContactField
-                          className={classNames(
-                            "__wab_instance",
-                            sty.contactField___3SoFk
-                          )}
-                          errorContent={null}
-                          field={"message"}
-                          hideError={false}
-                          required={true}
-                        >
-                          <Label
-                            className={classNames(
-                              "__wab_instance",
-                              sty.label___7CnnT
-                            )}
-                            requirementIndicator={"required"}
-                          >
-                            {"Message"}
-                          </Label>
-                          <TextAreaInput
-                            data-plasmic-name={"textAreaInput"}
-                            data-plasmic-override={overrides.textAreaInput}
-                            className={classNames(
-                              "__wab_instance",
-                              sty.textAreaInput
-                            )}
-                            inputMode={"text"}
-                            onChange={async (...eventArgs: any) => {
-                              generateStateOnChangeProp($state, [
-                                "textAreaInput",
-                                "value"
-                              ]).apply(null, eventArgs);
-
-                              if (
-                                eventArgs.length > 1 &&
-                                eventArgs[1] &&
-                                eventArgs[1]._plasmic_state_init_
-                              ) {
-                                return;
-                              }
-                            }}
-                            padded={[]}
-                            value={generateStateValueProp($state, [
-                              "textAreaInput",
-                              "value"
-                            ])}
-                          />
-                        </ContactField>
-                        <div className={classNames("all", sty.freeBox__obP6Z)}>
-                          <ContactSubmit
-                            data-plasmic-name={"contactSubmitButton"}
-                            data-plasmic-override={
-                              overrides.contactSubmitButton
-                            }
-                            className={classNames(
-                              "__wab_instance",
-                              sty.contactSubmitButton
-                            )}
-                            label={"Submit"}
-                          >
-                            <Button
-                              data-plasmic-name={"button"}
-                              data-plasmic-override={overrides.button}
-                              className={classNames(
-                                "__wab_instance",
-                                sty.button
-                              )}
-                              effect={
-                                <div
-                                  data-plasmic-name={"freeBox"}
-                                  data-plasmic-override={overrides.freeBox}
-                                  className={classNames("all", sty.freeBox)}
-                                />
-                              }
-                              end={
-                                <ArrowRightSvgIcon
-                                  className={classNames("all", sty.svg__ihUjC)}
-                                  role={"img"}
-                                />
-                              }
-                              iconEnd={true}
-                              label={
-                                <div
-                                  data-plasmic-name={"text"}
-                                  data-plasmic-override={overrides.text}
-                                  className={classNames(
-                                    "all",
-                                    "__wab_text",
-                                    sty.text
-                                  )}
-                                >
-                                  {"Submit"}
-                                </div>
-                              }
-                            />
-                          </ContactSubmit>
-                        </div>
-                      </React.Fragment>
-                    )}
-                  </DataCtxReader__>
-                </ContactForm>
-                <div className={classNames("all", sty.freeBox__aXiKz)}>
-                  <FloatingElement
-                    animationAmplitude={-4}
-                    animationDuration={12}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.floatingElement__nhD0Y
-                    )}
-                  >
-                    <PlasmicImg__
-                      alt={""}
-                      className={classNames(sty.img__inIpY)}
-                      displayHeight={"auto"}
-                      displayMaxHeight={"none"}
-                      displayMaxWidth={"100%"}
-                      displayMinHeight={"0"}
-                      displayMinWidth={"0"}
-                      displayWidth={"auto"}
-                      loading={"lazy"}
-                      src={{
-                        src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
-                        fullWidth: 40,
-                        fullHeight: 40,
-                        aspectRatio: undefined
-                      }}
-                    />
-                  </FloatingElement>
+                    >
+                      <PlasmicImg__
+                        alt={""}
+                        className={classNames(sty.img__inIpY)}
+                        displayHeight={"auto"}
+                        displayMaxHeight={"none"}
+                        displayMaxWidth={"100%"}
+                        displayMinHeight={"0"}
+                        displayMinWidth={"0"}
+                        displayWidth={"auto"}
+                        loading={"lazy"}
+                        src={{
+                          src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
+                          fullWidth: 40,
+                          fullHeight: 40,
+                          aspectRatio: undefined
+                        }}
+                      />
+                    </FloatingElement>
+                  </div>
+                  <div className={classNames("all", sty.freeBox__lr11R)}>
+                    <FloatingElement
+                      animationAmplitude={4}
+                      animationDuration={12}
+                      className={classNames(
+                        "__wab_instance",
+                        sty.floatingElement__qzVgh
+                      )}
+                    >
+                      <PlasmicImg__
+                        alt={""}
+                        className={classNames(sty.img___526G)}
+                        displayHeight={"auto"}
+                        displayMaxHeight={"none"}
+                        displayMaxWidth={"100%"}
+                        displayMinHeight={"0"}
+                        displayMinWidth={"0"}
+                        displayWidth={"auto"}
+                        loading={"lazy"}
+                        src={{
+                          src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
+                          fullWidth: 40,
+                          fullHeight: 40,
+                          aspectRatio: undefined
+                        }}
+                      />
+                    </FloatingElement>
+                  </div>
                 </div>
-                <div className={classNames("all", sty.freeBox__lr11R)}>
-                  <FloatingElement
-                    animationAmplitude={4}
-                    animationDuration={12}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.floatingElement__qzVgh
-                    )}
-                  >
-                    <PlasmicImg__
-                      alt={""}
-                      className={classNames(sty.img___526G)}
-                      displayHeight={"auto"}
-                      displayMaxHeight={"none"}
-                      displayMaxWidth={"100%"}
-                      displayMinHeight={"0"}
-                      displayMinWidth={"0"}
-                      displayWidth={"auto"}
-                      loading={"lazy"}
-                      src={{
-                        src: "/plasmic/toothmonster/images/registrationMarkCornerSvg.svg",
-                        fullWidth: 40,
-                        fullHeight: 40,
-                        aspectRatio: undefined
-                      }}
-                    />
-                  </FloatingElement>
-                </div>
-              </div>
-            </InkBleed>
-          </section>
-          <Footer
-            data-plasmic-name={"footer"}
-            data-plasmic-override={overrides.footer}
-            className={classNames("__wab_instance", sty.footer)}
-          />
+              </InkBleed>
+            </section>
+            <div className={classNames("all", sty.freeBox__bTdjq)}>
+              <Footer
+                data-plasmic-name={"footer"}
+                data-plasmic-override={overrides.footer}
+                className={classNames("__wab_instance", sty.footer)}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </React.Fragment>
