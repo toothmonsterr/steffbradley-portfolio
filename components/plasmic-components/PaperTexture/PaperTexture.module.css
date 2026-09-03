@@ -1,0 +1,31 @@
+.wrapper {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* line-height: 0 removes the descender gap under an inline image. Safe here
+   (unlike OffsetCMYK) because there is a single layer — nothing has to stay
+   in register with a separately laid-out sizer. */
+.inner {
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+}
+
+.inner > img,
+.inner > svg,
+.inner > video,
+.inner > picture {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

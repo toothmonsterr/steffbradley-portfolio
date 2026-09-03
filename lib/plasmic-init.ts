@@ -84,6 +84,7 @@ import { PrintColorbar, PrintColorbarMeta }     from '@/components/plasmic-compo
 import { TornSection, TornSectionMeta }         from '@/components/plasmic-components/TornSection';
 import { HalftoneMask, HalftoneMaskMeta }       from '@/components/plasmic-components/HalftoneMask';
 import { NoiseMask, NoiseMaskMeta }             from '@/components/plasmic-components/NoiseMask';
+import { PaperTexture, PaperTextureMeta }       from '@/components/plasmic-components/PaperTexture';
 import { RevealOnScroll, RevealOnScrollMeta }   from '@/components/plasmic-components/RevealOnScroll';
 import { NextImage, NextImageMeta }             from '@/components/plasmic-components/NextImage';
 import { StickerPeel, StickerPeelMeta }         from '@/components/plasmic-components/StickerPeel';
@@ -120,6 +121,7 @@ PLASMIC.registerComponent(PrintColorbar, PrintColorbarMeta as any);
 PLASMIC.registerComponent(TornSection,   TornSectionMeta   as any);
 PLASMIC.registerComponent(HalftoneMask, HalftoneMaskMeta  as any);
 PLASMIC.registerComponent(NoiseMask,    NoiseMaskMeta     as any);
+PLASMIC.registerComponent(PaperTexture, PaperTextureMeta  as any);
 PLASMIC.registerComponent(RevealOnScroll, RevealOnScrollMeta as any);
 PLASMIC.registerComponent(NextImage,           NextImageMeta           as any);
 PLASMIC.registerComponent(StickerPeel,         StickerPeelMeta         as any);
