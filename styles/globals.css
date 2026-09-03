@@ -39,6 +39,10 @@ video {
 
 a {
   color: inherit;
+  /* WebKit and Gecko paint anchor text through -webkit-text-fill-color, which
+     takes precedence over `color`. Left unset, it keeps the UA's near-black
+     anchor default on iOS Safari and Firefox and the design token is ignored. */
+  -webkit-text-fill-color: currentColor;
   text-decoration: none;
 }
 

@@ -46,6 +46,67 @@ export interface GradientBlobProps {
   className?: string;
 }
 
+// Canvas2D `filter` is unsupported on iOS Safari before 18.2 (and desktop
+// Safari before 18). Assigning it there is a silent no-op — no throw — so the
+// blobs would composite unblurred as hard-edged circles. Probe once by writing
+// a filter and reading it back: only a browser that implements the property
+// echoes it.
+let canvasFilterSupport: boolean | null = null;
+function supportsCanvasFilter(): boolean {
+  if (canvasFilterSupport !== null) return canvasFilterSupport;
+  if (typeof document === 'undefined') return false;
+  const probe = document.createElement('canvas').getContext('2d');
+  if (!probe) return (canvasFilterSupport = false);
+  probe.filter = 'blur(2px)';
+  canvasFilterSupport = probe.filter === 'blur(2px)';
+  return canvasFilterSupport;
+}
+
+/**
+ * Gaussian-ish blur for browsers without Canvas2D `filter`.
+ *
+ * Repeatedly halves the source into a scratch canvas and scales it back up.
+ * Bilinear sampling on each pass is a box blur, and stacked box blurs converge
+ * on a Gaussian — enough for an out-of-focus colour wash. Cost is a fraction of
+ * a real blur because the intermediate is tiny.
+ */
+function downsampleBlur(
+  dest: CanvasRenderingContext2D,
+  source: HTMLCanvasElement,
+  scratch: HTMLCanvasElement,
+  radius: number
+) {
+  const w = source.width;
+  const h = source.height;
+  // Each halving contributes ~2px of apparent radius at full size; solve for
+  // the shrink factor that lands near the requested radius, floored so the
+  // intermediate never collapses to nothing.
+  const shrink = Math.max(0.02, Math.min(0.5, 2 / Math.max(1, radius)));
+  const sw = Math.max(1, Math.round(w * shrink));
+  const sh = Math.max(1, Math.round(h * shrink));
+
+  if (scratch.width !== sw || scratch.height !== sh) {
+    scratch.width = sw;
+    scratch.height = sh;
+  }
+  const sCtx = scratch.getContext('2d');
+  if (!sCtx) return;
+
+  sCtx.clearRect(0, 0, sw, sh);
+  sCtx.imageSmoothingEnabled = true;
+  sCtx.imageSmoothingQuality = 'high';
+  sCtx.drawImage(source, 0, 0, sw, sh);
+
+  dest.imageSmoothingEnabled = true;
+  dest.imageSmoothingQuality = 'high';
+  // Two upscale passes soften the residual blockiness of a single stretch.
+  dest.globalAlpha = 1;
+  dest.drawImage(scratch, 0, 0, sw, sh, 0, 0, w, h);
+  dest.globalAlpha = 0.5;
+  dest.drawImage(scratch, 0, 0, sw, sh, -1, -1, w + 2, h + 2);
+  dest.globalAlpha = 1;
+}
+
 function mulberry32(a: number) {
   return () => {
     let t = (a += 0x6d2b79f5);
@@ -120,6 +181,7 @@ export function GradientBlob({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
+  const scratchRef = useRef<HTMLCanvasElement | null>(null);
   const { prefersReduced, isTouch } = useAnimationTier();
 
   const colors = useMemo(
@@ -168,6 +230,12 @@ export function GradientBlob({
     const offscreen = offscreenRef.current;
     const offCtx = offscreen.getContext('2d');
     if (!offCtx) return;
+
+    // Only allocated on browsers that need the manual blur path.
+    const hasCanvasFilter = supportsCanvasFilter();
+    if (!hasCanvasFilter && !scratchRef.current) {
+      scratchRef.current = document.createElement('canvas');
+    }
     const syncOffscreen = () => {
       offscreen.width = canvas.width;
       offscreen.height = canvas.height;
@@ -214,8 +282,13 @@ export function GradientBlob({
       ctx.clearRect(0, 0, w, h);
       const scaledBlur = blurAmount * RENDER_SCALE;
       const effectiveBlur = Math.min(scaledBlur, Math.min(w, h) / 2);
-      ctx.filter = `blur(${effectiveBlur}px)`;
-      ctx.drawImage(offscreen, 0, 0);
+      if (hasCanvasFilter) {
+        ctx.filter = `blur(${effectiveBlur}px)`;
+        ctx.drawImage(offscreen, 0, 0);
+      } else if (scratchRef.current) {
+        ctx.filter = 'none';
+        downsampleBlur(ctx, offscreen, scratchRef.current, effectiveBlur);
+      }
     };
 
     const tick = (now: number) => {
