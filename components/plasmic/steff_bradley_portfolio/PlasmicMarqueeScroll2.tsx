@@ -60,8 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ScrollMarquee } from "@/components/plasmic-components/ScrollMarquee"; // plasmic-import: K8ICcSEKq3PA/codeComponent
-import { OffsetCMYK } from "@/components/plasmic-components/OffsetCMYK"; // plasmic-import: W6F38AxYTSP7/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
+import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "../toothmonster/PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -82,6 +82,7 @@ export const PlasmicMarqueeScroll2__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicMarqueeScroll2__OverridesType = {
   root?: Flex__<typeof ScrollMarquee>;
+  freeBox?: Flex__<"div">;
 };
 
 export interface DefaultMarqueeScroll2Props {
@@ -147,66 +148,54 @@ function PlasmicMarqueeScroll2__RenderFunc(props: {
       height={"90px"}
       pauseOnHover={false}
     >
-      <OffsetCMYK
-        blendMode={"darken"}
-        className={classNames("__wab_instance", sty.offsetCmyk__pjLf)}
-        colorC={true ? "#CEBEE3" : undefined}
-        colorK={true ? "#00427F" : undefined}
-        colorM={true ? "#FF6A50" : undefined}
-        colorY={true ? "#DDEA44" : undefined}
-        interaction={"inverse"}
-        jitter={0.3}
-        offsetX={1}
-        offsetY={1}
-        texture={"noise"}
-        textureContrast={75}
-        textureHoverEnabled={false}
-        textureStep={1}
+      <div
+        data-plasmic-name={"freeBox"}
+        data-plasmic-override={overrides.freeBox}
+        className={classNames("all", sty.freeBox)}
       >
         <NextImage
           alt={""}
-          className={classNames("__wab_instance", sty.image___7DsLz)}
-          fill={true}
-          objectFit={"contain"}
+          className={classNames("__wab_instance", sty.image__u889G)}
           src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
         />
-      </OffsetCMYK>
-      <OffsetCMYK
-        blendMode={"darken"}
-        className={classNames("__wab_instance", sty.offsetCmyk__cvkRp)}
-        colorC={true ? "#CEBEE3" : undefined}
-        colorK={true ? "#00427F" : undefined}
-        colorM={true ? "#FF6A50" : undefined}
-        colorY={true ? "#DDEA44" : undefined}
-        interaction={"inverse"}
-        jitter={0.3}
-        offsetX={1}
-        offsetY={1}
-        texture={"noise"}
-        textureContrast={75}
-        textureHoverEnabled={false}
-        textureStep={1}
-      >
+
         <NextImage
           alt={""}
-          className={classNames("__wab_instance", sty.image__frM1O)}
-          fill={true}
-          objectFit={"contain"}
+          className={classNames("__wab_instance", sty.image__vDaP)}
           src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
         />
-      </OffsetCMYK>
+
+        <NoiseOverlay
+          blendMode={"normal"}
+          className={classNames("__wab_instance", sty.noiseOverlay__wD81K)}
+          color={true ? "#EADBC2" : undefined}
+          grainSize={1}
+          isolateBlend={false}
+        />
+
+        <NoiseOverlay
+          blendMode={"multiply"}
+          className={classNames("__wab_instance", sty.noiseOverlay__xVnJ5)}
+          color={true ? "#000000" : undefined}
+          grainSize={1}
+          isolateBlend={false}
+          seed={3}
+        />
+      </div>
     </ScrollMarquee>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "freeBox"],
+  freeBox: ["freeBox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: typeof ScrollMarquee;
+  freeBox: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -271,6 +260,7 @@ export const PlasmicMarqueeScroll2 = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    freeBox: makeNodeComponent("freeBox"),
 
     // Metadata about props expected for PlasmicMarqueeScroll2
     internalVariantProps: PlasmicMarqueeScroll2__VariantProps,
