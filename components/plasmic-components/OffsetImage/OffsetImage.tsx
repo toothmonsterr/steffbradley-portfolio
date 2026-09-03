@@ -21,6 +21,10 @@ export interface OffsetImageProps {
   /** When true, applies luminance-separation tinting to each slot using colorA/colorB */
   tintSlots?: boolean;
   imageContrast?: number;
+  /** Per-slot override of imageContrast. Negative values invert the luminance
+      separation, so light areas take the ink instead of dark ones. */
+  imageContrastA?: number;
+  imageContrastB?: number;
   offsetX?: number;
   offsetY?: number;
   blendMode?: 'normal' | 'multiply' | 'darken' | 'screen' | 'overlay';
@@ -48,6 +52,8 @@ export const OffsetImage = React.memo(function OffsetImage({
   colorB        = '#DDEA44',
   tintSlots      = false,
   imageContrast  = 1.3,
+  imageContrastA,
+  imageContrastB,
   offsetX        = 4,
   offsetY        = 3,
   blendMode      = 'multiply',
@@ -67,6 +73,10 @@ export const OffsetImage = React.memo(function OffsetImage({
   const filterAId = `oi-a-${uid}`;
   const filterBId = `oi-b-${uid}`;
   const { prefersReduced, frameInterval } = useAnimationTier();
+
+  // Per-slot contrast falls back to the shared imageContrast when unset.
+  const contrastA = imageContrastA ?? imageContrast;
+  const contrastB = imageContrastB ?? imageContrast;
 
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -116,8 +126,8 @@ export const OffsetImage = React.memo(function OffsetImage({
       {tintSlots && (
         <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
           <defs>
-            {imageFilterJSX(filterAId, colorA, imageContrast, texture, 0, textureStep, textureContrast)}
-            {imageFilterJSX(filterBId, colorB, imageContrast, texture, 1, textureStep, textureContrast)}
+            {imageFilterJSX(filterAId, colorA, contrastA, texture, 0, textureStep, textureContrast)}
+            {imageFilterJSX(filterBId, colorB, contrastB, texture, 1, textureStep, textureContrast)}
           </defs>
         </svg>
       )}

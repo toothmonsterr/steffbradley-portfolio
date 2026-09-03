@@ -14,7 +14,9 @@ export const OffsetImageMeta = {
     tintSlots:     { type: 'boolean', defaultValueHint: false, description: 'When on, each slot is tinted via luminance separation using colorA/colorB. When off, slots render in their natural colors.' },
     colorA:        { type: 'color', defaultValueHint: '#FF6A50', description: 'Ink color for slot A (used when tintSlots is on)' },
     colorB:        { type: 'color', defaultValueHint: '#DDEA44', description: 'Ink color for slot B (used when tintSlots is on)' },
-    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Contrast of the luminance tint — higher = richer ink, deeper shadows (used when tintSlots is on)' },
+    imageContrast: { type: 'number', defaultValueHint: 1.3, description: 'Contrast of the luminance tint — higher = richer ink, deeper shadows (used when tintSlots is on). Negative values invert the separation so light areas take the ink.' },
+    imageContrastA: { type: 'number', description: 'Overrides Image Contrast for slot A only. Leave blank to follow Image Contrast. Negative inverts the separation.' },
+    imageContrastB: { type: 'number', description: 'Overrides Image Contrast for slot B only. Leave blank to follow Image Contrast. Negative inverts the separation — e.g. slot A positive, slot B negative for opposing plates.' },
 
     offsetX:   { type: 'number', defaultValueHint: 4, description: 'Horizontal misregistration per layer (px)' },
     offsetY:   { type: 'number', defaultValueHint: 3, description: 'Vertical misregistration per layer (px)' },
