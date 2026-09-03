@@ -15,6 +15,9 @@ export const ContactFormMeta = {
   description:
     'Owns the contact form state, validation and submission. Drop ContactField components inside for each field, plus a ContactSubmit button. Exposes $ctx.contactForm with: status, values, errors, errorMessage, isIdle, isSubmitting, isSuccess, isError, hasErrors — bind text to these or add style variants on them. Includes a hidden anti-spam field automatically; do not remove it.',
   providesData: true,
+  // Studio decides a code component is stylable by looking for this; without it
+  // the design panel refuses width, padding and layout on the form.
+  styleSections: true,
   props: {
     children: {
       type: 'slot',
@@ -46,42 +49,30 @@ export const ContactFieldMeta = {
   name: 'ContactField',
   displayName: 'Contact Field',
   description:
-    'One input in a ContactForm. Must be placed inside a ContactForm. Set which field it edits, then style the label, input and error text. Errors appear only after the field is blurred or the form is submitted; the error element carries data-has-error="true" so you can target it with a style variant.',
+    'Binds one field of a ContactForm to the design you place inside it. Must be placed inside a ContactForm. Put an Aria Text Field in the slot, with a Label and an Input inside that — they pick up the value, invalid and disabled state automatically, so nothing inside needs binding. Errors appear only after the field is blurred or the form is submitted; the error element carries data-has-error="true" so you can target it with a style variant.',
+  // Styling here targets the field's outer wrapper — the input and label are
+  // styled on the Aria components you place in the slot.
+  styleSections: true,
   props: {
     field: {
       type: 'choice',
       options: ['name', 'email', 'subject', 'message'],
       defaultValueHint: 'name',
-      description: 'Which field this input edits',
+      description: 'Which field the slotted input edits',
     },
-    as: {
-      type: 'choice',
-      options: ['input', 'textarea'],
-      defaultValueHint: 'input',
-      description: 'Use textarea for the message field',
-    },
-    label: {
-      type: 'string',
-      description: 'Visible label text — always provide one unless you supply your own labelled element',
-    },
-    placeholder: {
-      type: 'string',
-      description: 'Placeholder text inside the input. Not a substitute for a label',
-    },
-    rows: {
-      type: 'number',
-      defaultValueHint: 6,
-      description: 'Visible rows when using a textarea',
+    children: {
+      type: 'slot',
+      description:
+        'Your field UI — an Aria Text Field containing a Label and an Input (or TextArea for the message). Do not bind value or onChange on them; this component supplies both',
     },
     required: {
       type: 'boolean',
       defaultValueHint: false,
       description: 'Marks the field required in the browser. The server validates regardless of this setting',
     },
-    hideLabel: {
-      type: 'boolean',
-      defaultValueHint: false,
-      description: 'Hide the built-in label — only use this if you are labelling the input another way',
+    errorContent: {
+      type: 'slot',
+      description: 'Error content — style the error text yourself. Bind a text element to $ctx.contactField.error; $ctx.contactField.hasError is true while the message is showing',
     },
     hideError: {
       type: 'boolean',
@@ -101,6 +92,7 @@ export const ContactSubmitMeta = {
   displayName: 'Contact Submit Button',
   description:
     'Submit button for a ContactForm. Must be placed inside a ContactForm. Disables itself while sending and carries data-is-submitting="true" for a style variant. Leave the slot empty to use the label props, or add your own content and bind it to $ctx.contactForm.status.',
+  styleSections: true,
   props: {
     children: {
       type: 'slot',

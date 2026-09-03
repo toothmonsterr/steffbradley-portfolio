@@ -1,25 +1,24 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useSelector } from '@plasmicapp/react-web/lib/host';
+import { DataProvider, useSelector } from '@plasmicapp/react-web/lib/host';
+import { BaseTextField } from '@plasmicpkgs/react-aria/skinny/registerTextField';
 import type { Field } from '@/lib/contact/validation';
 import { useContactStore } from './store';
 
 export interface ContactFieldProps {
-  /** Which field this input edits */
+  /** Which field the slotted input edits */
   field?: Field;
-  /** Render a single-line input or a multi-line textarea */
-  as?: 'input' | 'textarea';
-  /** Visible label text — leave empty only if you supply your own labelled element */
-  label?: string;
-  /** Placeholder text shown inside the input */
-  placeholder?: string;
-  /** Rows for the textarea */
-  rows?: number;
-  /** Mark the field visually as required (the server validates regardless) */
+  /**
+   * Your field UI — an Aria Text Field holding a Label and an Input. It picks
+   * up the value, invalid and disabled state through Aria's context, so
+   * nothing inside needs binding.
+   */
+  children?: React.ReactNode;
+  /** Mark the field required in the browser (the server validates regardless) */
   required?: boolean;
-  /** Hide the built-in label — use when your design puts the label elsewhere */
-  hideLabel?: boolean;
   /** Hide the built-in error message — use when you render errors yourself */
   hideError?: boolean;
+  /** Error content — bind text inside it to $ctx.contactField.error */
+  errorContent?: React.ReactNode;
   /** Autocomplete hint passed to the browser */
   autoComplete?: string;
   className?: string;
@@ -32,22 +31,20 @@ const AUTOCOMPLETE: Record<Field, string> = {
   message: 'off',
 };
 
-const INPUT_TYPE: Record<Field, string> = {
-  name: 'text',
-  email: 'email',
-  subject: 'text',
-  message: 'text',
-};
-
+/**
+ * Binds one field of a ContactForm to whatever you compose inside it.
+ *
+ * It renders no input or label of its own: an Aria Text Field in the slot
+ * publishes value, invalid and disabled state to its own Label and Input
+ * through React Aria's context, so the design lives entirely in Studio and
+ * only the wiring lives here.
+ */
 export const ContactField = React.memo(function ContactField({
   field = 'name',
-  as = 'input',
-  label,
-  placeholder,
-  rows = 6,
+  children,
   required = false,
-  hideLabel = false,
   hideError = false,
+  errorContent,
   autoComplete,
   className,
 }: ContactFieldProps) {
@@ -55,87 +52,74 @@ export const ContactField = React.memo(function ContactField({
   // and pulls the live state out of the module store.
   const formId = useSelector('contactFormId') as string | undefined;
   const entry = useContactStore(formId);
-  const ref = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const registerInput = entry?.actions.registerInput;
 
   // Register the DOM node so the form can focus this field when it fails
-  // validation. Re-runs if the form remounts under a new id.
+  // validation. The element belongs to the slotted Aria Input, so it is found
+  // from the wrapper rather than through a ref we own.
   useEffect(() => {
     if (!registerInput) return;
-    registerInput(field, ref.current);
+    const node =
+      wrapperRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+        'input, textarea',
+      ) ?? null;
+    registerInput(field, node);
     return () => registerInput(field, null);
-  }, [registerInput, field]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      entry?.actions.setField(field, e.target.value);
-    },
-    [entry, field],
-  );
+  }, [registerInput, field, children]);
 
   const handleBlur = useCallback(() => {
     entry?.actions.blurField(field);
   }, [entry, field]);
 
+  // Aria's TextField hands back the string value, not a change event.
+  const handleChange = useCallback(
+    (next: string) => {
+      entry?.actions.setField(field, next);
+    },
+    [entry, field],
+  );
+
   // Outside a ContactForm (or on the Studio canvas before one is placed) there
-  // is no state to bind to. Render an inert preview so the component is still
-  // visible and stylable rather than collapsing to nothing.
+  // is no state to bind to. Render the slot inertly so the design is still
+  // visible and editable rather than collapsing to nothing.
   if (!entry) {
-    return (
-      <div className={className}>
-        {!hideLabel && label ? <label>{label}</label> : null}
-        {as === 'textarea' ? (
-          <textarea rows={rows} placeholder={placeholder} disabled />
-        ) : (
-          <input type="text" placeholder={placeholder} disabled />
-        )}
-      </div>
-    );
+    return <div className={className}>{children}</div>;
   }
 
   const { values, errors, domId, status } = entry.state;
   const error = errors[field];
-  const inputId = `${domId}-${field}`;
-  const errorId = `${inputId}-error`;
-
-  const shared = {
-    id: inputId,
-    name: field,
-    value: values[field],
-    onChange: handleChange,
-    onBlur: handleBlur,
-    placeholder,
-    required,
-    disabled: status === 'submitting',
-    autoComplete: autoComplete ?? AUTOCOMPLETE[field],
-    'aria-invalid': error ? (true as const) : undefined,
-    'aria-describedby': error ? errorId : undefined,
-  };
+  const errorId = `${domId}-${field}-error`;
+  // Exposed to errorContent so a text element can bind to $ctx.contactField.error
+  const fieldCtx = { field, error: error ?? '', hasError: Boolean(error) };
 
   return (
-    <div className={className}>
-      {!hideLabel && label ? <label htmlFor={inputId}>{label}</label> : null}
+    <div className={className} ref={wrapperRef}>
+      <BaseTextField
+        name={field}
+        value={values[field]}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        isRequired={required}
+        isDisabled={status === 'submitting'}
+        isInvalid={Boolean(error)}
+        autoComplete={[autoComplete ?? AUTOCOMPLETE[field]]}
+      >
+        {children}
+      </BaseTextField>
 
-      {as === 'textarea' ? (
-        <textarea
-          {...shared}
-          rows={rows}
-          ref={ref as React.RefObject<HTMLTextAreaElement>}
-        />
-      ) : (
-        <input
-          {...shared}
-          type={INPUT_TYPE[field]}
-          ref={ref as React.RefObject<HTMLInputElement>}
-        />
-      )}
-
-      {/* The error node is always present so aria-describedby has a stable
-          target; it simply holds no text when the field is valid. */}
+      {/* The error node is always present so its id is a stable target; it
+          simply holds no text when the field is valid. */}
       {!hideError ? (
         <span id={errorId} data-has-error={error ? 'true' : 'false'}>
-          {error ?? ''}
+          {errorContent ? (
+            <DataProvider name="contactField" data={fieldCtx}>
+              {errorContent}
+            </DataProvider>
+          ) : (
+            error ?? ''
+          )}
         </span>
       ) : null}
     </div>

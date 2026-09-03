@@ -104,6 +104,10 @@ import {
   ContactField, ContactFieldMeta,
   ContactSubmit, ContactSubmitMeta,
 } from '@/components/plasmic-components/ContactForm';
+// The Aria components go inside ContactField's slot. They are NOT
+// registered here — the react-aria package is a Plasmic project dependency
+// (see plasmic.json), so Studio already provides them. Registering them again
+// collides on the component name and stops Studio loading.
 
 PLASMIC.registerComponent(FloatingElement, FloatingElementMeta as any);
 PLASMIC.registerComponent(ScrollMarquee,   ScrollMarqueeMeta   as any);
