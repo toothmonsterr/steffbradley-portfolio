@@ -66,6 +66,7 @@ import { ContactField } from "@/components/plasmic-components/ContactForm"; // p
 import Label from "../../Label"; // plasmic-import: BYBqjVrGPH5t/component
 import TextInput from "../../TextInput"; // plasmic-import: ct_DnrV178NJ/component
 import TextAreaInput from "../../TextAreaInput"; // plasmic-import: M9d78DwckmWy/component
+import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
 import { ContactSubmit } from "@/components/plasmic-components/ContactForm"; // plasmic-import: xraZo1vHJbhP/codeComponent
 import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
@@ -75,6 +76,8 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import sty from "./PlasmicContact.module.css"; // plasmic-import: O81Fd1q4ueaL/css
 
+import CircleIcon from "../toothmonster/icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
+import ArrowRightSvgIcon from "../toothmonster/icons/PlasmicIcon__ArrowRightSvg"; // plasmic-import: 0vNaQ1KvdrHQ/icon
 import RegistrationMarkTargetSvg2Icon from "../toothmonster/icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
 
 const emptyProxy: any = new Proxy(() => "", {
@@ -125,13 +128,13 @@ export type PlasmicContact__OverridesType = {
   section?: Flex__<"section">;
   h1?: Flex__<"h1">;
   contactForm?: Flex__<typeof ContactForm>;
-  text?: Flex__<"div">;
   nameInput?: Flex__<typeof TextInput>;
   emailInput?: Flex__<typeof TextInput>;
   subjectInput?: Flex__<typeof TextInput>;
   textAreaInput?: Flex__<typeof TextAreaInput>;
+  button?: Flex__<typeof Button>;
+  freeBox?: Flex__<"div">;
   contactSubmitButton?: Flex__<typeof ContactSubmit>;
-  svg?: Flex__<"svg">;
   footer?: Flex__<typeof Footer>;
 };
 
@@ -320,21 +323,9 @@ function PlasmicContact__RenderFunc(props: {
                             "__wab_instance",
                             sty.contactField__dUhcG
                           )}
-                          errorContent={
-                            <div
-                              data-plasmic-name={"text"}
-                              data-plasmic-override={overrides.text}
-                              className={classNames(
-                                "all",
-                                "__wab_text",
-                                sty.text
-                              )}
-                            >
-                              {"Name is required."}
-                            </div>
-                          }
+                          errorContent={null}
                           field={"name"}
-                          hideError={true}
+                          hideError={false}
                           required={true}
                         >
                           <Label
@@ -380,9 +371,9 @@ function PlasmicContact__RenderFunc(props: {
                             "__wab_instance",
                             sty.contactField___0MFsy
                           )}
-                          errorContent={"Email is required."}
+                          errorContent={null}
                           field={"email"}
-                          hideError={true}
+                          hideError={false}
                           required={true}
                         >
                           <Label
@@ -429,9 +420,9 @@ function PlasmicContact__RenderFunc(props: {
                             "__wab_instance",
                             sty.contactField__yRq3M
                           )}
-                          errorContent={"Subject line is required."}
+                          errorContent={""}
                           field={"subject"}
-                          hideError={true}
+                          hideError={false}
                           required={true}
                         >
                           <Label
@@ -477,9 +468,9 @@ function PlasmicContact__RenderFunc(props: {
                             "__wab_instance",
                             sty.contactField___3SoFk
                           )}
-                          errorContent={"You need a message!"}
+                          errorContent={null}
                           field={"message"}
-                          hideError={true}
+                          hideError={false}
                           required={true}
                         >
                           <Label
@@ -521,17 +512,59 @@ function PlasmicContact__RenderFunc(props: {
                           />
                         </ContactField>
                         <div className={classNames("all", sty.freeBox__obP6Z)}>
-                          <ContactSubmit
-                            data-plasmic-name={"contactSubmitButton"}
-                            data-plasmic-override={
-                              overrides.contactSubmitButton
+                          <Button
+                            data-plasmic-name={"button"}
+                            data-plasmic-override={overrides.button}
+                            className={classNames("__wab_instance", sty.button)}
+                            effect={
+                              <React.Fragment>
+                                <div
+                                  data-plasmic-name={"freeBox"}
+                                  data-plasmic-override={overrides.freeBox}
+                                  className={classNames("all", sty.freeBox)}
+                                />
+
+                                <ContactSubmit
+                                  data-plasmic-name={"contactSubmitButton"}
+                                  data-plasmic-override={
+                                    overrides.contactSubmitButton
+                                  }
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.contactSubmitButton
+                                  )}
+                                  label={"Submit"}
+                                >
+                                  <div
+                                    className={classNames(
+                                      "all",
+                                      "__wab_text",
+                                      sty.text___5WZoH
+                                    )}
+                                  >
+                                    {""}
+                                  </div>
+                                </ContactSubmit>
+                              </React.Fragment>
                             }
-                            children={null}
-                            className={classNames(
-                              "__wab_instance",
-                              sty.contactSubmitButton
-                            )}
-                            label={"Submit"}
+                            end={
+                              <ArrowRightSvgIcon
+                                className={classNames("all", sty.svg__ihUjC)}
+                                role={"img"}
+                              />
+                            }
+                            iconEnd={true}
+                            label={
+                              <div
+                                className={classNames(
+                                  "all",
+                                  "__wab_text",
+                                  sty.text__wjHsB
+                                )}
+                              >
+                                {"Submit"}
+                              </div>
+                            }
                           />
                         </div>
                       </React.Fragment>
@@ -539,9 +572,7 @@ function PlasmicContact__RenderFunc(props: {
                   </DataCtxReader__>
                 </ContactForm>
                 <RegistrationMarkTargetSvg2Icon
-                  data-plasmic-name={"svg"}
-                  data-plasmic-override={overrides.svg}
-                  className={classNames("all", sty.svg)}
+                  className={classNames("all", sty.svg__qwgEp)}
                   role={"img"}
                 />
               </div>
@@ -565,13 +596,13 @@ const PlasmicDescendants = {
     "section",
     "h1",
     "contactForm",
-    "text",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
+    "button",
+    "freeBox",
     "contactSubmitButton",
-    "svg",
     "footer"
   ],
   navBanner: ["navBanner"],
@@ -579,31 +610,32 @@ const PlasmicDescendants = {
     "section",
     "h1",
     "contactForm",
-    "text",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
-    "contactSubmitButton",
-    "svg"
+    "button",
+    "freeBox",
+    "contactSubmitButton"
   ],
   h1: ["h1"],
   contactForm: [
     "contactForm",
-    "text",
     "nameInput",
     "emailInput",
     "subjectInput",
     "textAreaInput",
+    "button",
+    "freeBox",
     "contactSubmitButton"
   ],
-  text: ["text"],
   nameInput: ["nameInput"],
   emailInput: ["emailInput"],
   subjectInput: ["subjectInput"],
   textAreaInput: ["textAreaInput"],
+  button: ["button", "freeBox", "contactSubmitButton"],
+  freeBox: ["freeBox"],
   contactSubmitButton: ["contactSubmitButton"],
-  svg: ["svg"],
   footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -615,13 +647,13 @@ type NodeDefaultElementType = {
   section: "section";
   h1: "h1";
   contactForm: typeof ContactForm;
-  text: "div";
   nameInput: typeof TextInput;
   emailInput: typeof TextInput;
   subjectInput: typeof TextInput;
   textAreaInput: typeof TextAreaInput;
+  button: typeof Button;
+  freeBox: "div";
   contactSubmitButton: typeof ContactSubmit;
-  svg: "svg";
   footer: typeof Footer;
 };
 
@@ -691,13 +723,13 @@ export const PlasmicContact = Object.assign(
     section: makeNodeComponent("section"),
     h1: makeNodeComponent("h1"),
     contactForm: makeNodeComponent("contactForm"),
-    text: makeNodeComponent("text"),
     nameInput: makeNodeComponent("nameInput"),
     emailInput: makeNodeComponent("emailInput"),
     subjectInput: makeNodeComponent("subjectInput"),
     textAreaInput: makeNodeComponent("textAreaInput"),
+    button: makeNodeComponent("button"),
+    freeBox: makeNodeComponent("freeBox"),
     contactSubmitButton: makeNodeComponent("contactSubmitButton"),
-    svg: makeNodeComponent("svg"),
     footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicContact
