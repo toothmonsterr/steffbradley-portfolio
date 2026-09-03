@@ -26261,6 +26261,20 @@
           "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicFooter.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "O81Fd1q4ueaL",
+          "name": "Contact",
+          "type": "managed",
+          "projectId": "67C2x4VH9CGyuASG98L3XF",
+          "renderModuleFilePath": "plasmic/steff_bradley_portfolio/PlasmicContact.tsx",
+          "importSpec": {
+            "modulePath": "../pages/contact.tsx"
+          },
+          "cssFilePath": "plasmic/steff_bradley_portfolio/PlasmicContact.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/contact"
         }
       ],
       "icons": [

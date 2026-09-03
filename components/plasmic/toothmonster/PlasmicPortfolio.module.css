@@ -135,8 +135,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  grid-column-start: 1 !important;
-  grid-column-end: -1 !important;
+  grid-column-start: 3 !important;
+  grid-column-end: -3 !important;
 }
 @media (max-width: 640px) {
   .freeBox__vwvDf {
