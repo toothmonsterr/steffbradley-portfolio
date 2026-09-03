@@ -37,11 +37,20 @@ video {
   display: block;
 }
 
+/* Deliberately does NOT set `color`. Plasmic colours anchors through a base
+   rule of the form `a:where(.root_reset_….a__67C2x)`; `:where()` adds no
+   specificity, so that rule scores the same (0,0,1) as a bare `a` here and
+   loses the tie purely because globals.css is imported second. A `color`
+   declaration in this block therefore overrode every Plasmic link token,
+   leaving links to inherit near-black from `body` while `:hover` — at (0,1,1)
+   — still resolved correctly. Colour links via Plasmic tokens, or a scoped
+   selector, not from here.
+
+   -webkit-text-fill-color is still needed: WebKit and Gecko paint anchor text
+   through it and it takes precedence over `color`, so left unset the UA's
+   near-black default persists on iOS Safari and Firefox. `currentColor` makes
+   it track whatever `color` resolves to instead of pinning a value. */
 a {
-  color: inherit;
-  /* WebKit and Gecko paint anchor text through -webkit-text-fill-color, which
-     takes precedence over `color`. Left unset, it keeps the UA's near-black
-     anchor default on iOS Safari and Firefox and the design token is ignored. */
   -webkit-text-fill-color: currentColor;
   text-decoration: none;
 }
