@@ -60,12 +60,12 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
-import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
-import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
 import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // plasmic-import: bIanIbIW8b7U/codeComponent
 import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
+import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
 import { PaperTexture } from "@/components/plasmic-components/PaperTexture"; // plasmic-import: 9rVOQ6ot_kuJ/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
+import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
 import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
 import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
 import { CmsPaginationContext } from "@/components/plasmic-components/CmsPagination"; // plasmic-import: XQkM4MEcOLl0/codeComponent
@@ -87,10 +87,10 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import sty from "./PlasmicHomepage.module.css"; // plasmic-import: FuUP13USuDR8/css
 
-import RegistrationMarkTargetSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
-import RegistrationMarkCornerSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkCornerSvg2"; // plasmic-import: S_mhq_tZ6KnU/icon
 import CircleIcon from "./icons/PlasmicIcon__Circle"; // plasmic-import: 2Ox0yRYYMfoI/icon
 import CirclesparkleSvgIcon from "./icons/PlasmicIcon__CirclesparkleSvg"; // plasmic-import: 9fph0KMRmqAr/icon
+import RegistrationMarkTargetSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkTargetSvg2"; // plasmic-import: eGWLBGxB6lSY/icon
+import RegistrationMarkCornerSvg2Icon from "./icons/PlasmicIcon__RegistrationMarkCornerSvg2"; // plasmic-import: S_mhq_tZ6KnU/icon
 import EyeconSvgIcon from "./icons/PlasmicIcon__EyeconSvg"; // plasmic-import: qwQ4br4oCQfg/icon
 import ArrowRightSvgIcon from "./icons/PlasmicIcon__ArrowRightSvg"; // plasmic-import: 0vNaQ1KvdrHQ/icon
 import ArrowLeftSvgIcon from "./icons/PlasmicIcon__ArrowLeftSvg"; // plasmic-import: 1pIw_X8xb4RU/icon
@@ -241,222 +241,226 @@ function PlasmicHomepage__RenderFunc(props: {
             effectVisible={true}
           />
 
-          <div
-            data-plasmic-name={"columns"}
-            data-plasmic-override={overrides.columns}
-            className={classNames("all", sty.columns)}
-          >
-            <div className={classNames("all", sty.column___2GzTv)}>
-              <div className={classNames("all", sty.freeBox__rt7Me)}>
-                <h4
-                  data-plasmic-name={"h4"}
-                  data-plasmic-override={overrides.h4}
+          <div className={classNames("all", sty.freeBox___5CYP)}>
+            <div
+              data-plasmic-name={"columns"}
+              data-plasmic-override={overrides.columns}
+              className={classNames("all", sty.columns)}
+            >
+              <div className={classNames("all", sty.column___2GzTv)}>
+                <div className={classNames("all", sty.freeBox__rt7Me)}>
+                  <h4
+                    data-plasmic-name={"h4"}
+                    data-plasmic-override={overrides.h4}
+                    className={classNames(
+                      "all",
+                      "h4",
+                      "h4__67C2x",
+                      "__wab_text",
+                      sty.h4
+                    )}
+                  >
+                    {"hello, my name is"}
+                  </h4>
+                </div>
+                <h1
                   className={classNames(
                     "all",
-                    "h4",
-                    "h4__67C2x",
+                    "h1",
+                    "h1__67C2x",
                     "__wab_text",
-                    sty.h4
+                    sty.h1___2PyZv
                   )}
                 >
-                  {"hello, my name is"}
-                </h4>
-              </div>
-              <h1
-                className={classNames(
-                  "all",
-                  "h1",
-                  "h1__67C2x",
-                  "__wab_text",
-                  sty.h1___2PyZv
-                )}
-              >
-                {"steff bradley"}
-              </h1>
-              <div className={classNames("all", "__wab_text", sty.text__wlB8S)}>
-                <React.Fragment>
-                  <React.Fragment>{"i'm a "}</React.Fragment>
-                  <span
-                    className={
-                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
-                    }
-                    style={{
-                      fontWeight: 700,
-                      color: "var(--token-5QKIfNB0tRzE)"
-                    }}
-                  >
-                    {"designer"}
-                  </span>
-                  <React.Fragment>{", "}</React.Fragment>
-                  <span
-                    className={
-                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
-                    }
-                    style={{
-                      fontWeight: 700,
-                      color: "var(--token-aXuLypa7xfma)"
-                    }}
-                  >
-                    {"artist"}
-                  </span>
-                  <React.Fragment>{", & "}</React.Fragment>
-                  <span
-                    className={
-                      "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
-                    }
-                    style={{
-                      fontWeight: 700,
-                      color: "var(--token-B34tJ4Y-Hjpw)"
-                    }}
-                  >
-                    {"web developer"}
-                  </span>
+                  {"steff bradley"}
+                </h1>
+                <div
+                  className={classNames("all", "__wab_text", sty.text__wlB8S)}
+                >
                   <React.Fragment>
-                    {
-                      "; always experimenting & always learning\ni work with motion, interactivity, design engineering, and systems"
-                    }
+                    <React.Fragment>{"i'm a "}</React.Fragment>
+                    <span
+                      className={
+                        "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                      }
+                      style={{
+                        fontWeight: 700,
+                        color: "var(--token-5QKIfNB0tRzE)"
+                      }}
+                    >
+                      {"designer"}
+                    </span>
+                    <React.Fragment>{", "}</React.Fragment>
+                    <span
+                      className={
+                        "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                      }
+                      style={{
+                        fontWeight: 700,
+                        color: "var(--token-aXuLypa7xfma)"
+                      }}
+                    >
+                      {"artist"}
+                    </span>
+                    <React.Fragment>{", & "}</React.Fragment>
+                    <span
+                      className={
+                        "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                      }
+                      style={{
+                        fontWeight: 700,
+                        color: "var(--token-B34tJ4Y-Hjpw)"
+                      }}
+                    >
+                      {"web developer"}
+                    </span>
+                    <React.Fragment>
+                      {
+                        "; always experimenting & always learning\ni work with motion, interactivity, design engineering, and systems"
+                      }
+                    </React.Fragment>
                   </React.Fragment>
-                </React.Fragment>
-              </div>
-              <FloatingElement
-                className={classNames(
-                  "__wab_instance",
-                  sty.floatingElement__phqx3
-                )}
-              >
-                <OffsetShape
+                </div>
+                <OffsetImage
                   className={classNames(
                     "__wab_instance",
-                    sty.offsetShape__vCwh
+                    sty.offsetImage__butHq
                   )}
-                  colorA={true ? "#FF6A50" : undefined}
+                  colorA={true ? "#52A159" : undefined}
                   colorB={true ? "#CEBEE3" : undefined}
-                  jitter={8}
-                  offsetX={6}
-                  offsetY={-3}
-                  texture={"halftone"}
-                  textureStep={3}
-                >
-                  <RegistrationMarkTargetSvg2Icon
-                    className={classNames("all", sty.svg__hwk3K)}
-                    role={"img"}
-                  />
-                </OffsetShape>
-              </FloatingElement>
-              <FloatingElement
-                className={classNames(
-                  "__wab_instance",
-                  sty.floatingElement__zri9C
-                )}
-              >
-                <OffsetShape
+                  imageContrast={3}
+                  jitter={0.3}
+                  offsetX={2}
+                  offsetY={2}
+                  slotA={
+                    <Button
+                      className={classNames(
+                        "__wab_instance",
+                        sty.button__fgFa1
+                      )}
+                      color={"blue"}
+                      disabled={false}
+                      effect={
+                        <div
+                          data-plasmic-name={"freeBox5"}
+                          data-plasmic-override={overrides.freeBox5}
+                          className={classNames("all", sty.freeBox5)}
+                        />
+                      }
+                      end={
+                        <CirclesparkleSvgIcon
+                          className={classNames("all", sty.svg__v3HEj)}
+                          role={"img"}
+                        />
+                      }
+                      iconEnd={true}
+                      label={
+                        <div
+                          className={classNames(
+                            "all",
+                            "__wab_text",
+                            sty.text__vbMxN
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return "contact me";
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </div>
+                      }
+                    />
+                  }
+                  slotB={
+                    <div
+                      data-plasmic-name={"freeBox6"}
+                      data-plasmic-override={overrides.freeBox6}
+                      className={classNames("all", sty.freeBox6)}
+                    />
+                  }
+                  texture={"noise"}
+                  textureContrast={80}
+                  textureHoverEnabled={false}
+                  textureStep={1}
+                  tintSlots={true}
+                />
+              </div>
+              <div className={classNames("all", sty.column___77LZa)}>
+                <FloatingElement
+                  animationAmplitude={40}
                   className={classNames(
                     "__wab_instance",
-                    sty.offsetShape__kty4F
+                    sty.floatingElement__kBxv9
                   )}
-                  colorA={true ? "#00427F" : undefined}
-                  colorB={true ? "#DDEA44" : undefined}
-                  texture={"halftone"}
-                  textureStep={3}
                 >
-                  <RegistrationMarkCornerSvg2Icon
-                    className={classNames("all", sty.svg__qKs5S)}
-                    role={"img"}
-                  />
-                </OffsetShape>
-              </FloatingElement>
-              <OffsetImage
-                className={classNames("__wab_instance", sty.offsetImage__butHq)}
-                colorA={true ? "#52A159" : undefined}
+                  <PaperTexture
+                    data-plasmic-name={"paperTexture"}
+                    data-plasmic-override={overrides.paperTexture}
+                    className={classNames("__wab_instance", sty.paperTexture)}
+                    coverage={65}
+                    softness={0}
+                    step={1}
+                  >
+                    <NextImage
+                      alt={""}
+                      className={classNames("__wab_instance", sty.image__uPw9)}
+                      src={"/plasmic/toothmonster/images/toothcontactGif.gif"}
+                    />
+                  </PaperTexture>
+                </FloatingElement>
+              </div>
+            </div>
+            <FloatingElement
+              className={classNames(
+                "__wab_instance",
+                sty.floatingElement__phqx3
+              )}
+            >
+              <OffsetShape
+                className={classNames("__wab_instance", sty.offsetShape__vCwh)}
+                colorA={true ? "#FF6A50" : undefined}
                 colorB={true ? "#CEBEE3" : undefined}
-                imageContrast={3}
-                jitter={0.3}
-                offsetX={2}
-                offsetY={2}
-                slotA={
-                  <Button
-                    className={classNames("__wab_instance", sty.button__fgFa1)}
-                    color={"blue"}
-                    disabled={false}
-                    effect={
-                      <div
-                        data-plasmic-name={"freeBox5"}
-                        data-plasmic-override={overrides.freeBox5}
-                        className={classNames("all", sty.freeBox5)}
-                      />
-                    }
-                    end={
-                      <CirclesparkleSvgIcon
-                        className={classNames("all", sty.svg__v3HEj)}
-                        role={"img"}
-                      />
-                    }
-                    iconEnd={true}
-                    label={
-                      <div
-                        className={classNames(
-                          "all",
-                          "__wab_text",
-                          sty.text__vbMxN
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return "contact me";
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </div>
-                    }
-                  />
-                }
-                slotB={
-                  <div
-                    data-plasmic-name={"freeBox6"}
-                    data-plasmic-override={overrides.freeBox6}
-                    className={classNames("all", sty.freeBox6)}
-                  />
-                }
-                texture={"noise"}
-                textureContrast={80}
-                textureHoverEnabled={false}
-                textureStep={1}
-                tintSlots={true}
-              />
-            </div>
-            <div className={classNames("all", sty.column___77LZa)}>
-              <FloatingElement
-                animationAmplitude={40}
-                className={classNames(
-                  "__wab_instance",
-                  sty.floatingElement__kBxv9
-                )}
+                jitter={8}
+                offsetX={6}
+                offsetY={-3}
+                texture={"halftone"}
+                textureStep={3}
               >
-                <PaperTexture
-                  data-plasmic-name={"paperTexture"}
-                  data-plasmic-override={overrides.paperTexture}
-                  className={classNames("__wab_instance", sty.paperTexture)}
-                  coverage={65}
-                  softness={0}
-                  step={1}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image__uPw9)}
-                    src={"/plasmic/toothmonster/images/toothcontactGif.gif"}
-                  />
-                </PaperTexture>
-              </FloatingElement>
-            </div>
+                <RegistrationMarkTargetSvg2Icon
+                  className={classNames("all", sty.svg__hwk3K)}
+                  role={"img"}
+                />
+              </OffsetShape>
+            </FloatingElement>
+            <FloatingElement
+              className={classNames(
+                "__wab_instance",
+                sty.floatingElement__zri9C
+              )}
+            >
+              <OffsetShape
+                className={classNames("__wab_instance", sty.offsetShape__kty4F)}
+                colorA={true ? "#00427F" : undefined}
+                colorB={true ? "#DDEA44" : undefined}
+                texture={"halftone"}
+                textureStep={3}
+              >
+                <RegistrationMarkCornerSvg2Icon
+                  className={classNames("all", sty.svg__qKs5S)}
+                  role={"img"}
+                />
+              </OffsetShape>
+            </FloatingElement>
           </div>
           <MarqueeScroll
             data-plasmic-name={"marqueeScroll"}
