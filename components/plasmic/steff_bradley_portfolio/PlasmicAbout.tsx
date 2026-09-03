@@ -61,6 +61,10 @@ import {
 
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
 import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
+import { StickerPeel } from "@/components/plasmic-components/StickerPeel"; // plasmic-import: J7gKDwRqusOu/codeComponent
+import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // plasmic-import: bIanIbIW8b7U/codeComponent
+import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
+import { ScotchTape } from "@/components/plasmic-components/ScotchTape"; // plasmic-import: TbfB48S8CS8c/codeComponent
 import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "../toothmonster/PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
@@ -115,8 +119,11 @@ export type PlasmicAbout__OverridesType = {
   root?: Flex__<"div">;
   navBanner?: Flex__<typeof NavBanner>;
   section?: Flex__<"section">;
-  inkBleed?: Flex__<typeof InkBleed>;
-  h1?: Flex__<"h1">;
+  stickerPeel?: Flex__<typeof StickerPeel>;
+  h4?: Flex__<"h4">;
+  offsetImage?: Flex__<typeof OffsetImage>;
+  link?: Flex__<"a"> & Partial<LinkProps>;
+  scotchTape?: Flex__<typeof ScotchTape>;
   footer?: Flex__<typeof Footer>;
 };
 
@@ -207,31 +214,198 @@ function PlasmicAbout__RenderFunc(props: {
               data-plasmic-override={overrides.section}
               className={classNames("all", sty.section)}
             >
-              <InkBleed
-                data-plasmic-name={"inkBleed"}
-                data-plasmic-override={overrides.inkBleed}
-                bleedColor={true ? "#00427F40" : undefined}
-                className={classNames("__wab_instance", sty.inkBleed)}
-                noiseFrequency={1}
-                spread={3}
-              >
-                <h1
-                  data-plasmic-name={"h1"}
-                  data-plasmic-override={overrides.h1}
-                  className={classNames(
-                    "all",
-                    "h1",
-                    "h1__67C2x",
-                    "__wab_text",
-                    sty.h1
-                  )}
+              <div className={classNames("all", sty.freeBox__cPalv)}>
+                <InkBleed
+                  bleedColor={true ? "#607522" : undefined}
+                  className={classNames("__wab_instance", sty.inkBleed__pfiky)}
+                  noiseFrequency={1}
+                  spread={3}
                 >
-                  {"about me"}
-                </h1>
-              </InkBleed>
-              <div className={classNames("all", sty.freeBox__cPalv)} />
+                  <StickerPeel
+                    data-plasmic-name={"stickerPeel"}
+                    data-plasmic-override={overrides.stickerPeel}
+                    backColor={true ? "#FF6A50" : undefined}
+                    className={classNames("__wab_instance", sty.stickerPeel)}
+                    corner={"bottom-left"}
+                    fillColor={true ? "#EDE9E3" : undefined}
+                    hoverPeelSize={24}
+                    peelSize={24}
+                  >
+                    <div className={classNames("all", sty.freeBox__bN1Qq)}>
+                      <h4
+                        data-plasmic-name={"h4"}
+                        data-plasmic-override={overrides.h4}
+                        className={classNames(
+                          "all",
+                          "h4",
+                          "h4__67C2x",
+                          "__wab_text",
+                          sty.h4
+                        )}
+                      >
+                        {"hello again"}
+                      </h4>
+                      <div
+                        className={classNames(
+                          "all",
+                          "__wab_text",
+                          sty.text__vMy0B
+                        )}
+                      >
+                        <React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                            }
+                            style={{
+                              fontWeight: 700,
+                              color: "var(--token-WRRVAbe826uH)"
+                            }}
+                          >
+                            {"steff bradley"}
+                          </span>
+                          <React.Fragment>
+                            {
+                              " is a designer, illustrator, and developer based in atlanta, ga"
+                            }
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                      <div
+                        className={classNames(
+                          "all",
+                          "__wab_text",
+                          sty.text__b0Lb
+                        )}
+                      >
+                        <React.Fragment>
+                          <React.Fragment>
+                            {
+                              "graduating from pratt institute in 2019, they have worked as a "
+                            }
+                          </React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                            }
+                            style={{
+                              fontWeight: 700,
+                              color: "var(--token-tt4LcQz9DuF0)"
+                            }}
+                          >
+                            {"UI/UX"}
+                          </span>
+                          <React.Fragment>
+                            {
+                              " designer across marketing, gaming, and web development"
+                            }
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                      <div
+                        className={classNames(
+                          "all",
+                          "__wab_text",
+                          sty.text__eXrn
+                        )}
+                      >
+                        <React.Fragment>
+                          <React.Fragment>{"always "}</React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                            }
+                            style={{
+                              fontWeight: 700,
+                              color: "var(--token-WRRVAbe826uH)"
+                            }}
+                          >
+                            {"learning"}
+                          </span>
+                          <React.Fragment>
+                            {" & always trying something "}
+                          </React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span plasmic_default__span__67C2x"
+                            }
+                            style={{
+                              fontWeight: 700,
+                              color: "var(--token-B34tJ4Y-Hjpw)"
+                            }}
+                          >
+                            {"new"}
+                          </span>
+                        </React.Fragment>
+                      </div>
+                    </div>
+                  </StickerPeel>
+                </InkBleed>
+                <OffsetImage
+                  data-plasmic-name={"offsetImage"}
+                  data-plasmic-override={overrides.offsetImage}
+                  className={classNames("__wab_instance", sty.offsetImage)}
+                  colorA={true ? "#00427F" : undefined}
+                  colorB={true ? "#CEBEE3" : undefined}
+                  imageContrastB={-1.2}
+                  slotA={
+                    <NextImage
+                      alt={""}
+                      className={classNames("__wab_instance", sty.image__y9G8U)}
+                      src={"/plasmic/steff_bradley_portfolio/images/me1Png.png"}
+                    />
+                  }
+                  slotB={
+                    <NextImage
+                      alt={""}
+                      className={classNames("__wab_instance", sty.image__ovGqM)}
+                      src={"/plasmic/steff_bradley_portfolio/images/me1Png.png"}
+                    />
+                  }
+                  texture={"noise"}
+                  textureContrast={80}
+                  textureHoverEnabled={false}
+                  textureStep={1}
+                  tintSlots={true}
+                />
+              </div>
             </section>
             <div className={classNames("all", sty.freeBox__gOzt9)}>
+              <InkBleed
+                bleedColor={true ? "#00427F40" : undefined}
+                className={classNames("__wab_instance", sty.inkBleed__omQmK)}
+                noiseFrequency={1}
+                spread={4}
+              >
+                <PlasmicLink__
+                  data-plasmic-name={"link"}
+                  data-plasmic-override={overrides.link}
+                  className={classNames("all", "a", "a__67C2x", sty.link)}
+                  component={Link}
+                  href={"https://toothmonster.neocities.org/"}
+                  legacyBehavior={false}
+                  platform={"nextjs"}
+                  target={"_blank"}
+                >
+                  <ScotchTape
+                    data-plasmic-name={"scotchTape"}
+                    data-plasmic-override={overrides.scotchTape}
+                    className={classNames("__wab_instance", sty.scotchTape)}
+                    rotation={4}
+                  >
+                    <NextImage
+                      alt={""}
+                      className={classNames("__wab_instance", sty.image__uI8GR)}
+                      fill={false}
+                      height={31}
+                      src={
+                        "/plasmic/steff_bradley_portfolio/images/toothmonster88X31Gif.gif"
+                      }
+                      width={88}
+                    />
+                  </ScotchTape>
+                </PlasmicLink__>
+              </InkBleed>
               <Footer
                 data-plasmic-name={"footer"}
                 data-plasmic-override={overrides.footer}
@@ -246,11 +420,24 @@ function PlasmicAbout__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navBanner", "section", "inkBleed", "h1", "footer"],
+  root: [
+    "root",
+    "navBanner",
+    "section",
+    "stickerPeel",
+    "h4",
+    "offsetImage",
+    "link",
+    "scotchTape",
+    "footer"
+  ],
   navBanner: ["navBanner"],
-  section: ["section", "inkBleed", "h1"],
-  inkBleed: ["inkBleed", "h1"],
-  h1: ["h1"],
+  section: ["section", "stickerPeel", "h4", "offsetImage"],
+  stickerPeel: ["stickerPeel", "h4"],
+  h4: ["h4"],
+  offsetImage: ["offsetImage"],
+  link: ["link", "scotchTape"],
+  scotchTape: ["scotchTape"],
   footer: ["footer"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -260,8 +447,11 @@ type NodeDefaultElementType = {
   root: "div";
   navBanner: typeof NavBanner;
   section: "section";
-  inkBleed: typeof InkBleed;
-  h1: "h1";
+  stickerPeel: typeof StickerPeel;
+  h4: "h4";
+  offsetImage: typeof OffsetImage;
+  link: "a";
+  scotchTape: typeof ScotchTape;
   footer: typeof Footer;
 };
 
@@ -329,8 +519,11 @@ export const PlasmicAbout = Object.assign(
     // Helper components rendering sub-elements
     navBanner: makeNodeComponent("navBanner"),
     section: makeNodeComponent("section"),
-    inkBleed: makeNodeComponent("inkBleed"),
-    h1: makeNodeComponent("h1"),
+    stickerPeel: makeNodeComponent("stickerPeel"),
+    h4: makeNodeComponent("h4"),
+    offsetImage: makeNodeComponent("offsetImage"),
+    link: makeNodeComponent("link"),
+    scotchTape: makeNodeComponent("scotchTape"),
     footer: makeNodeComponent("footer"),
 
     // Metadata about props expected for PlasmicAbout

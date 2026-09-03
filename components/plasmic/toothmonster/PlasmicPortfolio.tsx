@@ -71,6 +71,7 @@ import { TornSection } from "@/components/plasmic-components/TornSection"; // pl
 import MarqueeScroll2 from "../../MarqueeScroll2"; // plasmic-import: a2tFCAaUQuGy/component
 import { RichText } from "@/components/plasmic-components/RichText"; // plasmic-import: AFjwBSjF0xKm/codeComponent
 import { CaseStudyGallery } from "@/components/plasmic-components/CaseStudyGallery"; // plasmic-import: d9wanfeydFZF/codeComponent
+import { Shimmer } from "@/components/plasmic-components/Shimmer"; // plasmic-import: dBSvAg8mx3HD/codeComponent
 import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
 import Footer from "../../Footer"; // plasmic-import: jjWjxw2fIQP_/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
@@ -133,10 +134,11 @@ export type PlasmicPortfolio__OverridesType = {
   navBanner?: Flex__<typeof NavBanner>;
   cmsDataFetcher?: Flex__<typeof CmsQueryRepeater>;
   hero?: Flex__<"div">;
-  section?: Flex__<"section">;
   marqueeScroll2?: Flex__<typeof MarqueeScroll2>;
   content?: Flex__<"div">;
   caseStudyGallery?: Flex__<typeof CaseStudyGallery>;
+  emptyhero?: Flex__<"div">;
+  skeletonHero?: Flex__<"div">;
   marqueeScroll?: Flex__<typeof MarqueeScroll>;
   footer?: Flex__<typeof Footer>;
 };
@@ -243,9 +245,44 @@ function PlasmicPortfolio__RenderFunc(props: {
               <DataCtxReader__>
                 {$ctx => (
                   <div
-                    className={classNames("all", "__wab_text", sty.text__rHYxR)}
+                    data-plasmic-name={"emptyhero"}
+                    data-plasmic-override={overrides.emptyhero}
+                    className={classNames("all", sty.emptyhero)}
                   >
-                    {"No matching published entries found."}
+                    <div className={classNames("all", sty.freeBox__jxIrO)}>
+                      <InkBleed
+                        bleedColor={true ? "#00427F40" : undefined}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.inkBleed__nylaH
+                        )}
+                        noiseFrequency={1}
+                        spread={3}
+                      >
+                        <h1
+                          className={classNames(
+                            "all",
+                            "h1",
+                            "h1__67C2x",
+                            "__wab_text",
+                            sty.h1__vyW0Q
+                          )}
+                        >
+                          {"404"}
+                        </h1>
+                        <h1
+                          className={classNames(
+                            "all",
+                            "h1",
+                            "h1__67C2x",
+                            "__wab_text",
+                            sty.h1__aexvX
+                          )}
+                        >
+                          {"Sorry, Something went wrong."}
+                        </h1>
+                      </InkBleed>
+                    </div>
                   </div>
                 )}
               </DataCtxReader__>
@@ -271,9 +308,184 @@ function PlasmicPortfolio__RenderFunc(props: {
               <DataCtxReader__>
                 {$ctx => (
                   <div
-                    className={classNames("all", "__wab_text", sty.text__cZtDk)}
+                    data-plasmic-name={"skeletonHero"}
+                    data-plasmic-override={overrides.skeletonHero}
+                    className={classNames("all", sty.skeletonHero)}
                   >
-                    {"Loading..."}
+                    <section className={classNames("all", sty.section__nW2Mg)}>
+                      <div className={classNames("all", sty.freeBox__gydlV)}>
+                        <Shimmer
+                          baseColor={true ? "#E5E7EB" : undefined}
+                          className={classNames(
+                            "__wab_instance",
+                            sty.shimmer__tzTcn
+                          )}
+                          highlightColor={true ? "#F3F4F6" : undefined}
+                        />
+
+                        <Shimmer
+                          baseColor={true ? "#E5E7EB" : undefined}
+                          className={classNames(
+                            "__wab_instance",
+                            sty.shimmer__kTg6
+                          )}
+                          highlightColor={true ? "#F3F4F6" : undefined}
+                        />
+                      </div>
+                      <div className={classNames("all", sty.freeBox__igYzB)}>
+                        <div className={classNames("all", sty.freeBox__bz3Vy)}>
+                          <ScotchTape
+                            className={classNames(
+                              "__wab_instance",
+                              sty.scotchTape__aQsU3
+                            )}
+                            rotation={-12}
+                          >
+                            <div
+                              className={classNames("all", sty.freeBox__tfhiX)}
+                            >
+                              <NoiseOverlay
+                                animate={"never"}
+                                blendMode={"normal"}
+                                className={classNames(
+                                  "__wab_instance",
+                                  sty.noiseOverlay__ydZug
+                                )}
+                                color={true ? "#EDE9E3" : undefined}
+                                intensity={0.5}
+                                isolateBlend={false}
+                              />
+
+                              <div
+                                className={classNames(
+                                  "all",
+                                  sty.freeBox__gXQgX
+                                )}
+                              />
+                            </div>
+                          </ScotchTape>
+                        </div>
+                        <div className={classNames("all", sty.freeBox__xyHoi)}>
+                          <MockupFrame
+                            bezel={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 4
+                                : undefined
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.mockupFrame__li6Ft
+                            )}
+                            device={"laptop"}
+                            tabLabel={""}
+                            url={""}
+                          >
+                            <Shimmer
+                              baseColor={true ? "#E5E7EB" : undefined}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.shimmer__pd6J7
+                              )}
+                              highlightColor={true ? "#F3F4F6" : undefined}
+                            />
+                          </MockupFrame>
+                          <MockupFrame
+                            bezel={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 4
+                                : 8
+                            }
+                            bodyRadius={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 12
+                                : 32
+                            }
+                            className={classNames(
+                              "__wab_instance",
+                              sty.mockupFrame__oFaUi
+                            )}
+                            device={"phone"}
+                            screenRadius={
+                              hasVariant(globalVariants, "screen", "mobile")
+                                ? 8
+                                : 24
+                            }
+                            tabLabel={""}
+                            url={""}
+                          >
+                            <Shimmer
+                              baseColor={true ? "#E5E7EB" : undefined}
+                              className={classNames(
+                                "__wab_instance",
+                                sty.shimmer__ebxVm
+                              )}
+                              highlightColor={true ? "#F3F4F6" : undefined}
+                            />
+                          </MockupFrame>
+                        </div>
+                      </div>
+                    </section>
+                    <div className={classNames("all", sty.freeBox__xXhzs)}>
+                      <div className={classNames("all", sty.freeBox__h4Kn9)}>
+                        <div
+                          className={classNames("all", sty.freeBox__nDzaH)}
+                        />
+
+                        <div className={classNames("all", sty.freeBox__sv8I)}>
+                          <TornSection
+                            background={
+                              <React.Fragment>
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__euYWw
+                                  )}
+                                />
+
+                                <div
+                                  className={classNames(
+                                    "all",
+                                    sty.freeBox__utc6H
+                                  )}
+                                >
+                                  <NoiseOverlay
+                                    animate={"never"}
+                                    blendMode={"soft-light"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__cFu5S
+                                    )}
+                                    color={true ? "#EDE9E3" : undefined}
+                                    intensity={0.5}
+                                    isolateBlend={false}
+                                  />
+
+                                  <NoiseOverlay
+                                    animate={"never"}
+                                    blendMode={"multiply"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay___5C9G
+                                    )}
+                                    color={true ? "#00427F40" : undefined}
+                                    intensity={0.5}
+                                    isolateBlend={false}
+                                    seed={5}
+                                  />
+                                </div>
+                              </React.Fragment>
+                            }
+                            children={null}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.tornSection___4HS1
+                            )}
+                            tornBottom={false}
+                            tornTop={true}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </DataCtxReader__>
@@ -291,11 +503,7 @@ function PlasmicPortfolio__RenderFunc(props: {
                     data-plasmic-override={overrides.hero}
                     className={classNames("all", sty.hero)}
                   >
-                    <section
-                      data-plasmic-name={"section"}
-                      data-plasmic-override={overrides.section}
-                      className={classNames("all", sty.section)}
-                    >
+                    <section className={classNames("all", sty.section__nkP9I)}>
                       <InkBleed
                         bleedColor={true ? "#00427F40" : undefined}
                         className={classNames(
@@ -1174,10 +1382,11 @@ const PlasmicDescendants = {
     "navBanner",
     "cmsDataFetcher",
     "hero",
-    "section",
     "marqueeScroll2",
     "content",
     "caseStudyGallery",
+    "emptyhero",
+    "skeletonHero",
     "marqueeScroll",
     "footer"
   ],
@@ -1185,16 +1394,18 @@ const PlasmicDescendants = {
   cmsDataFetcher: [
     "cmsDataFetcher",
     "hero",
-    "section",
     "marqueeScroll2",
     "content",
-    "caseStudyGallery"
+    "caseStudyGallery",
+    "emptyhero",
+    "skeletonHero"
   ],
-  hero: ["hero", "section"],
-  section: ["section"],
+  hero: ["hero"],
   marqueeScroll2: ["marqueeScroll2"],
   content: ["content", "caseStudyGallery"],
   caseStudyGallery: ["caseStudyGallery"],
+  emptyhero: ["emptyhero"],
+  skeletonHero: ["skeletonHero"],
   marqueeScroll: ["marqueeScroll"],
   footer: ["footer"]
 } as const;
@@ -1206,10 +1417,11 @@ type NodeDefaultElementType = {
   navBanner: typeof NavBanner;
   cmsDataFetcher: typeof CmsQueryRepeater;
   hero: "div";
-  section: "section";
   marqueeScroll2: typeof MarqueeScroll2;
   content: "div";
   caseStudyGallery: typeof CaseStudyGallery;
+  emptyhero: "div";
+  skeletonHero: "div";
   marqueeScroll: typeof MarqueeScroll;
   footer: typeof Footer;
 };
@@ -1279,10 +1491,11 @@ export const PlasmicPortfolio = Object.assign(
     navBanner: makeNodeComponent("navBanner"),
     cmsDataFetcher: makeNodeComponent("cmsDataFetcher"),
     hero: makeNodeComponent("hero"),
-    section: makeNodeComponent("section"),
     marqueeScroll2: makeNodeComponent("marqueeScroll2"),
     content: makeNodeComponent("content"),
     caseStudyGallery: makeNodeComponent("caseStudyGallery"),
+    emptyhero: makeNodeComponent("emptyhero"),
+    skeletonHero: makeNodeComponent("skeletonHero"),
     marqueeScroll: makeNodeComponent("marqueeScroll"),
     footer: makeNodeComponent("footer"),
 
