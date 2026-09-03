@@ -60,6 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/component
+import { ContactForm } from "@/components/plasmic-components/ContactForm"; // plasmic-import: JivwNWK20kIt/codeComponent
+import { ContactField } from "@/components/plasmic-components/ContactForm"; // plasmic-import: 5qwWzawLe4Hl/codeComponent
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "../toothmonster/PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -112,6 +114,8 @@ export const PlasmicContact__ArgProps = new Array<ArgPropType>();
 export type PlasmicContact__OverridesType = {
   root?: Flex__<"div">;
   navBanner?: Flex__<typeof NavBanner>;
+  section?: Flex__<"section">;
+  contactForm?: Flex__<typeof ContactForm>;
 };
 
 export interface DefaultContactProps {}
@@ -194,6 +198,59 @@ function PlasmicContact__RenderFunc(props: {
             className={classNames("__wab_instance", sty.navBanner)}
             color={"coral"}
           />
+
+          <section
+            data-plasmic-name={"section"}
+            data-plasmic-override={overrides.section}
+            className={classNames("all", sty.section)}
+          >
+            <ContactForm
+              data-plasmic-name={"contactForm"}
+              data-plasmic-override={overrides.contactForm}
+              className={classNames("__wab_instance", sty.contactForm)}
+            >
+              <DataCtxReader__>
+                {$ctx => (
+                  <React.Fragment>
+                    <ContactField
+                      className={classNames(
+                        "__wab_instance",
+                        sty.contactField__plsy
+                      )}
+                      field={"name"}
+                    />
+
+                    <ContactField
+                      className={classNames(
+                        "__wab_instance",
+                        sty.contactField__aFa0C
+                      )}
+                      field={"email"}
+                      label={"Email"}
+                    />
+
+                    <ContactField
+                      className={classNames(
+                        "__wab_instance",
+                        sty.contactField__uAWgh
+                      )}
+                      field={"subject"}
+                      label={"Subject"}
+                    />
+
+                    <ContactField
+                      className={classNames(
+                        "__wab_instance",
+                        sty.contactField__yn0AC
+                      )}
+                      field={"message"}
+                      label={"Message"}
+                    />
+                  </React.Fragment>
+                )}
+              </DataCtxReader__>
+            </ContactForm>
+          </section>
         </div>
       </div>
     </React.Fragment>
@@ -201,8 +258,10 @@ function PlasmicContact__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "navBanner"],
-  navBanner: ["navBanner"]
+  root: ["root", "navBanner", "section", "contactForm"],
+  navBanner: ["navBanner"],
+  section: ["section", "contactForm"],
+  contactForm: ["contactForm"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -210,6 +269,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   navBanner: typeof NavBanner;
+  section: "section";
+  contactForm: typeof ContactForm;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -275,6 +336,8 @@ export const PlasmicContact = Object.assign(
   {
     // Helper components rendering sub-elements
     navBanner: makeNodeComponent("navBanner"),
+    section: makeNodeComponent("section"),
+    contactForm: makeNodeComponent("contactForm"),
 
     // Metadata about props expected for PlasmicContact
     internalVariantProps: PlasmicContact__VariantProps,
