@@ -129,6 +129,11 @@
   left: -77px;
   top: -53px;
 }
+@media (max-width: 640px) {
+  .floatingElement__phqx3:global(.__wab_instance) {
+    display: none;
+  }
+}
 .offsetShape__vCwh:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -150,6 +155,11 @@
   top: auto;
   bottom: -60px;
   right: -67px;
+}
+@media (max-width: 640px) {
+  .floatingElement__zri9C:global(.__wab_instance) {
+    display: none;
+  }
 }
 .offsetShape__kty4F:global(.__wab_instance) {
   max-width: 100%;
@@ -248,13 +258,6 @@
   max-width: 100%;
   object-fit: cover;
 }
-.offsetCmyk__sTgZh:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  width: 348px;
-  height: 100%;
-  min-height: 0;
-}
 .image__uPw9:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -265,6 +268,9 @@
 }
 .marqueeScroll:global(.__wab_instance):global(.__wab_instance) {
   z-index: 1;
+  width: 100%;
+  grid-column-start: 1 !important;
+  grid-column-end: -1 !important;
   margin: -8px;
 }
 .section {
@@ -467,16 +473,6 @@
   min-height: 0;
   margin: -4px 0px 0px;
 }
-.offsetCmyk__jr5Hn:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  min-width: 0;
-  min-height: 0;
-}
 .image__tPqGa:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
@@ -485,7 +481,7 @@
   min-height: 0;
 }
 .freeBox__gn4Il {
-  background: var(--token-hRuVqbYqll8H);
+  background: none;
   display: block;
   position: absolute;
   width: 100%;
@@ -497,6 +493,20 @@
   bottom: 0;
   z-index: 1;
   min-width: 0;
+}
+.noiseOverlay__ir8HD:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.noiseOverlay__tJ7G:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: absolute;
+  left: 0px;
+  top: 0px;
 }
 .tornSection___3PrAn:global(.__wab_instance) {
   object-fit: cover;
@@ -910,6 +920,11 @@
   z-index: 0;
   right: 119px;
 }
+@media (max-width: 640px) {
+  .freeBox__awWL {
+    display: none;
+  }
+}
 .halftoneMask__qkJjM:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -985,6 +1000,7 @@
     grid-column-start: 1 !important;
     grid-column-end: -1 !important;
     min-height: 0;
+    display: none;
   }
 }
 .halftoneMask__mLp1:global(.__wab_instance) {

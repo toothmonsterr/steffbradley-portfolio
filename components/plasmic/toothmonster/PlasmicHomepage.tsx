@@ -64,7 +64,6 @@ import { FloatingElement } from "@/components/plasmic-components/FloatingElement
 import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
 import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // plasmic-import: bIanIbIW8b7U/codeComponent
 import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
-import { OffsetCMYK } from "@/components/plasmic-components/OffsetCMYK"; // plasmic-import: W6F38AxYTSP7/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
 import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
 import { InkBleed } from "@/components/plasmic-components/InkBleed"; // plasmic-import: x-cwBn9SIvTe/codeComponent
@@ -440,27 +439,11 @@ function PlasmicHomepage__RenderFunc(props: {
                   sty.floatingElement__kBxv9
                 )}
               >
-                <OffsetCMYK
-                  blendMode={"darken"}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.offsetCmyk__sTgZh
-                  )}
-                  colorC={true ? "#CEBEE3" : undefined}
-                  colorK={true ? "#00427F" : undefined}
-                  colorM={true ? "#FF6A50" : undefined}
-                  colorY={true ? "#DDEA44" : undefined}
-                  texture={"noise"}
-                  textureContrast={70}
-                  textureHoverEnabled={false}
-                  textureStep={1}
-                >
-                  <NextImage
-                    alt={""}
-                    className={classNames("__wab_instance", sty.image__uPw9)}
-                    src={"/plasmic/toothmonster/images/toothcontactGif.gif"}
-                  />
-                </OffsetCMYK>
+                <NextImage
+                  alt={""}
+                  className={classNames("__wab_instance", sty.image__uPw9)}
+                  src={"/plasmic/toothmonster/images/toothcontactGif.gif"}
+                />
               </FloatingElement>
             </div>
           </div>
@@ -658,45 +641,44 @@ function PlasmicHomepage__RenderFunc(props: {
                                   sty.freeBox__soZho
                                 )}
                               >
-                                <OffsetCMYK
-                                  blendMode={"multiply"}
-                                  channelContrast={1.2}
+                                <NextImage
+                                  alt={""}
                                   className={classNames(
                                     "__wab_instance",
-                                    sty.offsetCmyk__jr5Hn
+                                    sty.image__tPqGa
                                   )}
-                                  colorC={true ? "#CEBEE3" : undefined}
-                                  colorK={true ? "#00427F" : undefined}
-                                  colorM={true ? "#FF6A50" : undefined}
-                                  colorY={true ? "#DDEA44" : undefined}
-                                  interaction={"inverse"}
-                                  jitter={2}
-                                  offsetX={0.3}
-                                  offsetY={0.2}
-                                  texture={"halftone"}
-                                  textureContrast={90}
-                                  textureHoverEnabled={false}
-                                  textureStep={3}
-                                >
-                                  <NextImage
-                                    alt={""}
-                                    className={classNames(
-                                      "__wab_instance",
-                                      sty.image__tPqGa
-                                    )}
-                                    objectFit={"cover"}
-                                    src={
-                                      $ctx.plasmicCmsCaseStudyTitleItem.data
-                                        .caseStudyCardImg.url
-                                    }
-                                  />
-                                </OffsetCMYK>
+                                  objectFit={"cover"}
+                                  src={
+                                    $ctx.plasmicCmsCaseStudyTitleItem.data
+                                      .caseStudyCardImg.url
+                                  }
+                                />
+
                                 <div
                                   className={classNames(
                                     "all",
                                     sty.freeBox__gn4Il
                                   )}
-                                />
+                                >
+                                  <NoiseOverlay
+                                    blendMode={"normal"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__ir8HD
+                                    )}
+                                    color={true ? "#EADBC2" : undefined}
+                                  />
+
+                                  <NoiseOverlay
+                                    blendMode={"multiply"}
+                                    className={classNames(
+                                      "__wab_instance",
+                                      sty.noiseOverlay__tJ7G
+                                    )}
+                                    color={true ? "#00427F40" : undefined}
+                                    seed={38}
+                                  />
+                                </div>
                               </div>
                               <TornSection
                                 background={

@@ -26706,6 +26706,12 @@
           "name": "ContactSubmit",
           "displayName": "ContactSubmit",
           "componentImportPath": "@/components/plasmic-components/ContactForm"
+        },
+        {
+          "id": "9rVOQ6ot_kuJ",
+          "name": "PaperTexture",
+          "displayName": "PaperTexture",
+          "componentImportPath": "@/components/plasmic-components/PaperTexture"
         }
       ],
       "customFunctions": []
@@ -27191,6 +27197,6 @@
   "nextjsConfig": {
     "pagesDir": "../pages"
   },
-  "cliVersion": "0.1.375",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.375/dist/plasmic.schema.json"
+  "cliVersion": "0.1.376",
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.376/dist/plasmic.schema.json"
 }
