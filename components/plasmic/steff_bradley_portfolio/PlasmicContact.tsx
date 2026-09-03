@@ -334,6 +334,7 @@ function PlasmicContact__RenderFunc(props: {
                             </div>
                           }
                           field={"name"}
+                          hideError={true}
                           required={true}
                         >
                           <Label
@@ -381,6 +382,7 @@ function PlasmicContact__RenderFunc(props: {
                           )}
                           errorContent={"Email is required."}
                           field={"email"}
+                          hideError={true}
                           required={true}
                         >
                           <Label
@@ -428,7 +430,8 @@ function PlasmicContact__RenderFunc(props: {
                             sty.contactField__yRq3M
                           )}
                           errorContent={"Subject line is required."}
-                          field={"email"}
+                          field={"subject"}
+                          hideError={true}
                           required={true}
                         >
                           <Label
@@ -475,7 +478,8 @@ function PlasmicContact__RenderFunc(props: {
                             sty.contactField___3SoFk
                           )}
                           errorContent={"You need a message!"}
-                          field={"email"}
+                          field={"message"}
+                          hideError={true}
                           required={true}
                         >
                           <Label
