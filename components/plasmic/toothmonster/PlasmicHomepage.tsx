@@ -238,7 +238,6 @@ function PlasmicHomepage__RenderFunc(props: {
             bottomTear={true}
             className={classNames("__wab_instance", sty.navBanner)}
             color={"midnight"}
-            effectVisible={true}
           />
 
           <div className={classNames("all", sty.freeBox___5CYP)}>
@@ -379,6 +378,7 @@ function PlasmicHomepage__RenderFunc(props: {
                           </React.Fragment>
                         </div>
                       }
+                      linkTo={`/contact`}
                     />
                   }
                   slotB={

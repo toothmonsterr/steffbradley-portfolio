@@ -253,15 +253,15 @@ function PlasmicContact__RenderFunc(props: {
             sty.root
           )}
         >
-          <NavBanner
-            data-plasmic-name={"navBanner"}
-            data-plasmic-override={overrides.navBanner}
-            bottomTear={true}
-            className={classNames("__wab_instance", sty.navBanner)}
-            color={"coral"}
-          />
-
           <div className={classNames("all", sty.freeBox__wUQf)}>
+            <NavBanner
+              data-plasmic-name={"navBanner"}
+              data-plasmic-override={overrides.navBanner}
+              bottomTear={true}
+              className={classNames("__wab_instance", sty.navBanner)}
+              color={"coral"}
+            />
+
             <section
               data-plasmic-name={"section"}
               data-plasmic-override={overrides.section}
