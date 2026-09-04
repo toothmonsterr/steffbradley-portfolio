@@ -1,0 +1,60 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--eye-loader-bg, #EADBC2);
+  opacity: 1;
+  transition: opacity var(--eye-loader-fade-ms, 320ms) ease-out;
+}
+
+.root[data-hidden='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mark {
+  width: var(--eye-loader-size, 96px);
+  height: var(--eye-loader-size, 96px);
+  color: var(--eye-loader-color, #00427F);
+}
+
+.mark svg {
+  display: block;
+  overflow: visible;
+}
+
+/* The lens outlines (plain <path>, no class) are never animated, so they
+   rasterize once and never repaint — that's what the choppy scaleY blink
+   was costing us. Only the pupils move, and translate() on a small circle
+   composites cheaply with no vector re-rasterization. */
+.pupilTop,
+.pupilBottom {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform;
+  animation: pupil-drift var(--eye-loader-drift-sec, 4s) ease-in-out infinite;
+}
+
+.pupilBottom {
+  animation-delay: var(--eye-loader-drift-offset, 0.35s);
+}
+
+/* A smooth small circular lap around the pupil's rest position, in SVG user
+   units — comfortably inside the lens (radius 15.688) so it never crosses
+   the outline. */
+@keyframes pupil-drift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(5px, -2px); }
+  50%  { transform: translate(0, 3px); }
+  75%  { transform: translate(-5px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root { transition: none; }
+  .pupilTop,
+  .pupilBottom { animation: none; }
+}

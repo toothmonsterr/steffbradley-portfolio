@@ -7,8 +7,21 @@ import GlobalContextsProvider from "../components/plasmic/toothmonster/PlasmicGl
 import { PlasmicHomepage } from "../components/plasmic/toothmonster/PlasmicHomepage";
 import { useRouter } from "next/router";
 import { PlasmicQueryDataProvider } from "@plasmicapp/react-web/lib/query";
+import { EyeLoader } from "@/components/plasmic-components/EyeLoader";
+
+// Floor on how long the splash stays up, so it's never just a flash on a fast
+// hydrate.
+const SPLASH_MIN_MS = 1200;
 
 function Homepage() {
+  // Rendered on the server, so it's part of the very first HTML the browser
+  // paints — before React has hydrated. Flips true after the minimum splash
+  // time has elapsed on the client, after which the overlay fades out.
+  const [splashDone, setSplashDone] = React.useState(false);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setSplashDone(true), SPLASH_MIN_MS);
+    return () => clearTimeout(timer);
+  }, []);
   // Use PlasmicHomepage to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
@@ -36,6 +49,7 @@ function Homepage() {
           params={useRouter()?.query}
           query={useRouter()?.query}
         >
+          <EyeLoader hidden={splashDone} />
           <PlasmicHomepage />
         </PageParamsProvider__>
       </PlasmicQueryDataProvider>
