@@ -14,7 +14,7 @@
   min-width: 0;
   padding: 48px;
 }
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .freeBox___06Nrh {
     padding: 24px var(--token-XOrZk8yJ8Gx5);
   }

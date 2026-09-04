@@ -26810,6 +26810,12 @@
           "name": "PaperTexture",
           "displayName": "PaperTexture",
           "componentImportPath": "@/components/plasmic-components/PaperTexture"
+        },
+        {
+          "id": "6W78b9VgwWr2",
+          "name": "EyeLoader",
+          "displayName": "EyeLoader",
+          "componentImportPath": "@/components/plasmic-components/EyeLoader"
         }
       ],
       "customFunctions": []
@@ -27295,6 +27301,6 @@
   "nextjsConfig": {
     "pagesDir": "../pages"
   },
-  "cliVersion": "0.1.376",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.376/dist/plasmic.schema.json"
+  "cliVersion": "0.1.377",
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.377/dist/plasmic.schema.json"
 }

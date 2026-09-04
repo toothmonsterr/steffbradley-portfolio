@@ -1032,7 +1032,9 @@ function PlasmicPortfolio__RenderFunc(props: {
                         rounded={8}
                         slideGap={32}
                         tapeColor={true ? "#CEBEE3" : undefined}
-                        visibleSlides={2}
+                        visibleSlides={
+                          hasVariant(globalVariants, "screen", "tablet") ? 1 : 2
+                        }
                       />
                     </div>
                     <TornSection

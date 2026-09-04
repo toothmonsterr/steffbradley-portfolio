@@ -554,7 +554,7 @@
   --mixin-QJm_dFRm9nYm_user-select: text;
   --mixin-QJm_dFRm9nYm_text-decoration-line: none;
   --mixin-QJm_dFRm9nYm_text-overflow: clip;
-  --mixin-QJm_dFRm9nYm_color: #000000;
+  --mixin-QJm_dFRm9nYm_color: var(--token-tvApPEHD7oPk);
   --mixin-lRYNL4Sz_vaw_font-weight: 700;
   --mixin-lRYNL4Sz_vaw_font-size: 64px;
   --mixin-lRYNL4Sz_vaw_line-height: 1;

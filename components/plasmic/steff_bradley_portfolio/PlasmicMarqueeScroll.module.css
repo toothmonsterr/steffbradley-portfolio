@@ -6,7 +6,12 @@
   position: relative;
   min-width: 0;
 }
-.freeBox {
+.paperTexture:global(.__wab_instance) {
+  animation: none;
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox__rmTt9 {
   animation: none;
   display: flex;
   flex-direction: row;
@@ -18,26 +23,41 @@
   max-width: 100%;
   min-width: 0;
 }
-.image__pyNj:global(.__wab_instance) {
+.image__egV8:global(.__wab_instance) {
   animation: none;
   max-width: 100%;
   object-fit: cover;
   height: 90px;
   width: auto;
 }
-.image__qzFpC:global(.__wab_instance) {
+.image__sFo8Y:global(.__wab_instance) {
   animation: none;
   max-width: 100%;
   object-fit: cover;
   height: 90px;
   width: auto;
 }
-.noiseOverlay__v9C7N:global(.__wab_instance) {
+.freeBox__pEH1 {
+  animation: none;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.noiseOverlay___8IJlm:global(.__wab_instance) {
   animation: none;
   max-width: 100%;
   object-fit: cover;
 }
-.noiseOverlay__h3DLe:global(.__wab_instance) {
+.noiseOverlay__kpjVn:global(.__wab_instance) {
   animation: none;
   max-width: 100%;
   object-fit: cover;

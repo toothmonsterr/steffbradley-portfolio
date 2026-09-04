@@ -11,7 +11,7 @@
   "dependencies": {
     "@fontsource-variable/syne": "^5.2.7",
     "@fontsource-variable/urbanist": "^5.2.7",
-    "@plasmicapp/cli": "^0.1.376",
+    "@plasmicapp/cli": "^0.1.377",
     "@plasmicapp/loader-nextjs": "^2.0.1",
     "@plasmicapp/react-web": "^1.0.34",
     "@plasmicpkgs/cms": "^0.0.39",
