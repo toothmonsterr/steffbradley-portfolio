@@ -145,12 +145,6 @@
   -webkit-transition-property: all;
   -webkit-transition-duration: 1s;
 }
-@media (max-width: 1280px) {
-  .offsetImage__butHq:global(.__wab_instance) {
-    width: 100%;
-    min-width: 0;
-  }
-}
 @media (max-width: 720px) {
   .offsetImage__butHq:global(.__wab_instance) {
     width: 100%;
@@ -199,11 +193,6 @@
   white-space: pre;
   z-index: 5;
   color: #ffffff;
-}
-@media (max-width: 1280px) {
-  .text__vbMxN {
-    width: auto;
-  }
 }
 .svg__v3HEj {
   position: relative;
