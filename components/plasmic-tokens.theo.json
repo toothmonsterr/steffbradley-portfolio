@@ -753,7 +753,7 @@
     {
       "name": "Sans-serif",
       "type": "fontfamily",
-      "value": "Inter",
+      "value": "\"Urbanist\", sans-serif",
       "category": "fontfamily",
       "meta": {
         "projectId": "67C2x4VH9CGyuASG98L3XF",

@@ -15,7 +15,7 @@ import { EyeLoader } from "@/components/plasmic-components/EyeLoader";
 // The hero image is the Largest Contentful Paint element. Preloading it lets
 // the browser start the download from the <head>, before the page's JS and CSS
 // have told it the image exists.
-const HERO_IMAGE = "/plasmic/toothmonster/images/toothcontactGif.gif";
+const HERO_IMAGE = "/images/toothcontact-hero.webp";
 
 interface HomepageProps {
   queryCache?: Record<string, unknown>;

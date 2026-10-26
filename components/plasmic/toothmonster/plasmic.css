@@ -6,7 +6,6 @@
 @import "../plasmic_kit_animations/plasmic.css"; /* plasmic-import: axVArpcqgHCPMKB2yUGsW3/projectcss */
 @import "../react_scroll_parallax_global/plasmic.css"; /* plasmic-import: 84wxoth5npGrp6RRXPL88z/projectcss */
 @import "../cms/plasmic.css"; /* plasmic-import: hPz6Q3nQJn9Q8DTBgANGwo/projectcss */
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&family=Inter%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens_67C2x4VH9CGyuASG98L3XF {
   --token-SkhDeVUszhHS: #ede9e3;
@@ -469,7 +468,7 @@
   --plasmic-token-warning-warning-soft-foreground: var(--token-hhc56eKcGP0E);
   --token-6y05U5qu5bTJ: 0.5rem;
   --plasmic-token-size-8: var(--token-6y05U5qu5bTJ);
-  --token-wx8tPfOWhFpx: Inter;
+  --token-wx8tPfOWhFpx: var(--token-GpKDDbwq26at);
   --plasmic-token-sans-serif: var(--token-wx8tPfOWhFpx);
   --token-xw1-G_yOXHza: 1rem;
   --plasmic-token-font-md: var(--token-xw1-G_yOXHza);
@@ -592,7 +591,6 @@
   --mixin-17quCk02klsB_border-bottom-right-radius: 3px;
   --mixin-17quCk02klsB_border-top-left-radius: 3px;
   --mixin-17quCk02klsB_border-top-right-radius: 3px;
-  --mixin-17quCk02klsB_font-family: "Inconsolata";
   --mixin-17quCk02klsB_padding-bottom: 1px;
   --mixin-17quCk02klsB_padding-left: 4px;
   --mixin-17quCk02klsB_padding-right: 4px;
@@ -621,7 +619,6 @@
   --mixin-wDq3shMKkkj5_border-bottom-right-radius: 3px;
   --mixin-wDq3shMKkkj5_border-top-left-radius: 3px;
   --mixin-wDq3shMKkkj5_border-top-right-radius: 3px;
-  --mixin-wDq3shMKkkj5_font-family: "Inconsolata";
   --mixin-wDq3shMKkkj5_padding-bottom: 3px;
   --mixin-wDq3shMKkkj5_padding-left: 6px;
   --mixin-wDq3shMKkkj5_padding-right: 6px;
@@ -1318,7 +1315,6 @@ code:where(.root_reset_67C2x4VH9CGyuASG98L3XF.code__67C2x),
 :where(.root_reset_67C2x4VH9CGyuASG98L3XF_tags) code,
 code:where(.root_reset_67C2x4VH9CGyuASG98L3XF_tags) {
   background: #f8f8f8;
-  font-family: var(--mixin-17quCk02klsB_font-family);
   border-radius: var(--mixin-17quCk02klsB_border-top-left-radius)
     var(--mixin-17quCk02klsB_border-top-right-radius)
     var(--mixin-17quCk02klsB_border-bottom-right-radius)
@@ -1359,7 +1355,6 @@ pre:where(.root_reset_67C2x4VH9CGyuASG98L3XF.pre__67C2x),
 :where(.root_reset_67C2x4VH9CGyuASG98L3XF_tags) pre,
 pre:where(.root_reset_67C2x4VH9CGyuASG98L3XF_tags) {
   background: #f8f8f8;
-  font-family: var(--mixin-wDq3shMKkkj5_font-family);
   border-radius: var(--mixin-wDq3shMKkkj5_border-top-left-radius)
     var(--mixin-wDq3shMKkkj5_border-top-right-radius)
     var(--mixin-wDq3shMKkkj5_border-bottom-right-radius)

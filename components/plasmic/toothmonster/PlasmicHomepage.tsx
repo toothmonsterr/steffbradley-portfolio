@@ -63,7 +63,6 @@ import NavBanner from "../../NavBanner"; // plasmic-import: uEuM32AhsVsN/compone
 import { OffsetImage } from "@/components/plasmic-components/OffsetImage"; // plasmic-import: bIanIbIW8b7U/codeComponent
 import Button from "../../Button"; // plasmic-import: wLGJ71B22wJH/component
 import { FloatingElement } from "@/components/plasmic-components/FloatingElement"; // plasmic-import: VhAhx6UYzzRr/codeComponent
-import { PaperTexture } from "@/components/plasmic-components/PaperTexture"; // plasmic-import: 9rVOQ6ot_kuJ/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
 import { OffsetShape } from "@/components/plasmic-components/OffsetShape"; // plasmic-import: 6iLg6RvlDLn6/codeComponent
 import MarqueeScroll from "../../MarqueeScroll"; // plasmic-import: p7cDk5onbOfu/component
@@ -143,7 +142,6 @@ export type PlasmicHomepage__OverridesType = {
   h4?: Flex__<"h4">;
   freeBox5?: Flex__<"div">;
   freeBox6?: Flex__<"div">;
-  paperTexture?: Flex__<typeof PaperTexture>;
   marqueeScroll?: Flex__<typeof MarqueeScroll>;
   section?: Flex__<"section">;
   cmsPaginationContext?: Flex__<typeof CmsPaginationContext>;
@@ -402,20 +400,12 @@ function PlasmicHomepage__RenderFunc(props: {
                     sty.floatingElement__kBxv9
                   )}
                 >
-                  <PaperTexture
-                    data-plasmic-name={"paperTexture"}
-                    data-plasmic-override={overrides.paperTexture}
-                    className={classNames("__wab_instance", sty.paperTexture)}
-                    coverage={65}
-                    softness={0}
-                    step={1}
-                  >
-                    <NextImage
-                      alt={""}
-                      className={classNames("__wab_instance", sty.image__uPw9)}
-                      src={"/plasmic/toothmonster/images/toothcontactGif.gif"}
-                    />
-                  </PaperTexture>
+                  <NextImage
+                    alt={""}
+                    className={classNames("__wab_instance", sty.image__uPw9)}
+                    priority={true}
+                    src={"/images/toothcontact-hero.webp"}
+                  />
                 </FloatingElement>
               </div>
             </div>
@@ -1214,7 +1204,6 @@ const PlasmicDescendants = {
     "h4",
     "freeBox5",
     "freeBox6",
-    "paperTexture",
     "marqueeScroll",
     "section",
     "cmsPaginationContext",
@@ -1227,11 +1216,10 @@ const PlasmicDescendants = {
     "footer"
   ],
   navBanner: ["navBanner"],
-  columns: ["columns", "h4", "freeBox5", "freeBox6", "paperTexture"],
+  columns: ["columns", "h4", "freeBox5", "freeBox6"],
   h4: ["h4"],
   freeBox5: ["freeBox5"],
   freeBox6: ["freeBox6"],
-  paperTexture: ["paperTexture"],
   marqueeScroll: ["marqueeScroll"],
   section: [
     "section",
@@ -1268,7 +1256,6 @@ type NodeDefaultElementType = {
   h4: "h4";
   freeBox5: "div";
   freeBox6: "div";
-  paperTexture: typeof PaperTexture;
   marqueeScroll: typeof MarqueeScroll;
   section: "section";
   cmsPaginationContext: typeof CmsPaginationContext;
@@ -1348,7 +1335,6 @@ export const PlasmicHomepage = Object.assign(
     h4: makeNodeComponent("h4"),
     freeBox5: makeNodeComponent("freeBox5"),
     freeBox6: makeNodeComponent("freeBox6"),
-    paperTexture: makeNodeComponent("paperTexture"),
     marqueeScroll: makeNodeComponent("marqueeScroll"),
     section: makeNodeComponent("section"),
     cmsPaginationContext: makeNodeComponent("cmsPaginationContext"),
