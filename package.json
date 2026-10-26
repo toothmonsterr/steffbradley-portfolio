@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@plasmicapp/cli": "^0.1.377",
+    "@plasmicapp/cli": "^0.1.384",
     "@plasmicapp/loader-nextjs": "^2.0.1",
     "@plasmicapp/react-web": "^1.0.34",
     "@plasmicpkgs/cms": "^0.0.39",
