@@ -26138,7 +26138,6 @@
         "58GpZjZCWTaJ8AUhpCwt2K": "3.35.0",
         "hjKYmYi6HMwK6TRyk7ew5R": "6.50.0",
         "szjgMQpPpxhmkjnaBvZQJG": "2.35.0",
-        "axVArpcqgHCPMKB2yUGsW3": "0.0.3",
         "84wxoth5npGrp6RRXPL88z": "4.37.0",
         "hPz6Q3nQJn9Q8DTBgANGwo": "0.1.0"
       },
@@ -26557,7 +26556,7 @@
         {
           "assetId": "67C2x4VH9CGyuASG98L3XF",
           "type": "projectCss",
-          "checksum": "12654d0428b98f116c8d5ba4cc49d6f5"
+          "checksum": "81288362b92b5015dc5b3a5e492a4379"
         }
       ],
       "codegenVersion": "0.0.3"
