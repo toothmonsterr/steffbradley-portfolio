@@ -1,0 +1,82 @@
+/* Misregistration motion shared by OffsetShape / OffsetImage / OffsetCMYK.
+
+   Replaces the per-instance requestAnimationFrame loop. Two nested spans per
+   ink layer:
+
+     .layer   — the misregistration offset. Rests at (--rest-x, --rest-y) and
+                moves to the near-registered (--reg-x, --reg-y) while the host
+                has [data-active]. A CSS transition does the ease.
+     .wobble  — the "breathing" drift through three seeded waypoints, as a
+                keyframe animation. Its amplitude is --offset-amp, a registered
+                number that transitions to 0 while active, so the drift fades
+                out smoothly on hover rather than snapping (removing the
+                animation would jump by up to `jitter` px).
+
+   [data-active] and [data-offscreen] are toggled on the host by
+   useOffsetInteraction; nothing runs per frame in JavaScript. */
+
+@property --offset-amp {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.layer {
+  transform: translate(var(--rest-x, 0px), var(--rest-y, 0px));
+  transition: transform var(--offset-ease, 0.6s) cubic-bezier(0.33, 0, 0.67, 1);
+}
+
+.host[data-active] .layer {
+  transform: translate(var(--reg-x, 0px), var(--reg-y, 0px));
+}
+
+.wobble {
+  display: block;
+  width: 100%;
+  height: 100%;
+  --offset-amp: 1;
+  transition: --offset-amp var(--offset-ease, 0.6s) cubic-bezier(0.33, 0, 0.67, 1);
+  /* Same 3.2s loop through three waypoints, smoothstep-eased per segment. */
+  animation: offset-wobble 3.2s cubic-bezier(0.33, 0, 0.67, 1) infinite;
+}
+
+.host[data-active] .wobble {
+  --offset-amp: 0;
+}
+
+/* Nothing to see off screen, so nothing to animate. */
+.host[data-offscreen] .wobble {
+  animation-play-state: paused;
+}
+
+@keyframes offset-wobble {
+  0%, 100% {
+    transform:
+      translate(calc(var(--w0x) * var(--offset-amp)), calc(var(--w0y) * var(--offset-amp)))
+      rotate(calc(var(--w0r) * var(--offset-amp)));
+  }
+  33.333% {
+    transform:
+      translate(calc(var(--w1x) * var(--offset-amp)), calc(var(--w1y) * var(--offset-amp)))
+      rotate(calc(var(--w1r) * var(--offset-amp)));
+  }
+  66.667% {
+    transform:
+      translate(calc(var(--w2x) * var(--offset-amp)), calc(var(--w2y) * var(--offset-amp)))
+      rotate(calc(var(--w2r) * var(--offset-amp)));
+  }
+}
+
+/* OffsetCMYK on touch: four full filter chains per instance, for sub-pixel
+   drift nobody can see on a phone. Hold still. */
+@media (pointer: coarse) {
+  .host[data-static-touch] .wobble {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wobble {
+    animation: none;
+  }
+}

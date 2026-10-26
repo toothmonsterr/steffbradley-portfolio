@@ -116,13 +116,6 @@
   pointer-events: auto;
 }
 
-/* Composite-layer promotion is scoped to when the element is actually on
-   screen and animating — the IntersectionObserver in useOffsetActivity sets
-   data-offset-active. Promoting every ink layer for the whole page life is
-   real GPU memory pressure on mobile. */
-.wrapper[data-offset-active] .layer {
-  will-change: transform;
-}
 
 
 /* Scroll-time containment.
@@ -139,11 +132,3 @@
   contain: layout style;
 }
 
-/* On touch the breathing wobble is off (see staticWobble in OffsetCMYK.tsx),
-   so the plates never move — drop the compositor hint and let the layer stay
-   cached for the whole scroll instead of being re-rasterized. */
-@media (pointer: coarse) {
-  .wrapper[data-offset-active] .layer {
-    will-change: auto;
-  }
-}

@@ -59,7 +59,12 @@ export const NextImageMeta = {
       type: 'boolean',
       defaultValueHint: false,
       description:
-        'Skip Next.js optimisation — required for external URLs not in next.config remotePatterns, SVGs, or animated GIFs.',
+        'Skip Next.js optimisation — required for external URLs not in next.config remotePatterns or SVGs. GIF and WebP files skip it automatically.',
+    },
+    sizes: {
+      type: 'string',
+      description:
+        'Rendered width, e.g. "300px" or "(max-width: 768px) 100vw, 50vw". Lets the browser download the smallest image that fits.',
     },
   },
   importPath: '@/components/plasmic-components/NextImage',

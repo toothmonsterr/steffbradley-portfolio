@@ -1,6 +1,7 @@
 import React, { useId, useRef } from 'react';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import styles from './PaperTexture.module.css';
+import { grainTileUrl, seedOffset, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
 
 // ---------------------------------------------------------------------------
 // Paper texture — subtractive, not additive.
@@ -104,24 +105,77 @@ export function PaperTexture({
   const tv = grainTable(coverage);
   const useLuma = lumaBias !== 0;
 
+  const tileSize = tileSizeForFrequency(Number(freq));
+  // The tiles are rendered at seed 1, the default, so seed 1 is offset 0.
+  // Filter path: the seed picks a pre-rendered sheet (tiles are at seed 1, so
+  // the default seed is variant 0).
+  const variant = (((Math.round(seed) - 1) % TILE_VARIANTS) + TILE_VARIANTS) % TILE_VARIANTS;
+
+  // Fast path: a plain uniform tooth is just the content masked by a
+  // pre-rendered grain tile (same noise, same threshold — see
+  // scripts/build-textures.mjs). No filter, so nothing is recomputed when the
+  // content repaints, which for an animated GIF is every frame. Softened
+  // edges, luminance bias and the animated grain still need the live filter.
+  if (softness <= 0 && !useLuma && !animate) {
+    const tile = `url(${grainTileUrl(coverage)})`;
+    const maskSize = `${tileSize.toFixed(1)}px ${tileSize.toFixed(1)}px`;
+    const maskPosition = seedOffset(seed - 1, tileSize);
+    return (
+      <span className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
+        <span
+          className={[styles.inner, styles.masked].join(' ')}
+          style={{
+            maskImage: tile,
+            WebkitMaskImage: tile,
+            maskSize,
+            WebkitMaskSize: maskSize,
+            maskPosition,
+            WebkitMaskPosition: maskPosition,
+          }}
+        >
+          {children}
+        </span>
+      </span>
+    );
+  }
+
   return (
     <span ref={hostRef} className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}>
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-            {/* 1. Paper tooth: fractal noise thresholded to hard flecks. */}
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency={freq}
-              numOctaves={2}
-              seed={seed}
-              stitchTiles="stitch"
-              result="noise"
-            />
-            <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
-            <feComponentTransfer in="grey" result="grain">
-              <feFuncA type="discrete" tableValues={tv} />
-            </feComponentTransfer>
+            {/* 1. Paper tooth: hard flecks. A pre-rendered grain tile unless
+                   the grain is animated, which needs live turbulence to
+                   reseed. */}
+            {animate ? (
+              <>
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency={freq}
+                  numOctaves={2}
+                  seed={seed}
+                  stitchTiles="stitch"
+                  result="noise"
+                />
+                <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
+                <feComponentTransfer in="grey" result="grain">
+                  <feFuncA type="discrete" tableValues={tv} />
+                </feComponentTransfer>
+              </>
+            ) : (
+              <>
+                <feImage
+                  href={grainTileUrl(coverage, variant)}
+                  x={0}
+                  y={0}
+                  width={tileSize}
+                  height={tileSize}
+                  preserveAspectRatio="none"
+                  result="grainTile"
+                />
+                <feTile in="grainTile" result="grain" />
+              </>
+            )}
 
             {/* 2. Optionally bias the tooth by the content's own luminance. */}
             {useLuma && (

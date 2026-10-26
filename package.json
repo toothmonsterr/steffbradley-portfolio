@@ -9,8 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fontsource-variable/syne": "^5.2.7",
-    "@fontsource-variable/urbanist": "^5.2.7",
     "@plasmicapp/cli": "^0.1.377",
     "@plasmicapp/loader-nextjs": "^2.0.1",
     "@plasmicapp/react-web": "^1.0.34",
@@ -39,9 +37,13 @@
     "@types/three": "^0.183.1",
     "eslint": "^9",
     "eslint-config-next": "15.5.15",
+    "playwright": "^1.64.1",
+    "sharp": "^0.35.5",
     "typescript": "^5"
   },
   "overrides": {
-    "@plasmicapp/host": "2.0.18"
+    "@plasmicapp/host": "2.0.18",
+    "@plasmicapp/query": "0.1.87",
+    "@plasmicapp/prepass": "1.0.29"
   }
 }

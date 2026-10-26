@@ -2,8 +2,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Required: three.js ships as ESM and must be transpiled for Next.js
-  transpilePackages: ['three'],
   images: {
     remotePatterns: [
       // Plasmic asset CDN — images uploaded via Plasmic Studio

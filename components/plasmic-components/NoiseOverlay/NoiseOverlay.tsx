@@ -1,8 +1,9 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './NoiseOverlay.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { colorOrDefault } from '@/hooks/colorDefault';
 import { findHoverHost } from '@/hooks/findHoverHost';
+import { grainTileUrl, seedOffset, tileSizeForFrequency } from '../textures';
 
 export interface NoiseOverlayProps {
   /** Noise opacity (0–1) */
@@ -31,6 +32,14 @@ export interface NoiseOverlayProps {
   className?: string;
 }
 
+// The grain is a solid colour layer masked by a pre-rendered noise tile
+// (public/textures, see scripts/build-textures.mjs). It used to be a live
+// feTurbulence filter, which recomputed procedural noise for every pixel each
+// time anything under it repainted. The tile is the same noise, thresholded
+// the same way ("0 1" = coverage 50), so it looks the same and costs a single
+// image decode.
+const GRAIN_TILE = grainTileUrl(50);
+
 export function NoiseOverlay({
   intensity = 0.25,
   grainSize = 1.2,
@@ -42,110 +51,64 @@ export function NoiseOverlay({
   className,
 }: NoiseOverlayProps) {
   const resolvedColor = colorOrDefault(color, '#201B2A');
-  const uid = useId().replace(/:/g, '');
-  const filterId = `noise-${uid}`;
-  const svgRef = useRef<SVGSVGElement>(null);
-  const turbRef = useRef<SVGFETurbulenceElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const { prefersReduced, isTouch } = useAnimationTier();
 
-  // Larger grain = lower frequency.
+  // Larger grain = lower frequency. Same mapping as the old filter, expressed
+  // as how large the tile is drawn.
   const baseFrequency = Math.max(0.1, 0.85 / Math.max(0.4, grainSize));
+  const size = tileSizeForFrequency(baseFrequency);
 
   useEffect(() => {
     // Static grain on touch: 'hover' can never fire without a pointer, and the
-    // 'always' flicker isn't worth a permanent SVG filter re-render on a phone.
+    // 'always' flicker isn't worth a continuous repaint on a phone.
     if (animate === 'never' || prefersReduced || isTouch) return;
-    const el = turbRef.current;
+    const el = ref.current;
     if (!el) return;
-
-    let raf = 0;
-    let last = 0;
-    let s = seed;
-    const tick = (t: number) => {
-      if (t - last > 83) {
-        s = (s + 1) % 1000;
-        el.setAttribute('seed', String(s));
-        last = t;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    const start = () => {
-      if (raf) return;
-      last = 0;
-      raf = requestAnimationFrame(tick);
-    };
-    const stop = () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      // Reset to the base seed so the grain returns to its "rest" state
-      el.setAttribute('seed', String(seed));
-      s = seed;
-    };
+    const on = () => { el.dataset.flicker = ''; };
+    const off = () => { delete el.dataset.flicker; };
 
     if (animate === 'always') {
-      // Actually cancel the RAF off-screen. Previously this only flipped a
-      // flag, so the frame callback kept firing for the life of the page.
+      // Only flicker while on screen.
       const io = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) start();
-        else stop();
+        if (entries[0].isIntersecting) on();
+        else off();
       }, { threshold: 0 });
-      if (svgRef.current) io.observe(svgRef.current);
-      start();
-      return () => { stop(); io.disconnect(); };
+      io.observe(el);
+      return () => { io.disconnect(); off(); };
     }
 
-    // animate === 'hover' — attach listeners to the hover host
-    const host = findHoverHost(svgRef.current);
+    const host = findHoverHost(el);
     if (!host) return;
-    const onEnter = () => start();
-    const onLeave = () => stop();
-    host.addEventListener('mouseenter', onEnter);
-    host.addEventListener('mouseleave', onLeave);
+    host.addEventListener('mouseenter', on);
+    host.addEventListener('mouseleave', off);
     return () => {
-      host.removeEventListener('mouseenter', onEnter);
-      host.removeEventListener('mouseleave', onLeave);
-      stop();
+      host.removeEventListener('mouseenter', on);
+      host.removeEventListener('mouseleave', off);
+      off();
     };
-  }, [animate, seed, prefersReduced, isTouch]);
+  }, [animate, prefersReduced, isTouch]);
+
+  const maskSize = `${size.toFixed(1)}px ${size.toFixed(1)}px`;
+  const maskPosition = seedOffset(seed, size);
 
   return (
-    <svg
-      ref={svgRef}
+    <span
+      ref={ref}
       aria-hidden="true"
-      focusable="false"
       className={[styles.overlay, className ?? ''].filter(Boolean).join(' ')}
       style={{
+        backgroundColor: resolvedColor,
         opacity: intensity,
         mixBlendMode: blendMode,
         isolation: isolateBlend ? 'isolate' : 'auto',
+        maskImage: `url(${GRAIN_TILE})`,
+        WebkitMaskImage: `url(${GRAIN_TILE})`,
+        maskSize,
+        WebkitMaskSize: maskSize,
+        maskPosition,
+        WebkitMaskPosition: maskPosition,
       }}
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <filter id={filterId} x="0%" y="0%" width="100%" height="100%">
-          <feTurbulence
-            ref={turbRef}
-            type="fractalNoise"
-            baseFrequency={baseFrequency}
-            numOctaves={2}
-            seed={seed}
-            stitchTiles="stitch"
-            result="noise"
-          />
-          {/* Threshold into discrete black/white grains */}
-          <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
-          <feComponentTransfer in="grey" result="mask">
-            <feFuncR type="discrete" tableValues="0 1" />
-            <feFuncG type="discrete" tableValues="0 1" />
-            <feFuncB type="discrete" tableValues="0 1" />
-            <feFuncA type="discrete" tableValues="0 1" />
-          </feComponentTransfer>
-          {/* Paint the grain with the target color */}
-          <feFlood floodColor={resolvedColor} result="tint" />
-          <feComposite in="tint" in2="mask" operator="in" />
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="100%" height="100%" filter={`url(#${filterId})`} />
-    </svg>
+    />
   );
 }

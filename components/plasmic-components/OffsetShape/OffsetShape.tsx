@@ -1,14 +1,17 @@
 import React, { useId, useMemo, useRef } from 'react';
-import { motion } from 'motion/react';
 import styles from './OffsetShape.module.css';
+import m from './offsetMotion.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import {
   buildWobble,
   shapeFilterJSX,
-  useOffsetActivity,
+  offsetHostVars,
+  offsetLayerVars,
+  restsActive,
+  useOffsetInteraction,
   useHalftoneProximity,
   useHalftoneScreen,
-  useLayerMotionValues,
+  wobbleVars,
   type Interaction,
   type TextureMode,
 } from './shared';
@@ -69,18 +72,13 @@ export function OffsetShape({
   const uid        = useId().replace(/:/g, '');
   const filterAId  = `os-a-${uid}`;
   const filterBId  = `os-b-${uid}`;
-  const { prefersReduced, frameInterval } = useAnimationTier();
+  const { prefersReduced } = useAnimationTier();
 
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
 
-  const layerA = useLayerMotionValues(-1, -1, wobbleA);
-  const layerB = useLayerMotionValues(1, 1, wobbleB);
-
   const hostRef = useRef<HTMLSpanElement>(null);
-  const layers = [layerA, layerB];
-
-  useOffsetActivity(hostRef, { interaction, offsetX, offsetY, easeDuration, prefersReduced, frameInterval, layers });
+  useOffsetInteraction(hostRef, interaction);
 
   const halftoneIds = useMemo(
     () => texture === 'halftone' && textureHoverContrast != null && textureHoverEnabled ? [filterAId, filterBId] : [],
@@ -110,8 +108,9 @@ export function OffsetShape({
   return (
     <span
       ref={hostRef}
-      className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
-      style={{ isolation: isolateBlend ? 'isolate' : 'auto' }}
+      className={[styles.wrapper, m.host, className ?? ''].filter(Boolean).join(' ')}
+      style={{ isolation: isolateBlend ? 'isolate' : 'auto', ...offsetHostVars(easeDuration) }}
+      data-active={restsActive(interaction) ? '' : undefined}
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
@@ -122,23 +121,23 @@ export function OffsetShape({
 
       <span className={styles.sizer} aria-hidden="true">{children}</span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
-        style={{ x: layerA.x, y: layerA.y, rotate: layerA.rotate, mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
+        style={{ ...offsetLayerVars(-1, -1, offsetX, offsetY), mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
       >
-        {layerCopy(filterAId)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleA)}>{layerCopy(filterAId)}</span>
+      </span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
-        style={{ x: layerB.x, y: layerB.y, rotate: layerB.rotate, mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
+        style={{ ...offsetLayerVars(1, 1, offsetX, offsetY), mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
       >
-        {layerCopy(filterBId)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleB)}>{layerCopy(filterBId)}</span>
+      </span>
 
       {/* Transparent interaction layer — captures pointer/keyboard events for
           buttons, links, etc. placed in children. The ink layers are inert. */}

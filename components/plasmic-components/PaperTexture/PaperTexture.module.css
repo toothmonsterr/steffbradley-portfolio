@@ -21,6 +21,11 @@
   max-width: 100%;
 }
 
+.masked {
+  mask-repeat: repeat;
+  -webkit-mask-repeat: repeat;
+}
+
 .inner > img,
 .inner > svg,
 .inner > video,

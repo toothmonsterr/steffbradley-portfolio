@@ -24,6 +24,11 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Own compositor layer, so the filtered result is rasterized once and then
+     reused when an ancestor moves (FloatingElement, reveal transforms)
+     instead of re-running the filter chain. Deliberately no `contain: paint`:
+     it would clip the halo, which paints outside this box by design. */
+  will-change: transform;
 }
 
 /* The bleed's inner content copy is invisible in terms of rendered pixels —

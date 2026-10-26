@@ -1,7 +1,8 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import styles from './InkBleed.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { findHoverHost } from '@/hooks/findHoverHost';
+import { fiberTileUrl, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
 
 export interface InkBleedProps {
   children?: React.ReactNode;
@@ -10,7 +11,7 @@ export interface InkBleedProps {
   spread?: number;
   /** Softness of the expanded edge — higher = more diffuse halo */
   softness?: number;
-  /** feTurbulence baseFrequency — lower = chunkier fiber, higher = finer grain */
+  /** Paper-fiber frequency — lower = chunkier fiber, higher = finer grain */
   noiseFrequency?: number;
   /** Fraction 0–1 controlling fiber sparseness: 0 = dense, 1 = sparse */
   noiseThreshold?: number;
@@ -38,6 +39,11 @@ export interface InkBleedProps {
   className?: string;
 }
 
+// Below this the dilate rounds to nothing visible, so a fractional spread was
+// paying for a morphology pass that changed no pixels.
+const MIN_SPREAD = 0.5;
+
+
 export function InkBleed({
   children,
   bleedColor     = '#201B2A',
@@ -54,29 +60,67 @@ export function InkBleed({
   const uid      = useId().replace(/:/g, '');
   const filterId = `inkbleed-${uid}`;
   const wrapperRef = useRef<HTMLSpanElement>(null);
-  const turbRef    = useRef<SVGFETurbulenceElement>(null);
+  const tileRef    = useRef<SVGFEImageElement>(null);
   const { prefersReduced, isTouch } = useAnimationTier();
 
-  // Build a discrete tableValues string for feFuncA.
-  // noiseThreshold=0 → dense fiber (many ones), 1 → sparse (few ones).
-  const N    = 10;
-  const ones = Math.max(1, Math.min(N - 1, Math.round((1 - noiseThreshold) * N)));
-  const tv   = Array.from({ length: N }, (_, i) => (i >= N - ones ? 1 : 0)).join(' ');
+  // The paper fiber is a pre-rendered tile of the old noise chain (3-octave
+  // fractal noise, luminance into alpha, same threshold table), drawn at the
+  // size that reproduces noiseFrequency. feImage + feTile replaces
+  // feTurbulence, so the filter no longer evaluates noise per pixel.
+  const tileSize = tileSizeForFrequency(noiseFrequency);
+  // The seed picks one of the pre-rendered sheets of fiber.
+  const variant = Math.abs(Math.round(seed)) % TILE_VARIANTS;
+
+  const dilate = spread >= MIN_SPREAD;
+
+  // Size the filter region to what the halo can reach (the dilate radius plus
+  // ~3σ of blur) instead of a blanket ±30% of the box. On a wide title, ±30%
+  // was hundreds of px of filter surface that nothing ever painted into.
+  const pad = (dilate ? spread : 0) + softness * 3 + 1;
+  const [box, setBox] = useState<{ w: number; h: number } | null>(null);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) {
+        setBox((prev) =>
+          prev && Math.abs(prev.w - width) < 1 && Math.abs(prev.h - height) < 1
+            ? prev
+            : { w: width, h: height });
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const region = box
+    ? {
+        x: `${((-pad / box.w) * 100).toFixed(3)}%`,
+        y: `${((-pad / box.h) * 100).toFixed(3)}%`,
+        width: `${((1 + (2 * pad) / box.w) * 100).toFixed(3)}%`,
+        height: `${((1 + (2 * pad) / box.h) * 100).toFixed(3)}%`,
+      }
+    : { x: '-30%', y: '-30%', width: '160%', height: '160%' };
 
   useEffect(() => {
     // Static on touch: 'hover' can never fire without a pointer, and the
     // 'always' flicker isn't worth a permanent SVG filter re-render on a phone.
     if (animate === 'never' || prefersReduced || isTouch) return;
-    const el = turbRef.current;
+    const el = tileRef.current;
     if (!el) return;
 
     let raf = 0;
     let last = 0;
-    let s = seed;
+    // Flicker by stepping through the other pre-rendered sheets of fiber,
+    // standing in for the old per-frame reseed.
+    let i = 0;
+    const place = (n: number) => {
+      el.setAttribute('href', fiberTileUrl(noiseThreshold, variant + n));
+    };
     const tick = (t: number) => {
       if (t - last > 83) {
-        s = (s + 1) % 1000;
-        el.setAttribute('seed', String(s));
+        i += 1;
+        place(i);
         last = t;
       }
       raf = requestAnimationFrame(tick);
@@ -89,13 +133,12 @@ export function InkBleed({
     const stop = () => {
       cancelAnimationFrame(raf);
       raf = 0;
-      el.setAttribute('seed', String(seed));
-      s = seed;
+      i = 0;
+      place(0);
     };
 
     if (animate === 'always') {
-      // Actually cancel the RAF off-screen. Previously this only flipped a
-      // flag, so the frame callback kept firing for the life of the page.
+      // Actually cancel the RAF off-screen.
       const io = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) start();
         else stop();
@@ -108,16 +151,14 @@ export function InkBleed({
     // animate === 'hover' — attach listeners to the hover host
     const host = findHoverHost(wrapperRef.current);
     if (!host) return;
-    const onEnter = () => start();
-    const onLeave = () => stop();
-    host.addEventListener('mouseenter', onEnter);
-    host.addEventListener('mouseleave', onLeave);
+    host.addEventListener('mouseenter', start);
+    host.addEventListener('mouseleave', stop);
     return () => {
-      host.removeEventListener('mouseenter', onEnter);
-      host.removeEventListener('mouseleave', onLeave);
+      host.removeEventListener('mouseenter', start);
+      host.removeEventListener('mouseleave', stop);
       stop();
     };
-  }, [animate, seed, prefersReduced, isTouch]);
+  }, [animate, prefersReduced, isTouch, noiseThreshold, variant]);
 
   return (
     <span
@@ -128,39 +169,28 @@ export function InkBleed({
       {/* Hidden defs SVG */}
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
-          <filter
-            id={filterId}
-            colorInterpolationFilters="sRGB"
-            x="-30%"
-            y="-30%"
-            width="160%"
-            height="160%"
-          >
-            {/* 1. Expand the content silhouette outward */}
-            <feMorphology in="SourceAlpha" operator="dilate" radius={spread} result="expanded" />
+          <filter id={filterId} colorInterpolationFilters="sRGB" {...region}>
+            {/* 1. Expand the content silhouette outward (skipped when the
+                spread is too small to show) */}
+            {dilate && (
+              <feMorphology in="SourceAlpha" operator="dilate" radius={spread} result="expanded" />
+            )}
 
             {/* 2. Soften the expanded edge */}
-            <feGaussianBlur in="expanded" stdDeviation={softness} result="expandedEdge" />
+            <feGaussianBlur in={dilate ? 'expanded' : 'SourceAlpha'} stdDeviation={softness} result="expandedEdge" />
 
-            {/* 3. Paper-fiber noise mask */}
-            <feTurbulence
-              ref={turbRef}
-              type="fractalNoise"
-              baseFrequency={noiseFrequency.toFixed(4)}
-              numOctaves="3"
-              seed={seed}
-              stitchTiles="stitch"
-              result="noise"
+            {/* 3. Paper-fiber mask: one pre-rendered tile, repeated */}
+            <feImage
+              ref={tileRef}
+              href={fiberTileUrl(noiseThreshold, variant)}
+              x={0}
+              y={0}
+              width={tileSize}
+              height={tileSize}
+              preserveAspectRatio="none"
+              result="fiberTile"
             />
-            <feColorMatrix
-              type="matrix"
-              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0"
-              in="noise"
-              result="noiseAlpha"
-            />
-            <feComponentTransfer in="noiseAlpha" result="grain">
-              <feFuncA type="discrete" tableValues={tv} />
-            </feComponentTransfer>
+            <feTile in="fiberTile" result="grain" />
 
             {/* 4. Clip bleed region by paper fiber */}
             <feComposite in="expandedEdge" in2="grain" operator="in" result="roughBleed" />

@@ -101,10 +101,3 @@
   object-fit: contain;
 }
 
-/* Composite-layer promotion is scoped to when the element is actually on
-   screen and animating — the IntersectionObserver in useOffsetActivity sets
-   data-offset-active. Promoting every ink layer for the whole page life is
-   real GPU memory pressure on mobile. */
-.wrapper[data-offset-active] .layer {
-  will-change: transform;
-}

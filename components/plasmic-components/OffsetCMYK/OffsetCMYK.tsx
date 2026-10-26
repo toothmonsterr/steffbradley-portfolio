@@ -1,13 +1,16 @@
 import React, { useId, useMemo, useRef } from 'react';
-import { motion } from 'motion/react';
 import styles from './OffsetCMYK.module.css';
+import m from '../OffsetShape/offsetMotion.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import {
   buildWobble,
-  useOffsetActivity,
+  offsetHostVars,
+  offsetLayerVars,
+  restsActive,
+  useOffsetInteraction,
   useHalftoneProximity,
   useHalftoneScreen,
-  useLayerMotionValues,
+  wobbleVars,
   type Interaction,
   type TextureMode,
 } from '../OffsetShape/shared';
@@ -80,27 +83,15 @@ export function OffsetCMYK({
     Y: `cmyk-y-${uid}`,
     K: `cmyk-k-${uid}`,
   };
-  const { prefersReduced, frameInterval, isTouch } = useAnimationTier();
+  const { prefersReduced } = useAnimationTier();
 
   const wobbleC = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleM = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
   const wobbleY = useMemo(() => buildWobble(uid.charCodeAt(0) + 3, jitter), [uid, jitter]);
   const wobbleK = useMemo(() => buildWobble(uid.charCodeAt(0) + 4, jitter), [uid, jitter]);
 
-  const layerC = useLayerMotionValues(-1, -1, wobbleC);
-  const layerM = useLayerMotionValues( 1, -1, wobbleM);
-  const layerY = useLayerMotionValues(-1,  1, wobbleY);
-  const layerK = useLayerMotionValues( 1,  1, wobbleK);
-
   const hostRef = useRef<HTMLSpanElement>(null);
-  const layers = [layerC, layerM, layerY, layerK];
-
-  useOffsetActivity(hostRef, {
-    interaction, offsetX, offsetY, easeDuration, prefersReduced, frameInterval, layers,
-    // Each plate is a full SVG filter chain, so a transform write re-renders
-    // four of them. Sub-pixel breathing is not worth that on a phone.
-    staticWobble: isTouch,
-  });
+  useOffsetInteraction(hostRef, interaction);
 
   const halftoneIds = useMemo(
     () => texture === 'halftone' && textureHoverContrast != null && textureHoverEnabled
@@ -132,7 +123,12 @@ export function OffsetCMYK({
   return (
     <span
       ref={hostRef}
-      className={[styles.wrapper, className ?? ''].filter(Boolean).join(' ')}
+      className={[styles.wrapper, m.host, className ?? ''].filter(Boolean).join(' ')}
+      style={offsetHostVars(easeDuration)}
+      data-active={restsActive(interaction) ? '' : undefined}
+      // Each plate is a full SVG filter chain: hold the plates still on
+      // touch, where sub-pixel breathing is not worth re-rasterizing four.
+      data-static-touch=""
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
@@ -146,53 +142,53 @@ export function OffsetCMYK({
       {/* Sizer — establishes wrapper dimensions from the children's natural size. */}
       <span className={styles.sizer} aria-hidden="true">{children}</span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
         style={{
-          x: layerC.x, y: layerC.y, rotate: layerC.rotate,
+          ...offsetLayerVars(-1, -1, offsetX, offsetY),
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
         }}
       >
-        {renderLayer(ids.C)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleC)}>{renderLayer(ids.C)}</span>
+      </span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
         style={{
-          x: layerM.x, y: layerM.y, rotate: layerM.rotate,
+          ...offsetLayerVars(1, -1, offsetX, offsetY),
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
         }}
       >
-        {renderLayer(ids.M)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleM)}>{renderLayer(ids.M)}</span>
+      </span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
         style={{
-          x: layerY.x, y: layerY.y, rotate: layerY.rotate,
+          ...offsetLayerVars(-1, 1, offsetX, offsetY),
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
         }}
       >
-        {renderLayer(ids.Y)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleY)}>{renderLayer(ids.Y)}</span>
+      </span>
 
-      <motion.span
-        className={styles.layer}
+      <span
+        className={[styles.layer, m.layer].join(' ')}
         aria-hidden="true"
         inert
         style={{
-          x: layerK.x, y: layerK.y, rotate: layerK.rotate,
+          ...offsetLayerVars(1, 1, offsetX, offsetY),
           mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'],
         }}
       >
-        {renderLayer(ids.K)}
-      </motion.span>
+        <span className={m.wobble} style={wobbleVars(wobbleK)}>{renderLayer(ids.K)}</span>
+      </span>
 
       {/* Transparent interaction layer — captures pointer/keyboard events for
           buttons, links, etc. placed in children. The ink layers are inert. */}

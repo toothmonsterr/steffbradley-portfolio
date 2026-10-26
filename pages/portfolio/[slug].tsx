@@ -3,58 +3,69 @@
 import * as React from "react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageParamsProvider as PageParamsProvider__ } from "@plasmicapp/react-web/lib/host";
+import { extractPlasmicQueryData } from "@plasmicapp/react-web/lib/prepass";
 import GlobalContextsProvider from "../../components/plasmic/toothmonster/PlasmicGlobalContextsProvider";
 
 import { PlasmicPortfolio } from "../../components/plasmic/toothmonster/PlasmicPortfolio";
 import { useRouter } from "next/router";
 import { PlasmicQueryDataProvider } from "@plasmicapp/react-web/lib/query";
 
-function Portfolio() {
-  // Use PlasmicPortfolio to render this component as it was
-  // designed in Plasmic, by activating the appropriate variants,
-  // attaching the appropriate event handlers, etc.  You
-  // can also install whatever React hooks you need here to manage state or
-  // fetch data.
-  //
-  // Props you can pass into PlasmicPortfolio are:
-  // 1. Variants you want to activate,
-  // 2. Contents for slots you want to fill,
-  // 3. Overrides for any named node in the component to attach behavior and data,
-  // 4. Props to set on the root node.
-  //
-  // By default, PlasmicPortfolio is wrapped by your project's global
-  // variant context providers. These wrappers may be moved to
-  // Next.js Custom App component
-  // (https://nextjs.org/docs/advanced-features/custom-app).
+interface PortfolioProps {
+  slug: string;
+  queryCache?: Record<string, unknown>;
+}
 
+// Rendered both by getStaticProps (to collect the CMS query results for this
+// slug) and by the page, so the case study is in the server HTML rather than
+// fetched in the browser behind Shimmer placeholders.
+function PortfolioTree({
+  route,
+  params,
+  query,
+}: {
+  route?: string;
+  params: Record<string, string | string[] | undefined>;
+  query?: Record<string, string | string[] | undefined>;
+}) {
   return (
     <GlobalContextsProvider>
-      <PlasmicQueryDataProvider>
-        <PageParamsProvider__
-          route={useRouter()?.pathname}
-          params={useRouter()?.query}
-          query={useRouter()?.query}
-        >
-          <PlasmicPortfolio />
-        </PageParamsProvider__>
-      </PlasmicQueryDataProvider>
+      <PageParamsProvider__ route={route} params={params} query={query}>
+        <PlasmicPortfolio />
+      </PageParamsProvider__>
     </GlobalContextsProvider>
+  );
+}
+
+function Portfolio({ slug, queryCache }: PortfolioProps) {
+  const router = useRouter();
+  return (
+    <PlasmicQueryDataProvider prefetchedCache={queryCache}>
+      <PortfolioTree
+        route={router?.pathname}
+        params={{ ...router?.query, slug }}
+        query={router?.query}
+      />
+    </PlasmicQueryDataProvider>
   );
 }
 
 export default Portfolio;
 
-// A dynamic route needs getStaticPaths to build at all. The case study itself
-// is fetched in the browser by the CMS query inside PlasmicPortfolio, which
-// reads the slug from the page params — so there is nothing to resolve here
-// and no path worth pre-rendering.
-//
-// fallback: "blocking" means a slug that was not pre-rendered is rendered on
-// first request and then cached, so new case studies appear without a rebuild.
+// No paths are pre-rendered at build time. fallback: "blocking" renders a slug
+// on its first request (CMS data included, via getStaticProps) and caches it,
+// so new case studies appear without a rebuild.
 export const getStaticPaths: GetStaticPaths = async () => {
   return { paths: [], fallback: "blocking" };
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  return { props: {} };
+export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params }) => {
+  const slug = String(params?.slug ?? "");
+  const queryCache = await extractPlasmicQueryData(
+    <PlasmicQueryDataProvider>
+      <PortfolioTree route="/portfolio/[slug]" params={{ slug }} query={{ slug }} />
+    </PlasmicQueryDataProvider>
+  );
+  // Regenerated in the background at most once a minute, so CMS edits to a
+  // case study show up without a redeploy.
+  return { props: { slug, queryCache }, revalidate: 60 };
 };

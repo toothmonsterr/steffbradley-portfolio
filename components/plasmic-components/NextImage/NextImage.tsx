@@ -24,8 +24,18 @@ export interface NextImageProps {
    * next.config remotePatterns, or for SVGs/GIFs.
    */
   unoptimized?: boolean;
+  /**
+   * How wide the image renders, as a media-query list (e.g. "300px" or
+   * "(max-width: 768px) 100vw, 50vw"). Lets the browser pick the smallest
+   * srcset candidate instead of assuming the full viewport width.
+   */
+  sizes?: string;
   className?: string;
 }
+
+// Animated GIF/WebP files are served as-is: the optimiser would either flatten
+// the animation or re-encode a file that is already compressed for the web.
+const PASS_THROUGH = /\.(gif|webp)(\?|#|$)/i;
 
 export function NextImage({
   src,
@@ -38,6 +48,7 @@ export function NextImage({
   priority = false,
   quality,
   unoptimized = false,
+  sizes,
   className,
 }: NextImageProps) {
   if (!src) {
@@ -59,6 +70,8 @@ export function NextImage({
     );
   }
 
+  const skipOptimizer = unoptimized || PASS_THROUGH.test(src);
+
   const style: React.CSSProperties = {
     objectFit,
     objectPosition,
@@ -73,7 +86,8 @@ export function NextImage({
         style={style}
         priority={priority}
         quality={quality}
-        unoptimized={unoptimized}
+        unoptimized={skipOptimizer}
+        sizes={sizes}
         className={className}
       />
     );
@@ -88,7 +102,8 @@ export function NextImage({
       style={style}
       priority={priority}
       quality={quality}
-      unoptimized={unoptimized}
+      unoptimized={skipOptimizer}
+      sizes={sizes}
       className={className}
     />
   );

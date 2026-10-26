@@ -1,16 +1,37 @@
-/* Fontsource variable fonts */
-@import '@fontsource-variable/urbanist';
-@import '@fontsource-variable/syne';
+/* ─── Fonts — one self-hosted WOFF2 each ─────────────────────
+   Declared under the literal family names the Plasmic tokens use
+   ("TAN Rosebud", "Syne", "Urbanist"), so Plasmic text and the --font-*
+   variables below resolve to exactly these files. These used to be loaded
+   two or three times over (next/font, @fontsource-variable imports, and a
+   raw TTF), each registering its own family name.
 
-/* ─── TAN Rosebud — self-hosted (licensed TTF)
-   Explicit @font-face ensures "TAN Rosebud" resolves in all contexts,
-   including the Plasmic canvas where next/font's scoped class may not cascade. */
+   Urbanist and Syne are the latin subset of the variable fonts, which covers
+   every weight in one file. The two critical files are preloaded in
+   _document.tsx. */
 @font-face {
-  font-family: 'TAN Rosebud';
-  src: url('/fonts/TAN Rosebud.ttf') format('truetype');
+  font-family: "TAN Rosebud";
+  src: url("/fonts/tan-rosebud.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+@font-face {
+  font-family: "Urbanist";
+  src: url("/fonts/urbanist-latin-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Syne";
+  src: url("/fonts/syne-latin-variable.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
@@ -57,7 +78,7 @@ a {
 
 /* ─── Design tokens as CSS custom properties ─────────────────── */
 :root {
-  /* Typography — Next.js font variables injected via _app.tsx className */
+  /* Typography — the @font-face families declared at the top of this file */
   --font-display:  "TAN Rosebud", serif;
   --font-heading:  "Syne", sans-serif;
   --font-body:     "Urbanist", sans-serif;

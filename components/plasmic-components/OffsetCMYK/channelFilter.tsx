@@ -1,5 +1,5 @@
 import React from 'react';
-import { type TextureMode } from '../OffsetShape/shared';
+import { grainTileJSX, type TextureMode } from '../OffsetShape/shared';
 
 // ---------------------------------------------------------------------------
 // Per-channel CMYK separation filters.
@@ -67,22 +67,10 @@ export function channelFilter(
   }
 
   if (texture === 'noise') {
-    const freq = (0.4 / Math.max(1, step)).toFixed(4);
-    const n = 10;
-    const ones = Math.round(Math.max(1, Math.min(n - 1, (dotSize / 100) * n)));
-    const tv = Array.from({ length: n }, (_, i) => (i >= n - ones ? 1 : 0)).join(' ');
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
         {densityChain}
-        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2"
-                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
-        <feColorMatrix type="saturate" values="0" in="noise" result="grey" />
-        <feComponentTransfer in="grey" result="grain">
-          <feFuncR type="discrete" tableValues={tv} />
-          <feFuncG type="discrete" tableValues={tv} />
-          <feFuncB type="discrete" tableValues={tv} />
-          <feFuncA type="discrete" tableValues={tv} />
-        </feComponentTransfer>
+        {grainTileJSX(layerIndex, step, dotSize)}
         <feComposite in="grain" in2="curved" operator="in" result="maskedGrain" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="maskedGrain" operator="in" />

@@ -1,0 +1,28 @@
+/* Same motion as the old Motion keyframes: y 0 → -amp → 0 and rotate
+   0 → 2° → -2° → 0 over one duration, each segment eased in-out. Two
+   animations on the individual transform properties so the two keyframe
+   tracks can keep their own spacing. */
+.float {
+  will-change: transform;
+  animation:
+    float-y var(--float-dur, 4s) ease-in-out var(--float-delay, 0s) infinite,
+    float-rotate var(--float-dur, 4s) ease-in-out var(--float-delay, 0s) infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 var(--float-amp, -12px); }
+}
+
+@keyframes float-rotate {
+  0%, 100% { rotate: 0deg; }
+  33.333%  { rotate: 2deg; }
+  66.667%  { rotate: -2deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float {
+    animation: none;
+    will-change: auto;
+  }
+}

@@ -4,12 +4,21 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Preload TAN Rosebud — critical display font (TTF; upgrade to WOFF2 for best perf) */}
+        {/* Preload the two fonts above the fold: TAN Rosebud (display
+            headings) and Urbanist (body). Syne loads on demand from its
+            @font-face in globals.css. */}
         <link
           rel="preload"
-          href="/fonts/TAN Rosebud.ttf"
+          href="/fonts/tan-rosebud.woff2"
           as="font"
-          type="font/ttf"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/urbanist-latin-variable.woff2"
+          as="font"
+          type="font/woff2"
           crossOrigin="anonymous"
         />
       </Head>
