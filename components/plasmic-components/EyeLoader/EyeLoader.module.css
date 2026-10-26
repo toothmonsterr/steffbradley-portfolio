@@ -42,6 +42,13 @@
   animation-delay: var(--eye-loader-drift-offset, 0.35s);
 }
 
+/* The splash stays mounted after it fades; stop the drift once it's gone. */
+.root[data-hidden='true'] .pupilTop,
+.root[data-hidden='true'] .pupilBottom {
+  animation-play-state: paused;
+  will-change: auto;
+}
+
 /* A smooth small circular lap around the pupil's rest position, in SVG user
    units — comfortably inside the lens (radius 15.688) so it never crosses
    the outline. */
