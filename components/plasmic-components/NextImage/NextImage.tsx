@@ -33,9 +33,9 @@ export interface NextImageProps {
   className?: string;
 }
 
-// Animated GIF/WebP files are served as-is: the optimiser would either flatten
-// the animation or re-encode a file that is already compressed for the web.
-const PASS_THROUGH = /\.(gif|webp)(\?|#|$)/i;
+// GIF/WebP/AVIF files are served as-is: the optimiser would either flatten an
+// animation or re-encode a file that is already compressed for the web.
+const PASS_THROUGH = /\.(gif|webp|avif)(\?|#|$)/i;
 
 export function NextImage({
   src,

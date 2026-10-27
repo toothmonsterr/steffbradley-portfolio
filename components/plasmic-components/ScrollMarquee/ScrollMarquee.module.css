@@ -4,10 +4,6 @@
   user-select: none;
 }
 
-.outer:hover .track {
-  animation-play-state: paused;
-}
-
 .track {
   display: flex;
   flex-wrap: nowrap;

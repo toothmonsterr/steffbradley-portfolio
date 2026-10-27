@@ -2,6 +2,7 @@ import React, { useId, useMemo, useRef } from 'react';
 import styles from './OffsetShape.module.css';
 import m from './offsetMotion.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
+import { useIsWebKit } from '@/hooks/useIsWebKit';
 import {
   buildWobble,
   shapeFilterJSX,
@@ -15,6 +16,7 @@ import {
   type Interaction,
   type TextureMode,
 } from './shared';
+import { useBakedHalftone } from './bakeHalftone';
 
 export interface OffsetShapeProps {
   children?: React.ReactNode;
@@ -73,6 +75,7 @@ export function OffsetShape({
   const filterAId  = `os-a-${uid}`;
   const filterBId  = `os-b-${uid}`;
   const { prefersReduced } = useAnimationTier();
+  const webkit = useIsWebKit();
 
   const wobbleA = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleB = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -99,11 +102,25 @@ export function OffsetShape({
   );
   useHalftoneScreen(hostRef, screenIds, { step: textureStep, contrast: textureContrast, prefersReduced });
 
-  const layerCopy = (filterId: string) => (
-    <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>
-      <span className={styles.filterInner}>{children}</span>
-    </span>
-  );
+  // Once hydrated, a static halftone is baked into one image per layer (see
+  // bakeHalftone.ts) and the filters are dropped. The hover-proximity effect
+  // redraws the dots live, so it keeps the filters.
+  const sizerRef = useRef<HTMLSpanElement>(null);
+  const baked = useBakedHalftone(hostRef, sizerRef, {
+    enabled: texture === 'halftone' && halftoneIds.length === 0,
+    colors: [colorA, colorB],
+    step: textureStep,
+    contrast: textureContrast,
+  });
+
+  const layerCopy = (filterId: string, layer: number) =>
+    baked ? (
+      <img className={styles.bakedLayer} src={baked[layer]} alt="" draggable={false} />
+    ) : (
+      <span className={styles.filterShell} style={{ filter: `url(#${filterId})` }}>
+        <span className={styles.filterInner}>{children}</span>
+      </span>
+    );
 
   return (
     <span
@@ -114,12 +131,12 @@ export function OffsetShape({
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
-          {shapeFilterJSX(filterAId, colorA, texture, 0, textureStep, textureContrast)}
-          {shapeFilterJSX(filterBId, colorB, texture, 1, textureStep, textureContrast)}
+          {shapeFilterJSX(filterAId, colorA, texture, 0, textureStep, textureContrast, webkit)}
+          {shapeFilterJSX(filterBId, colorB, texture, 1, textureStep, textureContrast, webkit)}
         </defs>
       </svg>
 
-      <span className={styles.sizer} aria-hidden="true">{children}</span>
+      <span ref={sizerRef} className={styles.sizer} aria-hidden="true">{children}</span>
 
       <span
         className={[styles.layer, m.layer].join(' ')}
@@ -127,7 +144,7 @@ export function OffsetShape({
         inert
         style={{ ...offsetLayerVars(-1, -1, offsetX, offsetY), mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
       >
-        <span className={m.wobble} style={wobbleVars(wobbleA)}>{layerCopy(filterAId)}</span>
+        <span className={m.wobble} style={wobbleVars(wobbleA)}>{layerCopy(filterAId, 0)}</span>
       </span>
 
       <span
@@ -136,7 +153,7 @@ export function OffsetShape({
         inert
         style={{ ...offsetLayerVars(1, 1, offsetX, offsetY), mixBlendMode: blendMode as React.CSSProperties['mixBlendMode'] }}
       >
-        <span className={m.wobble} style={wobbleVars(wobbleB)}>{layerCopy(filterBId)}</span>
+        <span className={m.wobble} style={wobbleVars(wobbleB)}>{layerCopy(filterBId, 1)}</span>
       </span>
 
       {/* Transparent interaction layer — captures pointer/keyboard events for

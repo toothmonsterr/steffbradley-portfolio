@@ -1,7 +1,8 @@
 import React, { useId, useRef } from 'react';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
+import { useIsWebKit } from '@/hooks/useIsWebKit';
 import styles from './PaperTexture.module.css';
-import { grainTileUrl, seedOffset, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
+import { FE_TILE_FILL, grainTileUrl, seedOffset, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
 
 // ---------------------------------------------------------------------------
 // Paper texture — subtractive, not additive.
@@ -100,6 +101,7 @@ export function PaperTexture({
   const uid = useId().replace(/:/g, '');
   const filterId = `paper-${uid}`;
   const hostRef = useRef<HTMLSpanElement>(null);
+  const webkit = useIsWebKit();
 
   const freq = (0.5 / Math.max(1, step)).toFixed(4);
   const tv = grainTable(coverage);
@@ -145,9 +147,9 @@ export function PaperTexture({
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
             {/* 1. Paper tooth: hard flecks. A pre-rendered grain tile unless
-                   the grain is animated, which needs live turbulence to
-                   reseed. */}
-            {animate ? (
+                   the grain is animated (live turbulence reseeds) or in
+                   WebKit, which cannot draw raster feImage (useIsWebKit). */}
+            {animate || webkit ? (
               <>
                 <feTurbulence
                   type="fractalNoise"
@@ -173,7 +175,7 @@ export function PaperTexture({
                   preserveAspectRatio="none"
                   result="grainTile"
                 />
-                <feTile in="grainTile" result="grain" />
+                <feTile in="grainTile" result="grain" {...FE_TILE_FILL} />
               </>
             )}
 

@@ -70,3 +70,15 @@ export function seedOffset(seed: number, size: number): string {
   const [x, y] = tileOffset(seed, size);
   return `${x.toFixed(1)}px ${y.toFixed(1)}px`;
 }
+
+/**
+ * Spread onto every <feTile>. Per the SVG spec a primitive's region defaults
+ * to the union of its inputs' regions, and feTile's only input is the single
+ * tile image at the origin — so Firefox and Safari "tile" just that one cell
+ * (Chrome is lenient and fills the filter region). On anything larger than a
+ * tile, or with a filter region reaching past the element (InkBleed's halo),
+ * the texture stops at the tile's edge. An explicit huge region makes it fill
+ * the whole filter region everywhere; it is clipped to that region, so it
+ * costs nothing extra.
+ */
+export const FE_TILE_FILL = { x: -100000, y: -100000, width: 200000, height: 200000 } as const;

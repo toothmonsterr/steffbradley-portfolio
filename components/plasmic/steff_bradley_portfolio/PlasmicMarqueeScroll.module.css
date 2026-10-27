@@ -6,23 +6,6 @@
   position: relative;
   min-width: 0;
 }
-.paperTexture:global(.__wab_instance) {
-  animation: none;
-  max-width: 100%;
-  object-fit: cover;
-}
-.freeBox__rmTt9 {
-  animation: none;
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-}
 .image__egV8:global(.__wab_instance) {
   animation: none;
   max-width: 100%;
@@ -36,29 +19,4 @@
   object-fit: cover;
   height: 90px;
   width: auto;
-}
-.freeBox__pEH1 {
-  animation: none;
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-}
-.noiseOverlay___8IJlm:global(.__wab_instance) {
-  animation: none;
-  max-width: 100%;
-  object-fit: cover;
-}
-.noiseOverlay__kpjVn:global(.__wab_instance) {
-  animation: none;
-  max-width: 100%;
-  object-fit: cover;
 }

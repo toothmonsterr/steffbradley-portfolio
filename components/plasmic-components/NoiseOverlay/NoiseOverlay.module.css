@@ -13,18 +13,19 @@
    different patch of the same noise, which reads as a new grain — the old
    filter reseeded feTurbulence at the same rate. `translate` on the masked
    layer would be cheaper still, but it would move the colour layer's edges;
-   shifting the mask keeps the box fixed. */
+   shifting the tile keeps the box fixed. Both properties are stepped: the
+   mask before hydration, the tinted background after. */
 .overlay[data-flicker] {
   animation: grain-flicker 0.5s steps(1, end) infinite;
 }
 
 @keyframes grain-flicker {
-  0%      { mask-position: 0 0;         -webkit-mask-position: 0 0; }
-  16.67%  { mask-position: 37px 91px;   -webkit-mask-position: 37px 91px; }
-  33.33%  { mask-position: 113px 17px;  -webkit-mask-position: 113px 17px; }
-  50%     { mask-position: 71px 149px;  -webkit-mask-position: 71px 149px; }
-  66.67%  { mask-position: 193px 59px;  -webkit-mask-position: 193px 59px; }
-  83.33%  { mask-position: 11px 203px;  -webkit-mask-position: 11px 203px; }
+  0%      { mask-position: 0 0; -webkit-mask-position: 0 0; background-position: 0 0; }
+  16.67%  { mask-position: 37px 91px; -webkit-mask-position: 37px 91px; background-position: 37px 91px; }
+  33.33%  { mask-position: 113px 17px; -webkit-mask-position: 113px 17px; background-position: 113px 17px; }
+  50%     { mask-position: 71px 149px; -webkit-mask-position: 71px 149px; background-position: 71px 149px; }
+  66.67%  { mask-position: 193px 59px; -webkit-mask-position: 193px 59px; background-position: 193px 59px; }
+  83.33%  { mask-position: 11px 203px; -webkit-mask-position: 11px 203px; background-position: 11px 203px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

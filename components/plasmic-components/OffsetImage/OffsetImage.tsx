@@ -2,6 +2,7 @@ import React, { useId, useMemo, useRef } from 'react';
 import styles from './OffsetImage.module.css';
 import m from '../OffsetShape/offsetMotion.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
+import { useIsWebKit } from '@/hooks/useIsWebKit';
 import {
   buildWobble,
   imageFilterJSX,
@@ -76,6 +77,7 @@ export const OffsetImage = React.memo(function OffsetImage({
   const filterAId = `oi-a-${uid}`;
   const filterBId = `oi-b-${uid}`;
   const { prefersReduced } = useAnimationTier();
+  const webkit = useIsWebKit();
 
   // Per-slot contrast falls back to the shared imageContrast when unset.
   const contrastA = imageContrastA ?? imageContrast;
@@ -118,8 +120,8 @@ export const OffsetImage = React.memo(function OffsetImage({
       {tintSlots && (
         <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
           <defs>
-            {imageFilterJSX(filterAId, colorA, contrastA, texture, 0, textureStep, textureContrast)}
-            {imageFilterJSX(filterBId, colorB, contrastB, texture, 1, textureStep, textureContrast)}
+            {imageFilterJSX(filterAId, colorA, contrastA, texture, 0, textureStep, textureContrast, webkit)}
+            {imageFilterJSX(filterBId, colorB, contrastB, texture, 1, textureStep, textureContrast, webkit)}
           </defs>
         </svg>
       )}

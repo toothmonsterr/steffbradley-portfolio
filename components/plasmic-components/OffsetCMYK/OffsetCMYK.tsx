@@ -2,6 +2,7 @@ import React, { useId, useMemo, useRef } from 'react';
 import styles from './OffsetCMYK.module.css';
 import m from '../OffsetShape/offsetMotion.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
+import { useIsWebKit } from '@/hooks/useIsWebKit';
 import {
   buildWobble,
   offsetHostVars,
@@ -84,6 +85,7 @@ export function OffsetCMYK({
     K: `cmyk-k-${uid}`,
   };
   const { prefersReduced } = useAnimationTier();
+  const webkit = useIsWebKit();
 
   const wobbleC = useMemo(() => buildWobble(uid.charCodeAt(0) + 1, jitter), [uid, jitter]);
   const wobbleM = useMemo(() => buildWobble(uid.charCodeAt(0) + 2, jitter), [uid, jitter]);
@@ -132,10 +134,10 @@ export function OffsetCMYK({
     >
       <svg className={styles.defs} aria-hidden="true" focusable="false" width="0" height="0">
         <defs>
-          {channelFilter(ids.C, 'C', colorC, channelContrast, texture, 0, textureStep, textureContrast)}
-          {channelFilter(ids.M, 'M', colorM, channelContrast, texture, 1, textureStep, textureContrast)}
-          {channelFilter(ids.Y, 'Y', colorY, channelContrast, texture, 2, textureStep, textureContrast)}
-          {channelFilter(ids.K, 'K', colorK, channelContrast, texture, 3, textureStep, textureContrast)}
+          {channelFilter(ids.C, 'C', colorC, channelContrast, texture, 0, textureStep, textureContrast, webkit)}
+          {channelFilter(ids.M, 'M', colorM, channelContrast, texture, 1, textureStep, textureContrast, webkit)}
+          {channelFilter(ids.Y, 'Y', colorY, channelContrast, texture, 2, textureStep, textureContrast, webkit)}
+          {channelFilter(ids.K, 'K', colorK, channelContrast, texture, 3, textureStep, textureContrast, webkit)}
         </defs>
       </svg>
 

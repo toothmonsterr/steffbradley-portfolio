@@ -39,3 +39,29 @@
   width: 100%;
   height: 100%;
 }
+
+/* The copy only supplies a silhouette. Anything animating inside it (a
+   wobbling button, a flickering grain) changes the filter's input every
+   frame, which forces the whole bleed filter to re-render every frame —
+   for no visible change, since only its outline is used. Freeze it. */
+.bleedSource *,
+.bleedSource *::before,
+.bleedSource *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* For the same reason, strip everything in the copy that is expensive to
+   render but does not change its outline: nested SVG filters (offset ink
+   layers, other bleeds), blend modes and masks. Firefox
+   renders a filter's whole input on the CPU and redoes it as new tiles
+   scroll in, so a card-sized bleed around a card full of effects was the
+   single biggest scroll cost there — with this, the bleed only has to
+   render plain boxes and images. */
+.bleedSource * {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  isolation: auto !important;
+}
