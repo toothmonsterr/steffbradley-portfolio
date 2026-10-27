@@ -48,3 +48,15 @@
   display: contents;
 }
 
+
+/* Baked halftone layer: an image of exactly the host box, so it lines up
+   with where the filter output used to sit. */
+.bakedLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}

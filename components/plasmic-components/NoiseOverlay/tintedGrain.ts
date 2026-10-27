@@ -16,7 +16,7 @@ let probe: HTMLSpanElement | null = null;
  * understands, by letting the browser compute it on a probe element in the
  * same document (so page-level custom properties apply).
  */
-function resolveColor(color: string): string {
+export function resolveCssColor(color: string): string {
   if (!probe) {
     probe = document.createElement('span');
     probe.style.display = 'none';
@@ -39,7 +39,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 
 /** Object URL of `tileUrl` recoloured to `color`, or null if it can't be made. */
 export function tintedGrain(tileUrl: string, color: string): Promise<string | null> {
-  const rgb = resolveColor(color);
+  const rgb = resolveCssColor(color);
   const key = `${tileUrl}|${rgb}`;
   let job = cache.get(key);
   if (!job) {

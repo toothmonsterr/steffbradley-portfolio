@@ -99,6 +99,9 @@ export function EyeLoader({
           bleedColor={eyeColor}
           spread={inkSpread}
           noiseFrequency={inkTextureScale}
+          // A clean glow: the fiber texture on a mark this small kept
+          // rendering clipped at the box in some browsers.
+          fiber={false}
           className={styles.mark}
         >
           {eyes}

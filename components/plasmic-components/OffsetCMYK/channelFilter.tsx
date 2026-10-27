@@ -42,6 +42,7 @@ function contrastTable(k: number): string {
 export function channelFilter(
   id: string, channel: Channel, color: string, contrast: number,
   texture: TextureMode, layerIndex: number, step: number, dotSize: number,
+  webkit = false,
 ) {
   const densityChain = (
     <>
@@ -70,7 +71,7 @@ export function channelFilter(
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
         {densityChain}
-        {grainTileJSX(layerIndex, step, dotSize)}
+        {grainTileJSX(layerIndex, step, dotSize, webkit)}
         <feComposite in="grain" in2="curved" operator="in" result="maskedGrain" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="maskedGrain" operator="in" />

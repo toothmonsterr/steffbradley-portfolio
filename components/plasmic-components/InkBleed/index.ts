@@ -14,6 +14,7 @@ export const InkBleedMeta = {
     softness:       { type: 'number', defaultValueHint: 4,    description: 'Blur softness of the spread — higher = more diffuse, feathered bleed' },
     noiseFrequency: { type: 'number', defaultValueHint: 0.08, description: 'Paper fiber scale — lower = chunkier chunks, higher = finer grain' },
     noiseThreshold: { type: 'number', defaultValueHint: 0.5,  description: 'Fiber sparseness 0–1: 0 = dense saturation, 1 = very sparse, barely-there bleed' },
+    fiber:          { type: 'boolean', defaultValueHint: true, description: 'Paper-fiber texture in the halo. Off = a clean soft glow.' },
     blendMode: {
       type: 'choice',
       options: ['normal', 'multiply', 'darken', 'screen', 'overlay'],

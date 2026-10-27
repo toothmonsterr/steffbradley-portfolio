@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { grainTileUrl, tileSizeForFrequency } from '../textures';
+import { FE_TILE_FILL, grainTileUrl, tileSizeForFrequency } from '../textures';
 
 // ---------------------------------------------------------------------------
 // Helpers shared by OffsetShape / OffsetImage / OffsetCMYK
@@ -52,7 +52,7 @@ export type TextureMode = 'none' | 'noise' | 'halftone';
 const LUMA_MATRIX = '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0';
 
 // Standard screen angles (index = layer order: 0=C,1=M,2=Y,3=K / A,B,...)
-const SCREEN_ANGLES = [15, 30, 45, 60];
+export const SCREEN_ANGLES = [15, 30, 45, 60];
 
 // Generates a w×h SVG with a rotated halftone dot grid, centred on the
 // element. One <pattern> with a single circle, rotated about the centre, so
@@ -96,8 +96,22 @@ export function rotatedDotScreenUri(step: number, dotSizePct: number, _angleDeg:
 // ink), clamped to 1–9 as the old table was. Each layer gets its own patch of
 // noise (its own seed, as before), so the plates scatter independently.
 // Produces result="grain".
-export function grainTileJSX(layerIndex: number, step: number, contrast: number) {
+export function grainTileJSX(layerIndex: number, step: number, contrast: number, webkit = false) {
   const ones = Math.round(Math.max(1, Math.min(9, (contrast / 100) * 10)));
+  if (webkit) {
+    // WebKit can't draw raster feImage in CSS filters (see useIsWebKit), so
+    // it gets the original live chain.
+    const tv = Array.from({ length: 10 }, (_, i) => (i >= 10 - ones ? 1 : 0)).join(' ');
+    return (
+      <>
+        <feTurbulence type="fractalNoise" baseFrequency={(0.4 / Math.max(1, step)).toFixed(4)} numOctaves="2"
+                      seed={layerIndex * 7 + 1} stitchTiles="stitch" result="noise" />
+        <feComponentTransfer in="noise" result="grain">
+          <feFuncA type="discrete" tableValues={tv} />
+        </feComponentTransfer>
+      </>
+    );
+  }
   const size = tileSizeForFrequency(0.4 / Math.max(1, step));
   return (
     <>
@@ -110,7 +124,7 @@ export function grainTileJSX(layerIndex: number, step: number, contrast: number)
         preserveAspectRatio="none"
         result="grainTile"
       />
-      <feTile in="grainTile" result="grain" />
+      <feTile in="grainTile" result="grain" {...FE_TILE_FILL} />
     </>
   );
 }
@@ -120,6 +134,7 @@ export function shapeFilterJSX(
   texture: TextureMode = 'none',
   layerIndex = 0,
   step = 4, contrast = 60,
+  webkit = false,
 ) {
   if (texture === 'halftone') {
     return (
@@ -136,7 +151,7 @@ export function shapeFilterJSX(
   if (texture === 'noise') {
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-        {grainTileJSX(layerIndex, step, contrast)}
+        {grainTileJSX(layerIndex, step, contrast, webkit)}
         <feComposite in="grain" in2="SourceAlpha" operator="in" result="maskedGrain" />
         <feFlood floodColor={color} result="ink" />
         <feComposite in="ink" in2="maskedGrain" operator="in" />
@@ -157,6 +172,7 @@ export function imageFilterJSX(
   texture: TextureMode = 'none',
   layerIndex = 0,
   step = 4, contrast = 60,
+  webkit = false,
 ) {
   // Luminance mask: dark areas of the image = more ink
   const lumaMask = (
@@ -186,7 +202,7 @@ export function imageFilterJSX(
     return (
       <filter id={id} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
         {lumaMask}
-        {grainTileJSX(layerIndex, step, contrast)}
+        {grainTileJSX(layerIndex, step, contrast, webkit)}
         {/* Grain clipped by image luminance mask */}
         <feComposite in="grain" in2="imageMask" operator="in" result="maskedGrain" />
         <feFlood floodColor={color} result="ink" />

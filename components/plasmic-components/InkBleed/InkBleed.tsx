@@ -1,8 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import styles from './InkBleed.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
+import { useIsWebKit } from '@/hooks/useIsWebKit';
 import { findHoverHost } from '@/hooks/findHoverHost';
-import { fiberTileUrl, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
+import { FE_TILE_FILL, fiberTileUrl, tileSizeForFrequency, TILE_VARIANTS } from '../textures';
 
 export interface InkBleedProps {
   children?: React.ReactNode;
@@ -15,6 +16,8 @@ export interface InkBleedProps {
   noiseFrequency?: number;
   /** Fraction 0–1 controlling fiber sparseness: 0 = dense, 1 = sparse */
   noiseThreshold?: number;
+  /** Paper-fiber texture in the halo (default true). Off = a clean soft glow. */
+  fiber?: boolean;
   /**
    * Blend mode applied ONLY to the bleed halo (the noisy ink ring around the
    * content). The children on top render normally, untouched. Set to 'multiply'
@@ -43,6 +46,13 @@ export interface InkBleedProps {
 // paying for a morphology pass that changed no pixels.
 const MIN_SPREAD = 0.5;
 
+// The old threshold table (0 = dense fiber, 1 = sparse), for the WebKit chain.
+function fiberTable(threshold: number): string {
+  const n = 10;
+  const ones = Math.max(1, Math.min(n - 1, Math.round((1 - threshold) * n)));
+  return Array.from({ length: n }, (_, i) => (i >= n - ones ? 1 : 0)).join(' ');
+}
+
 
 export function InkBleed({
   children,
@@ -51,6 +61,7 @@ export function InkBleed({
   softness       = 4,
   noiseFrequency = 0.08,
   noiseThreshold = 0.5,
+  fiber          = true,
   blendMode,
   isolateBlend   = true,
   animate        = 'never',
@@ -62,6 +73,7 @@ export function InkBleed({
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const tileRef    = useRef<SVGFEImageElement>(null);
   const { prefersReduced, isTouch } = useAnimationTier();
+  const webkit = useIsWebKit();
 
   // The paper fiber is a pre-rendered tile of the old noise chain (3-octave
   // fractal noise, luminance into alpha, same threshold table), drawn at the
@@ -74,9 +86,11 @@ export function InkBleed({
   const dilate = spread >= MIN_SPREAD;
 
   // Size the filter region to what the halo can reach (the dilate radius plus
-  // ~3σ of blur) instead of a blanket ±30% of the box. On a wide title, ±30%
-  // was hundreds of px of filter surface that nothing ever painted into.
-  const pad = (dilate ? spread : 0) + softness * 3 + 1;
+  // ~4σ of blur, at least 24px) instead of a blanket ±30% of the box. On a
+  // wide title, ±30% was hundreds of px of filter surface that nothing ever
+  // painted into. (3σ was too tight: the fiber threshold keeps faint blur-tail
+  // pixels visible as specks, and the halo looked cut off at the box.)
+  const pad = Math.max(24, (dilate ? spread : 0) + softness * 4 + 4);
   const [box, setBox] = useState<{ w: number; h: number } | null>(null);
   useEffect(() => {
     const el = wrapperRef.current;
@@ -179,21 +193,50 @@ export function InkBleed({
             {/* 2. Soften the expanded edge */}
             <feGaussianBlur in={dilate ? 'expanded' : 'SourceAlpha'} stdDeviation={softness} result="expandedEdge" />
 
-            {/* 3. Paper-fiber mask: one pre-rendered tile, repeated */}
-            <feImage
-              ref={tileRef}
-              href={fiberTileUrl(noiseThreshold, variant)}
-              x={0}
-              y={0}
-              width={tileSize}
-              height={tileSize}
-              preserveAspectRatio="none"
-              result="fiberTile"
-            />
-            <feTile in="fiberTile" result="grain" />
+            {/* 3. Paper-fiber mask: one pre-rendered tile, repeated. WebKit
+                can't draw raster feImage here (useIsWebKit), so it gets the
+                original live noise chain instead. Skipped entirely when
+                fiber is off: the halo is then a clean soft glow. */}
+            {!fiber ? null : webkit ? (
+              <>
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency={noiseFrequency.toFixed(4)}
+                  numOctaves="3"
+                  seed={seed}
+                  stitchTiles="stitch"
+                  result="noise"
+                />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.299 0.587 0.114 0 0"
+                  in="noise"
+                  result="noiseAlpha"
+                />
+                <feComponentTransfer in="noiseAlpha" result="grain">
+                  <feFuncA type="discrete" tableValues={fiberTable(noiseThreshold)} />
+                </feComponentTransfer>
+              </>
+            ) : (
+              <>
+                <feImage
+                  ref={tileRef}
+                  href={fiberTileUrl(noiseThreshold, variant)}
+                  x={0}
+                  y={0}
+                  width={tileSize}
+                  height={tileSize}
+                  preserveAspectRatio="none"
+                  result="fiberTile"
+                />
+                <feTile in="fiberTile" result="grain" {...FE_TILE_FILL} />
+              </>
+            )}
 
             {/* 4. Clip bleed region by paper fiber */}
-            <feComposite in="expandedEdge" in2="grain" operator="in" result="roughBleed" />
+            {fiber
+              ? <feComposite in="expandedEdge" in2="grain" operator="in" result="roughBleed" />
+              : <feOffset in="expandedEdge" dx={0} dy={0} result="roughBleed" />}
 
             {/* 5. Colorise with ink color — NOTE: no feMerge with SourceGraphic.
                 The filter output is ONLY the bleed, so the children rendered
