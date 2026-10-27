@@ -60,9 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ScrollMarquee } from "@/components/plasmic-components/ScrollMarquee"; // plasmic-import: K8ICcSEKq3PA/codeComponent
-import { PaperTexture } from "@/components/plasmic-components/PaperTexture"; // plasmic-import: 9rVOQ6ot_kuJ/codeComponent
 import { NextImage } from "@/components/plasmic-components/NextImage"; // plasmic-import: 6-H-ZX-IJsr_/codeComponent
-import { NoiseOverlay } from "@/components/plasmic-components/NoiseOverlay"; // plasmic-import: GohQkMFtGYyn/codeComponent
 import { _useGlobalVariants } from "../toothmonster/plasmic"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectModule
 import { _useStyleTokens } from "../toothmonster/PlasmicStyleTokensProvider"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/styleTokensProvider
 
@@ -83,7 +81,6 @@ export const PlasmicMarqueeScroll__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicMarqueeScroll__OverridesType = {
   root?: Flex__<typeof ScrollMarquee>;
-  paperTexture?: Flex__<typeof PaperTexture>;
 };
 
 export interface DefaultMarqueeScrollProps {
@@ -149,62 +146,33 @@ function PlasmicMarqueeScroll__RenderFunc(props: {
       height={"90px"}
       pauseOnHover={false}
     >
-      <PaperTexture
-        data-plasmic-name={"paperTexture"}
-        data-plasmic-override={overrides.paperTexture}
-        animate={false}
-        className={classNames("__wab_instance", sty.paperTexture)}
-        coverage={75}
-        lumaBias={2}
-        step={2}
-      >
-        <div className={classNames("all", sty.freeBox__rmTt9)}>
-          <NextImage
-            alt={""}
-            className={classNames("__wab_instance", sty.image__egV8)}
-            src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-          />
+      <NextImage
+        alt={""}
+        className={classNames("__wab_instance", sty.image__egV8)}
+        height={90}
+        src={"/images/marquee-textured.avif"}
+        width={1434}
+      />
 
-          <NextImage
-            alt={""}
-            className={classNames("__wab_instance", sty.image__sFo8Y)}
-            src={"/plasmic/toothmonster/images/marqueeSvg.svg"}
-          />
-
-          <div className={classNames("all", sty.freeBox__pEH1)}>
-            <NoiseOverlay
-              blendMode={"normal"}
-              className={classNames("__wab_instance", sty.noiseOverlay___8IJlm)}
-              color={true ? "#EADBC2" : undefined}
-              grainSize={1}
-              isolateBlend={false}
-            />
-
-            <NoiseOverlay
-              blendMode={"multiply"}
-              className={classNames("__wab_instance", sty.noiseOverlay__kpjVn)}
-              color={true ? "#000000" : undefined}
-              grainSize={1}
-              isolateBlend={false}
-              seed={3}
-            />
-          </div>
-        </div>
-      </PaperTexture>
+      <NextImage
+        alt={""}
+        className={classNames("__wab_instance", sty.image__sFo8Y)}
+        height={90}
+        src={"/images/marquee-textured.avif"}
+        width={1434}
+      />
     </ScrollMarquee>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "paperTexture"],
-  paperTexture: ["paperTexture"]
+  root: ["root"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: typeof ScrollMarquee;
-  paperTexture: typeof PaperTexture;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -269,7 +237,6 @@ export const PlasmicMarqueeScroll = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    paperTexture: makeNodeComponent("paperTexture"),
 
     // Metadata about props expected for PlasmicMarqueeScroll
     internalVariantProps: PlasmicMarqueeScroll__VariantProps,
