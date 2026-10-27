@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './NoiseOverlay.module.css';
 import { useAnimationTier } from '@/hooks/useAnimationTier';
 import { colorOrDefault } from '@/hooks/colorDefault';
 import { findHoverHost } from '@/hooks/findHoverHost';
 import { grainTileUrl, seedOffset, tileSizeForFrequency } from '../textures';
+import { tintedGrain } from './tintedGrain';
 
 export interface NoiseOverlayProps {
   /** Noise opacity (0–1) */
@@ -32,12 +33,12 @@ export interface NoiseOverlayProps {
   className?: string;
 }
 
-// The grain is a solid colour layer masked by a pre-rendered noise tile
+// The grain is a pre-rendered noise tile
 // (public/textures, see scripts/build-textures.mjs). It used to be a live
 // feTurbulence filter, which recomputed procedural noise for every pixel each
 // time anything under it repainted. The tile is the same noise, thresholded
 // the same way ("0 1" = coverage 50), so it looks the same and costs a single
-// image decode.
+// image decode. It is drawn pre-tinted as a repeating background (see below).
 const GRAIN_TILE = grainTileUrl(50);
 
 export function NoiseOverlay({
@@ -89,25 +90,46 @@ export function NoiseOverlay({
     };
   }, [animate, prefersReduced, isTouch]);
 
-  const maskSize = `${size.toFixed(1)}px ${size.toFixed(1)}px`;
-  const maskPosition = seedOffset(seed, size);
+  // Once hydrated, swap the mask for a pre-tinted background tile (see
+  // tintedGrain.ts — masks were the biggest scroll cost in Firefox). The
+  // server render keeps the mask so the first paint already has grain.
+  const [tinted, setTinted] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    tintedGrain(GRAIN_TILE, resolvedColor).then((url) => { if (live) setTinted(url); });
+    return () => { live = false; };
+  }, [resolvedColor]);
+
+  const tileSize = `${size.toFixed(1)}px ${size.toFixed(1)}px`;
+  const tilePosition = seedOffset(seed, size);
+
+  const grain: React.CSSProperties = tinted
+    ? {
+        backgroundImage: `url(${tinted})`,
+        backgroundSize: tileSize,
+        backgroundPosition: tilePosition,
+      }
+    : {
+        backgroundColor: resolvedColor,
+        maskImage: `url(${GRAIN_TILE})`,
+        WebkitMaskImage: `url(${GRAIN_TILE})`,
+        maskSize: tileSize,
+        WebkitMaskSize: tileSize,
+        maskPosition: tilePosition,
+        WebkitMaskPosition: tilePosition,
+      };
 
   return (
     <span
       ref={ref}
       aria-hidden="true"
       className={[styles.overlay, className ?? ''].filter(Boolean).join(' ')}
+      data-tinted={tinted ? '' : undefined}
       style={{
-        backgroundColor: resolvedColor,
         opacity: intensity,
         mixBlendMode: blendMode,
         isolation: isolateBlend ? 'isolate' : 'auto',
-        maskImage: `url(${GRAIN_TILE})`,
-        WebkitMaskImage: `url(${GRAIN_TILE})`,
-        maskSize,
-        WebkitMaskSize: maskSize,
-        maskPosition,
-        WebkitMaskPosition: maskPosition,
+        ...grain,
       }}
     />
   );
