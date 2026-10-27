@@ -20,6 +20,14 @@
   /* Flex so slot children can use flex: 1 or height: 100% to fill the layer */
   display: flex;
   flex-direction: column;
+  /* Own, isolated compositing layer for the clipped background. On iOS a
+     clip-path around animated, filtered content (the nav's RevealOnScroll)
+     inside a sticky element could leave the area outside the tear uncleared
+     between frames, flickering black instead of transparent. */
+  isolation: isolate;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Children in normal flow, above the background. Flex column + flex:1 so a
