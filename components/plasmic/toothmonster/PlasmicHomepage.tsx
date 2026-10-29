@@ -232,6 +232,7 @@ function PlasmicHomepage__RenderFunc(props: {
           <NavBanner
             data-plasmic-name={"navBanner"}
             data-plasmic-override={overrides.navBanner}
+
             bottomTear={true}
             className={classNames("__wab_instance", sty.navBanner)}
             color={"midnight"}
@@ -241,6 +242,7 @@ function PlasmicHomepage__RenderFunc(props: {
             <div
               data-plasmic-name={"columns"}
               data-plasmic-override={overrides.columns}
+
               className={classNames("all", sty.columns)}
             >
               <div className={classNames("all", sty.column___2GzTv)}>
@@ -248,6 +250,7 @@ function PlasmicHomepage__RenderFunc(props: {
                   <h4
                     data-plasmic-name={"h4"}
                     data-plasmic-override={overrides.h4}
+
                     className={classNames(
                       "all",
                       "h4",
@@ -340,6 +343,7 @@ function PlasmicHomepage__RenderFunc(props: {
                         <div
                           data-plasmic-name={"freeBox5"}
                           data-plasmic-override={overrides.freeBox5}
+
                           className={classNames("all", sty.freeBox5)}
                         />
                       }
@@ -382,6 +386,7 @@ function PlasmicHomepage__RenderFunc(props: {
                     <div
                       data-plasmic-name={"freeBox6"}
                       data-plasmic-override={overrides.freeBox6}
+
                       className={classNames("all", sty.freeBox6)}
                     />
                   }
@@ -454,12 +459,14 @@ function PlasmicHomepage__RenderFunc(props: {
           <MarqueeScroll
             data-plasmic-name={"marqueeScroll"}
             data-plasmic-override={overrides.marqueeScroll}
+
             className={classNames("__wab_instance", sty.marqueeScroll)}
           />
 
           <section
             data-plasmic-name={"section"}
             data-plasmic-override={overrides.section}
+
             className={classNames("all", sty.section)}
           >
             <div className={classNames("all", sty.freeBox__jkuRf)}>
@@ -490,6 +497,7 @@ function PlasmicHomepage__RenderFunc(props: {
               <CmsPaginationContext
                 data-plasmic-name={"cmsPaginationContext"}
                 data-plasmic-override={overrides.cmsPaginationContext}
+
                 className={classNames(
                   "__wab_instance",
                   sty.cmsPaginationContext
@@ -509,11 +517,12 @@ function PlasmicHomepage__RenderFunc(props: {
                       <CmsQueryRepeater
                         data-plasmic-name={"cmsDataFetcher"}
                         data-plasmic-override={overrides.cmsDataFetcher}
+
                         className={classNames(
                           "__wab_instance",
                           sty.cmsDataFetcher
                         )}
-                        desc={false}
+                        desc={true}
                         emptyMessage={
                           <DataCtxReader__>
                             {$ctx => (
@@ -1053,6 +1062,7 @@ function PlasmicHomepage__RenderFunc(props: {
                                               data-plasmic-override={
                                                 overrides.freeBox4
                                               }
+
                                               className={classNames(
                                                 "all",
                                                 sty.freeBox4
@@ -1107,6 +1117,7 @@ function PlasmicHomepage__RenderFunc(props: {
                                           data-plasmic-override={
                                             overrides.freeBox3
                                           }
+
                                           className={classNames(
                                             "all",
                                             sty.freeBox3
@@ -1129,6 +1140,7 @@ function PlasmicHomepage__RenderFunc(props: {
                       <CmsPaginationControls
                         data-plasmic-name={"cmsPaginationControls"}
                         data-plasmic-override={overrides.cmsPaginationControls}
+
                         className={classNames(
                           "__wab_instance",
                           sty.cmsPaginationControls
@@ -1154,6 +1166,7 @@ function PlasmicHomepage__RenderFunc(props: {
                           <PageButton
                             data-plasmic-name={"pageButton"}
                             data-plasmic-override={overrides.pageButton}
+
                             className={classNames(
                               "__wab_instance",
                               sty.pageButton
@@ -1182,12 +1195,14 @@ function PlasmicHomepage__RenderFunc(props: {
           <MarqueeScroll2
             data-plasmic-name={"marqueeScroll2"}
             data-plasmic-override={overrides.marqueeScroll2}
+
             className={classNames("__wab_instance", sty.marqueeScroll2)}
           />
 
           <Footer
             data-plasmic-name={"footer"}
             data-plasmic-override={overrides.footer}
+
             className={classNames("__wab_instance", sty.footer)}
           />
         </div>
