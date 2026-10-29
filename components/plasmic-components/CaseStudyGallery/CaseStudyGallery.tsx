@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useState } from 'react';
 import { NextImage } from '../NextImage';
 import { ScotchTape } from '../ScotchTape';
+import { Shimmer } from '../Shimmer';
 import { mulberry32 } from '../OffsetShape/shared';
 import styles from './CaseStudyGallery.module.css';
 
@@ -110,6 +111,29 @@ function toSrc(value: CmsImage): string | undefined {
   if (typeof value === 'string') return value || undefined;
   if (typeof value === 'object' && 'url' in value) return value.url || undefined;
   return undefined;
+}
+
+/**
+ * A shimmer skeleton holds the tile until its image arrives, then the image
+ * fades in over it. next/image fires onLoad for images already in the cache
+ * too, so a cached image never leaves the skeleton running.
+ */
+function GalleryImage(props: React.ComponentProps<typeof NextImage>) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && (
+        <div className={styles.skeleton}>
+          <Shimmer radius={0} />
+        </div>
+      )}
+      <NextImage
+        {...props}
+        className={[styles.image, loaded ? styles.imageLoaded : ''].filter(Boolean).join(' ')}
+        onLoad={() => setLoaded(true)}
+      />
+    </>
+  );
 }
 
 export function CaseStudyGallery({
@@ -230,7 +254,7 @@ export function CaseStudyGallery({
               className={styles.cell}
               style={{ aspectRatio, borderRadius: rounded || undefined }}
             >
-              <NextImage
+              <GalleryImage
                 src={slide.src}
                 // A caption describes the image, so it doubles as alt text —
                 // better than one shared `alt` repeated across every image.
@@ -338,7 +362,7 @@ export function CaseStudyGallery({
                 className={styles.slideImage}
                 style={{ aspectRatio, borderRadius: rounded || undefined }}
               >
-                <NextImage
+                <GalleryImage
                   src={slide.src}
                   alt={slide.caption || alt}
                   fill

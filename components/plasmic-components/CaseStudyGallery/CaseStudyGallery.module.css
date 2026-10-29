@@ -84,6 +84,28 @@
   border-radius: inherit;
 }
 
+/* Loading skeleton: sits under the image and is removed once it loads. The
+   tile's own radius and overflow clip it, so Shimmer's radius is zeroed. */
+.skeleton {
+  position: absolute;
+  inset: 0;
+}
+
+.image {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.imageLoaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    transition: none;
+  }
+}
+
 /* !important is required: grid-template-columns is set via inline style
    from the `columns` prop, which would otherwise win. */
 @media (max-width: 720px) {

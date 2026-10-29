@@ -30,6 +30,8 @@ export interface NextImageProps {
    * srcset candidate instead of assuming the full viewport width.
    */
   sizes?: string;
+  /** Fires once the image has loaded (code use only — not a Studio prop). */
+  onLoad?: React.ReactEventHandler<HTMLImageElement>;
   className?: string;
 }
 
@@ -49,6 +51,7 @@ export function NextImage({
   quality,
   unoptimized = false,
   sizes,
+  onLoad,
   className,
 }: NextImageProps) {
   if (!src) {
@@ -88,6 +91,7 @@ export function NextImage({
         quality={quality}
         unoptimized={skipOptimizer}
         sizes={sizes}
+        onLoad={onLoad}
         className={className}
       />
     );
@@ -104,6 +108,7 @@ export function NextImage({
       quality={quality}
       unoptimized={skipOptimizer}
       sizes={sizes}
+      onLoad={onLoad}
       className={className}
     />
   );
