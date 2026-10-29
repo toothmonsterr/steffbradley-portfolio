@@ -11,10 +11,14 @@
   overflow: hidden;
 }
 
-/* Content establishes the wrapper's layout dimensions (natural flow). */
+/* Content establishes the wrapper's layout dimensions (natural flow).
+   height: 100% only takes effect when the wrapper is given a height (e.g. a
+   stretched grid cell), so children set to fill (height: 100%) can follow
+   it — otherwise it resolves to auto and changes nothing. */
 .content {
   display: block;
   position: relative;
+  height: 100%;
 }
 
 /* Bleed layer — absolutely positioned behind the content, sized to the
