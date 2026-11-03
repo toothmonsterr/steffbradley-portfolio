@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@plasmicapp/cli": "^0.1.384",
-    "@plasmicapp/loader-nextjs": "^2.0.1",
-    "@plasmicapp/react-web": "^1.0.34",
+    "@plasmicapp/loader-nextjs": "^2.0.30",
+    "@plasmicapp/react-web": "^1.0.43",
     "@plasmicpkgs/cms": "^0.0.39",
     "@plasmicpkgs/plasmic-cms": "^0.0.312",
     "@plasmicpkgs/plasmic-nav": "^0.0.214",
@@ -42,8 +42,8 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@plasmicapp/host": "2.0.18",
-    "@plasmicapp/query": "0.1.87",
-    "@plasmicapp/prepass": "1.0.29"
+    "@plasmicapp/host": "2.0.21",
+    "@plasmicapp/query": "0.1.88",
+    "@plasmicapp/prepass": "1.0.30"
   }
 }
