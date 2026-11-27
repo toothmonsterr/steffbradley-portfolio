@@ -28,22 +28,24 @@ function Contact() {
   // (https://nextjs.org/docs/advanced-features/custom-app).
 
   return (
-    <GlobalContextsProvider>
-      <PlasmicQueryDataProvider>
-        <PageParamsProvider__
-          route={useRouter()?.pathname}
-          params={useRouter()?.query}
-          query={useRouter()?.query}
-        >
-          <PlasmicContact />
-        </PageParamsProvider__>
-      </PlasmicQueryDataProvider>
+    <>
+      <GlobalContextsProvider>
+        <PlasmicQueryDataProvider>
+          <PageParamsProvider__
+            route={useRouter()?.pathname}
+            params={useRouter()?.query}
+            query={useRouter()?.query}
+          >
+            <PlasmicContact />
+          </PageParamsProvider__>
+        </PlasmicQueryDataProvider>
+      </GlobalContextsProvider>
       <PageMeta
         title="Contact"
         description="Get in touch with Steff Bradley about design engineering, design systems or a project."
         path="/contact"
       />
-    </GlobalContextsProvider>
+    </>
   );
 }
 

@@ -28,22 +28,24 @@ function About() {
   // (https://nextjs.org/docs/advanced-features/custom-app).
 
   return (
-    <GlobalContextsProvider>
-      <PlasmicQueryDataProvider>
-        <PageParamsProvider__
-          route={useRouter()?.pathname}
-          params={useRouter()?.query}
-          query={useRouter()?.query}
-        >
-          <PlasmicAbout />
-        </PageParamsProvider__>
-      </PlasmicQueryDataProvider>
+    <>
+      <GlobalContextsProvider>
+        <PlasmicQueryDataProvider>
+          <PageParamsProvider__
+            route={useRouter()?.pathname}
+            params={useRouter()?.query}
+            query={useRouter()?.query}
+          >
+            <PlasmicAbout />
+          </PageParamsProvider__>
+        </PlasmicQueryDataProvider>
+      </GlobalContextsProvider>
       <PageMeta
         title="About"
         description="About Steff Bradley: a design engineer working across design systems, Figma plugins and front-end code."
         path="/about"
       />
-    </GlobalContextsProvider>
+    </>
   );
 }
 
