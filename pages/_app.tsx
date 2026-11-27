@@ -1,6 +1,7 @@
 import "../components/plasmic/toothmonster/plasmic.css"; // plasmic-import: 67C2x4VH9CGyuASG98L3XF/projectcss
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import { Analytics } from '@vercel/analytics/next';
 
 // Codegen pages provide their own Plasmic context (PlasmicQueryDataProvider) per-page,
 // so no global PlasmicRootProvider is needed here.
@@ -12,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div style={{ minHeight: "100%" }}>
       <Component {...pageProps} />
+      <Analytics />
     </div>
   );
 }
