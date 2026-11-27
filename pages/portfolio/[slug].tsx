@@ -9,10 +9,12 @@ import GlobalContextsProvider from "../../components/plasmic/toothmonster/Plasmi
 import { PlasmicPortfolio } from "../../components/plasmic/toothmonster/PlasmicPortfolio";
 import { useRouter } from "next/router";
 import { PlasmicQueryDataProvider } from "@plasmicapp/react-web/lib/query";
+import { PageMeta, findCaseStudyMeta, type CaseStudyMeta } from "@/lib/seo";
 
 interface PortfolioProps {
   slug: string;
   queryCache?: Record<string, unknown>;
+  meta: CaseStudyMeta;
 }
 
 // Rendered both by getStaticProps (to collect the CMS query results for this
@@ -36,7 +38,7 @@ function PortfolioTree({
   );
 }
 
-function Portfolio({ slug, queryCache }: PortfolioProps) {
+function Portfolio({ slug, queryCache, meta }: PortfolioProps) {
   const router = useRouter();
   return (
     <PlasmicQueryDataProvider prefetchedCache={queryCache}>
@@ -44,6 +46,13 @@ function Portfolio({ slug, queryCache }: PortfolioProps) {
         route={router?.pathname}
         params={{ ...router?.query, slug }}
         query={router?.query}
+      />
+      <PageMeta
+        title={meta.title ?? "Case study"}
+        description={meta.description ?? undefined}
+        image={meta.image ?? undefined}
+        path={`/portfolio/${slug}`}
+        type="article"
       />
     </PlasmicQueryDataProvider>
   );
@@ -67,5 +76,6 @@ export const getStaticProps: GetStaticProps<PortfolioProps> = async ({ params })
   );
   // Regenerated in the background at most once a minute, so CMS edits to a
   // case study show up without a redeploy.
-  return { props: { slug, queryCache }, revalidate: 60 };
+  const meta = findCaseStudyMeta(queryCache, slug);
+  return { props: { slug, queryCache, meta }, revalidate: 60 };
 };

@@ -11,6 +11,7 @@ import { PlasmicHomepage } from "../components/plasmic/toothmonster/PlasmicHomep
 import { useRouter } from "next/router";
 import { PlasmicQueryDataProvider } from "@plasmicapp/react-web/lib/query";
 import { EyeLoader } from "@/components/plasmic-components/EyeLoader";
+import { PageMeta } from "@/lib/seo";
 
 // The hero image is the Largest Contentful Paint element. Preloading it lets
 // the browser start the download from the <head>, before the page's JS and CSS
@@ -72,6 +73,7 @@ function Homepage({ queryCache }: HomepageProps) {
       <PlasmicQueryDataProvider prefetchedCache={queryCache}>
         <HomepageTree route={router?.pathname} query={router?.query} splashDone={splashDone} />
       </PlasmicQueryDataProvider>
+      <PageMeta path="/" />
     </>
   );
 }

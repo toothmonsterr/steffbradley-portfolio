@@ -7,6 +7,7 @@ import GlobalContextsProvider from "../components/plasmic/toothmonster/PlasmicGl
 import { PlasmicAbout } from "../components/plasmic/steff_bradley_portfolio/PlasmicAbout";
 import { useRouter } from "next/router";
 import { PlasmicQueryDataProvider } from "@plasmicapp/react-web/lib/query";
+import { PageMeta } from "@/lib/seo";
 
 function About() {
   // Use PlasmicAbout to render this component as it was
@@ -37,6 +38,11 @@ function About() {
           <PlasmicAbout />
         </PageParamsProvider__>
       </PlasmicQueryDataProvider>
+      <PageMeta
+        title="About"
+        description="About Steff Bradley: a design engineer working across design systems, Figma plugins and front-end code."
+        path="/about"
+      />
     </GlobalContextsProvider>
   );
 }
