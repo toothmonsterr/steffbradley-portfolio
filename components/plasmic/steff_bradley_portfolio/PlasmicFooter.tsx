@@ -207,7 +207,7 @@ function PlasmicFooter__RenderFunc(props: {
             <PlasmicLink__
               className={classNames("all", "a", "a__67C2x", sty.link__evkp)}
               component={Link}
-              href={"https://www.instagram.com/toothmonsterr/"}
+              href={"https://www.instagram.com/tooth.monsterr/"}
               legacyBehavior={false}
               platform={"nextjs"}
               target={"_blank"}

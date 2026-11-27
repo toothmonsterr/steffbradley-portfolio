@@ -74,12 +74,7 @@ createPlasmicElementProxy;
 
 export type PlasmicButton__VariantMembers = {
   color:
-    | "neutral"
-    | "peach"
-    | "blue"
-    | "success"
-    | "warning"
-    | "errorDestructive";
+    "neutral" | "peach" | "blue" | "success" | "warning" | "errorDestructive";
   type: "soft" | "bordered";
   size: "small" | "large";
   iconStart: "iconStart";
